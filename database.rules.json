@@ -1,0 +1,163 @@
+{
+    "rules": {
+        ".read": "auth.uid == 'TE0oHPbHzZaPJkA0zy1vHMfMTnX2' || auth.uid == 'yhogDXrS9IRGBHu6lnG2budZD1N2'",
+        "Activity": {
+            "$id": {
+                "$sessionDateNum": {
+                    "$uniqueID": {
+                        ".validate": "$id.endsWith(newData.child('id').val()) && $sessionDateNum.matches(/^(\\d{2}-\\d{2}-\\d{4}_\\d+)$/)",
+                        ".write": "$id.endsWith(auth.name)"
+                    }
+                }
+            }
+        },
+        "Participants": {
+            "$id": {
+                ".read": "$id.endsWith(auth.name)",
+                ".write": "$id.endsWith(auth.name)",
+                "condition": {
+                    ".write": "!data.exists() || !newData.exists()",
+                    ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 2"
+                },
+                "datetimeRegistered": {
+                    ".write": "!data.exists() || !newData.exists()",
+                    ".validate": "newData.isString()"
+                },
+                "lastSessionCompleted": {
+                    ".validate": "newData.isString()"
+                },
+                "id": {
+                    ".write": "!data.exists() || !newData.exists()"
+                },
+                "moneyEarned": {
+                    ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 30"
+                },
+                "sessionsCompleted": {
+                    ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 14"
+                },
+                "studyCompleted": {
+                    ".validate": "newData.isBoolean()"
+                },
+                "sessionsBegun": {
+                    ".validate": "newData.isNumber() && newData.val() >= 0"
+                },
+                "studyStage": {
+                    ".validate": "newData.isNumber() && newData.val() >= 0"
+                },
+              	"endDate": {
+                  ".write": "!data.exists() || !newData.exists()",
+                  ".validate": "newData.isString()" },
+                "trainingEndDate": { 
+                  ".write": "!data.exists() || !newData.exists()",
+                  ".validate": "newData.isString()" },
+
+                "$other": {
+                    ".validate": false
+                }
+            }
+        },
+        "EFFORTTrials": {
+            "$id": {
+                "$sessionDateNum": {
+                    "$trialNumber": {
+                        ".write": "$id.endsWith(auth.name)",
+                        ".validate": "$trialNumber.matches(/^\\d+$/)",
+                        "buttonPresses": { ".validate": "newData.isNumber()" },
+                        "dateTime": { ".validate": "newData.isString()" },
+                        "difficulty": { ".validate": "newData.isNumber()" },
+                        "decisionTime": { ".validate": "newData.isNumber()" },
+                        "effortTrialNum": { ".validate": "newData.isNumber()" },
+                        "filled": { ".validate": "newData.isBoolean()" },
+                        "id": { ".validate": true },
+                        "maxTime": { ".validate": "newData.isNumber()" },
+                        "probabilityOfWin": { ".validate": "newData.isNumber()" },
+                        "requiredPresses": { ".validate": "newData.isNumber()" },
+                        "reward": { ".validate": "newData.isNumber()" },
+                        "sessionNumber": { ".validate": "newData.isNumber()" },
+                        "timeTaken": { ".validate": "newData.isNumber()" },
+                        "win": { ".validate": "newData.isBoolean()" },
+                        "$other": { ".validate": false }
+                    }
+                }
+            }
+        },
+        "BERTTrials": {
+            "$id": {
+                "$sessionDateNum": {
+                    "$blocktype": {
+                        "$trialNumber": {
+                            ".write": "$id.endsWith(auth.name)",
+                            ".validate": "$trialNumber.matches(/^\\d+$/)",
+                            "condition": { ".validate": "newData.isNumber()" },
+                            "blocktype": { ".validate": "newData.isString()" },
+                            "classification": { ".validate": "newData.isString() || newData.isNumber()" },
+                            "correct": { ".validate": "newData.isString() || newData.isBoolean()" },
+                            "dateTime": { ".validate": "newData.isString()" },
+                            "fixationDuration": { ".validate": "newData.isNumber()" },
+                            "id": { ".validate": true },
+                            "response": { ".validate": "newData.isNumber()" },
+                            "responseTime": { ".validate": "newData.isNumber()" },
+                            "sessionNum": { ".validate": "newData.isNumber()" },
+                            "stimulusNumber": { ".validate": "newData.isNumber()" },
+                            "stimulusPath": { ".validate": "newData.isString()" },
+                            "trialNum": { ".validate": "newData.isNumber()" },
+                            "$other": { ".validate": false }
+                        }
+                    }
+
+                }
+            }
+        },
+
+        "Sessions": {
+            "$id": {
+                ".read": "$id.endsWith(auth.name)",
+                ".write": "$id.endsWith(auth.name)",
+                "$sessionDateNum": {
+                    "BERT_blocks": {
+                        "$blocktype": {
+                            "averageHappyAccuracy": { ".validate": "newData.isString() || newData.isNumber()" },
+                            "averageSadAccuracy": { ".validate": "newData.isString() || newData.isNumber()" },
+                            "balancePoint": { ".validate": "newData.isString() || newData.isNumber()" },
+                            "blocktype": { ".validate": "newData.isNumber()" },
+                            "dateTime": { ".validate": "newData.isString()" },
+                            "medianResponseTime": { ".validate": "newData.isNumber()" }
+                        }
+                    },
+                    "EFF_calibrationPresses": { ".validate": "newData.isNumber()" },
+                    "EFF_easyChoices": { ".validate": "newData.isNumber()" },
+                    "EFF_hardChoices": { ".validate": "newData.isNumber()" },
+                    "OS": { ".validate": "newData.isString()" },                    
+                    "SESH_completionLevel": { ".validate": "newData.isNumber()" },
+                    "SESH_date": { ".validate": "newData.isString()" },
+                    "SESH_sessionNumber": { ".validate": "newData.isNumber()" },                    
+                    "browser": { ".validate": "newData.isString()" },
+                    "condition": { ".validate": "newData.isNumber()" },
+                    "moneyWon": { ".validate": "newData.isNumber()" },
+                    "id": { ".validate": true },
+
+                    "$other": { ".validate": false }
+
+                }
+            }
+        },
+        "Questionnaire": {
+            ".read": true,
+            ".write": true
+        },
+        "Conditions": {
+            ".read": true,
+            ".write": true,
+            "condition1": {
+                ".validate": "newData.isNumber()"
+            },
+            "condition2": {
+                ".validate": "newData.isNumber()"
+            },
+            "$other": {
+                ".validate": false
+            }
+        }
+    
+    }
+}

@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Backend</title>
+    <style>
+        body {background-color: #FFFFFF; }
+    </style>
+</head>
+<body onload="init()">
+<b>Instructions:</b>
+<p>Database access to BERTI Longitudinal Study: Enter the admin username and password below, then click on one of the buttons to perform that action.</p>
+    
+    <form>
+        Username:<br>
+        <input type="text" id="username">
+        <br>
+        Password:<br>
+        <input type="password" id="password">
+    </form>
+       
+    <p>Click on a button below to run that script on the database:</p>
+
+
+<br/><button id="effort">Download Effort Trials</button>
+<br /><button id="bert">Download ERT Trials</button>
+
+    <br /><button id="activity">Download all Activity</button>
+    <br/><button id="sessions">Download all Sessions</button>
+    <br/><button id="participants">Download all Participants</button>
+
+    <div id="updates"><ul></ul></div>
+
+<script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
+<script src="js/libs/FileSaver.js"></script>
+<script src="js/Main.js"></script>
+<script src="js/helpers/setupDatabase.js"></script>
+
+<script>
+    function init()
+    {
+        var ERTTrialsButton = document.getElementById("bert");
+        var EFTTrialsButton = document.getElementById("effort");
+        var activityButton = document.getElementById("activity");
+        var participantsButton = document.getElementById("participants");
+        var sessionsButton = document.getElementById("sessions");
+
+        ERTTrialsButton.onclick = checkLogin.bind(this, getBERTTrials);
+        EFTTrialsButton.onclick = checkLogin.bind(this, getEFFORTTrials);
+        activityButton.onclick = checkLogin.bind(this, getActivity);
+        participantsButton.onclick = checkLogin.bind(this, getParticipants);
+        sessionsButton.onclick = checkLogin.bind(this, getSessions);
+    };
+</script>
+
+
+
+</body>
+</html>

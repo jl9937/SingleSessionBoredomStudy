@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Mindgame MK II</title>
+    <style>
+/*        body {*/
+/*            background-color: #000000;*/
+/*            margin: 0 0 0 0;*/
+/*            padding: 0 0 0 0;*/
+/*        }*/
+/**/
+/*        canvas {*/
+/*            background-color: #000000;*/
+/*            margin-left: auto;*/
+/*            margin-right: auto;*/
+/*            width: 1024px;*/
+/*        }*/
+/**/
+/*        div {*/
+/*            margin: 0 0 0 0;*/
+/*        }*/
+/**/
+/*        .outer {*/
+/*            display: table;*/
+/*            position: absolute;*/
+/*            height: 100%;*/
+/*            width: 100%;*/
+/*        }*/
+/**/
+/*        .middle {*/
+/*            display: table-cell;*/
+/*            vertical-align: middle;*/
+/*        }*/
+/**/
+/*        .inner {*/
+/*            margin-left: auto;*/
+/*            margin-right: auto;*/
+/*            width: 1024px;*/
+/*        }*/
+
+       body, html { margin: 0; padding: 0; width: 100%; height: 100%;  background-color: #000000}
+        canvas { position: absolute;top: 0; left: 0; right: 0; bottom: 0;margin: auto;}
+    </style>
+    <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />-->
+</head>
+<body onload="init()">
+
+
+   <div class="outer">
+        <div class="middle">
+            <div class="inner" id ="inner">
+                <!--<canvas id="game-canvas" width="1024" height="730"></canvas>
+                <div id="embeddedQuestionnaire" style="display: none; overflow:hidden;width:1024px;height:730px;">-->
+                <!--</div>-->
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+    <script src="js/libs/jquery-3.2.0.min.js"></script>
+    <script src="js/libs/date.js"></script>
+    <script src="js/libs/pixi.min.js"></script>
+    <script src="js/libs/pixi-ui.js"></script>
+
+    <script src="js/Main.js"></script>
+    <script src="js/Utils.js"></script>
+    <script src="js/ViewManager.js"></script>
+
+    <script src="js/helpers/DBInterface.js"></script>
+    <script src="js/helpers/VisabilityMonitor.js"></script>
+    <script src="js/helpers/ScheduleManager.js"></script>
+    <script src="js/helpers/ClickButton.js"></script>
+
+    <script src="js/views/View.js"></script>
+    <script src="js/views/MainMenu.js"></script>
+    <script src="js/views/Engine.js"></script>
+    <script src="js/views/GenericScreen.js"></script>
+
+    <script src="js/views/Questionnaires/FreeTextScreen.js"></script>
+    <script src="js/views/Questionnaires/EmbeddedQuestionnaire.js"></script>
+
+    <script src="js/database_objects/Trial.js"></script>
+    <script src="js/database_objects/EffortTrial.js"></script>
+    <script src="js/database_objects/Block.js"></script>
+    <script src="js/database_objects/Session.js"></script>
+
+
+    <script>
+        function init()
+        {
+
+            var oldIE;
+            if (document.all && !window.atob )
+            {
+                oldIE = true;
+            }
+
+            if (oldIE)
+            {
+                var para = document.createElement("h1");
+                document.getElementById("game-canvas").style.display = "none";
+                para.style.color = "white";
+                para.style.margin = "10px";
+                var node = document.createTextNode("Sorry, this study is not supported by Internet Explorer 9 or lower. Please swtich to IE 10, Edge, Chrome, Safari or Firefox");
+                para.appendChild(node);
+                document.body.appendChild(para);
+            } else
+            {
+                main = new Main();
+            }
+
+
+
+
+        };
+    </script>
+
+
+</body>
+
+</html>
