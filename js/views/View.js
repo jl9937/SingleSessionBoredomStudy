@@ -14,7 +14,7 @@ View.prototype.createBasic = function (stage, _session)
     stage.addChild(this);
     this.session = _session || this.session;
 
-    this.setSkin();
+    this.setSkin(this.session);
     this.createBackground();
 
     this.displayed = true;
@@ -51,9 +51,27 @@ View.prototype.buttonClicked = function (nextScreenToGoTo)
     this.moveToScreen = nextScreenToGoTo;
 }
 
-View.prototype.setSkin = function ()
+View.prototype.setSkin = function (session)
 {
-        this.titleText = "Emotion Recognition and\nWell-being Study";
-        this.startButtonText = "Start";
+    if (session.condition === Main.CONDITION_NONGAME)
+    {
+        this.titleText = "Stop Signal Task";
+        this.startButtonText = "Start"; this.startButtonText = "Start";
+        this.historyButtonText = "View History";
+        this.backgroundFile = "background.png"; this.backgroundFile = "background.png";
+    }
+    else if (session.condition === Main.CONDITION_POINTS)
+    {
+        this.titleText = "STOPMASTER";
+        this.startButtonText = "Start Game";
+        this.historyButtonText = "View History";
         this.backgroundFile = "background.png";
+    }
+    else if (session.condition === Main.CONDITION_THEME)
+    {
+        this.titleText = "Packathon";
+        this.startButtonText = "Start Game";
+        this.historyButtonText = "See Map";
+        this.backgroundFile = "themeBackground.png";
+    }
 }

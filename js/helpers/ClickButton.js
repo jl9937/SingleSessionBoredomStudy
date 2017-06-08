@@ -34,7 +34,7 @@ function ClickButton(_ypos, _text, callback, _xpos , scale, choice)
     this.yposVal = _ypos - this.heightVal/2;
     this.xposVal = _xpos || ((Main.SCREEN_WIDTH / 2) - (this.widthVal / 2));
     
-    this.lineStyle(3, 0x000000);
+    this.lineStyle(3, 0x000000, 1);
     this.buttonUp();
     
 

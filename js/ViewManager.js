@@ -1,18 +1,3 @@
-/*
-LOGIN
-INSTRUCTIONS#
-ENGINE
-POSTSESSIONSCREEN
-HISTORYMAP
-INSTRUCTIONS
-INTRO
-QUEST_ENGAGEMENT#
-QUEST_ENGAGEMENT_SHORT#
-QUEST_FREETEXT#
-QUEST_PERSEVERANCE#
-QUEST_DEMOGRAPHICS#
-*/
-
 //This object manages all possible views in the app.. Holds indexes for all views. 
 function VMan(_stage, main)
 {

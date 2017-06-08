@@ -1,25 +1,16 @@
 ﻿Main.DBURL = "https://mindgamesmkii.firebaseio.com";
 Main.URL = "https://mindgamesmkii.firebaseapp.com";
 
-
 Main.SCREEN_WIDTH = 1024;
 Main.SCREEN_HEIGHT = 730;
 Main.WORD_WRAP_WIDTH = 800;
 
+Main.CONDITION_NONGAME = 0;
+Main.CONDITION_POINTS = 1;
+Main.CONDITION_THEME = 2;
 
-Main.BASEPAY = 4;
-Main.SESHPAY = 0.5;
 
 Main.COMPLETION_LINK = "https://www.prolific.ac/submissions/592d4b16b97ad000017443f2/complete?cc=G6NBHMYI";
-
-var fps = 70;
-var now;
-var then = Date.now();
-var interval = 1000 / fps;
-//60 fps gives average delta of 21 (great)
-//30 fps gives average delta of 45
-var delta;
-var idealDelta = 21;
 
 //debug switch
 Main.isDebug = false;
@@ -36,31 +27,20 @@ function Main()
     // Initialize Renderer
     PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
     PIXI.settings.RESOLUTION = devicePixelRatio || 1;
-    //this.renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight, { resolution: devicePixelRatio || 1, transparent: true });
-
-    this.app = new PIXI.Application(window.innerWidth, window.innerHeight, { backgroundColor: 0x9ED0E9, resolution: devicePixelRatio || 1, transparent: true});
+    this.app = new PIXI.Application(window.innerWidth, window.innerHeight, { backgroundColor: 0x9ED0E9, resolution: devicePixelRatio || 1, transparent: true, antialias: true});
     document.body.appendChild(this.app.view);
 
     this.stage = this.app.stage;
-    //this.stage = new PIXI.Container();
-
-    //this.renderer = PIXI.autoDetectRenderer(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT, { view: document.getElementById("game-canvas") });
-    //this.renderer.backgroundColor = 0x9ED0E9;
 
     var self =this;
     var resizeFunction = function ()
     {
-        //self.app.renderer.resize(window.innerWidth, window.innerHeight);
-        const scaleFactor = Math.min(
-            window.innerWidth / Main.SCREEN_WIDTH,
-            window.innerHeight / Main.SCREEN_HEIGHT
-          );
+        var scaleFactor = Math.min(window.innerWidth / Main.SCREEN_WIDTH, window.innerHeight / Main.SCREEN_HEIGHT);
+        scaleFactor = scaleFactor > 1 ? 1 : scaleFactor;
         const newWidth = Math.ceil(Main.SCREEN_WIDTH * scaleFactor * 0.99);
         const newHeight = Math.ceil(Main.SCREEN_HEIGHT * scaleFactor  * 0.99);
-  
         self.app.renderer.view.style.width = `${newWidth}px`;
         self.app.renderer.view.style.height = `${newHeight}px`;
-
         self.app.renderer.resize(newWidth, newHeight);
         self.stage.scale.set(scaleFactor); 
     }
@@ -79,9 +59,8 @@ function Main()
     };
     firebase.initializeApp(config);
 
-    // Initialize Database Interface
+    //Initialize Database Interface
     this.db = new DBInterface();
-
     this.login();
 };
 
@@ -143,8 +122,6 @@ Main.prototype.setupSession = function (id, condition)
             buildTodaysScreens(self.session, self.viewManager);
             self.loadSprites(self.session.condition);
         }
-
-        //If complete, then shut down continue button
         if (sessionData === -1)
             debug("Today's session has been completed already");
         else if ((sessionData === null || sessionData === undefined) && self.session === undefined)
@@ -181,12 +158,8 @@ Main.prototype.loadOtherSprites = function ()
 {
     var allVariantAssets = [
         "../resources/taskElements/fixation.png",
-
-
         "../resources/interface/logo.png",
         "../resources/interface/transparent.png"
-
-       
     ];
 
     PIXI.loader.add(allVariantAssets).load();
@@ -196,11 +169,9 @@ Main.prototype.loadOtherSprites = function ()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //This is the game loop
-
 Main.prototype.update = function(delta) {
     this.viewManager.currentView.mainLoop(delta);
     this.viewManager.checkAllScreens();
-   // this.app.renderer.render(this.stage);
 }
 
 
