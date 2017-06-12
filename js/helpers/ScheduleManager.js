@@ -99,7 +99,7 @@ function addConsentScreen(name, nextpage, session)
    "Before we begin the study proper, we must ask you for your informed consent.\n\n " +
    "By completing the box below, you confirm you have read the study description " +
    "on Prolific Academic.com and are happy to take part. You also confirm that you are:\n\n" +
-   "1) Over 18 years of age\n2) Have English as a first language\n3) Have not consumed alcohol within the last 12 hours\n4)Are happy for this data to be anonymised and made publicly available\n\n" +
+   "1) Over 18 years of age\n2) Have English as a first language\n3) Have not consumed alcohol within the last 12 hours\n4) Are happy for this data to be anonymised and made publicly available\n\n" +
          "If you are happy to proceed, please type 'I give consent' in the box below. If not, please just close this window.", "consent", nextpage));
 }
 

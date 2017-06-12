@@ -16,22 +16,9 @@ FreeTextScreen.prototype.create = function (stage, db, session)
 {
     this.createBasic(stage, db, session);
     this.createScreenText(this.question);
-    var options = {
-        text: { font: "15px Arial" },
-        valign: "middle",
-        borderRadius: 5,
-        borderWidth: 2,
-        backgroundColor: "#d9d9d9",
-        padding: 10,
-        type: "text",
-        maxlength: 300,
-        width: Main.SCREEN_WIDTH * 0.9,
-        align: "left",
-        height: 10
-}
-    this.textInput = new PIXI.Input(options, 1);
-    this.textInput.x = Main.SCREEN_WIDTH / 2 - 0.5 * Main.SCREEN_WIDTH * 0.9 -10;
-    this.textInput.y = Main.SCREEN_HEIGHT / 2 + 100;
+  
+
+    this.textInput = new InputElement(Main.SCREEN_HEIGHT / 2 + 100, 400);
     this.addChild(this.textInput);
     this.textInput.focus();
 
@@ -58,7 +45,7 @@ FreeTextScreen.prototype.buttonClicked = function (nextScreenToGoTo)
 FreeTextScreen.prototype.mainLoop = function()
 {
     //todo this is naughty. Move this to options
-    if (this.textInput.value.search(/\s*I\s+GIVE\s+CONSENT\s*/i) !== -1)
+    if (this.textInput.getValue().search(/\s*I\s+GIVE\s+CONSENT\s*/i) !== -1)
     {
         this.nextButton.enable();
         this.mainLoop = function() {};

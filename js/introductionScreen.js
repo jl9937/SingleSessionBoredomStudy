@@ -33,6 +33,7 @@ introductionScreen.prototype.createScreen = function ()
 
 
     var options = { text: { font: "20px Arial" }, valign: "middle", maxlength: 24, borderRadius: 0, borderWidth: 2, backgroundColor: "#d9d9d9", padding: 10, type: "text", width: 450 }
+   
     this.IDinput = new PIXI.Input(options, 1);
     this.IDinput.x = Main.SCREEN_WIDTH / 2 - this.IDinput.width /2;
     

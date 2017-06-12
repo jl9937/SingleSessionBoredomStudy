@@ -79,19 +79,11 @@ MainMenu.prototype.createMainMenu = function()
 {
     this.createTitleText();
     this.createUserDataText(Main.SCREEN_HEIGHT / 2 - 118);
-
-    var trainingWeekOver = false;
-
-    if ((Date.today() > new Date.parseExact(this.session.getTrainingEndDateString(), "dd-MM-yyyy")) || this.session.getParticipantStage() === Session.STAGE_FINALTEST)
-        trainingWeekOver = true;
-    if(this.session.getParticipantStage() === Session.STAGE_FINALTEST && Date.today() >= new Date.parseExact(this.session.getEndDateString(), "dd-MM-yyyy"))
-        trainingWeekOver = false;
-
-   
+    
     var startButton;
-    if (this.session.getCompletionLevel() === Session.COMPLETE_NOTHING && !trainingWeekOver)
+    if (this.session.getCompletionLevel() === Session.COMPLETE_NOTHING)
         startButton = new ClickButton(Main.SCREEN_HEIGHT / 2, "Begin", this.buttonClicked.bind(this, this.nextScreenToGoTo), 0,0.8);
-    else if (this.session.getCompletionLevel() === Session.COMPLETE_ALL || trainingWeekOver)
+    else if (this.session.getCompletionLevel() === Session.COMPLETE_ALL)
     {
         startButton = new ClickButton(Main.SCREEN_HEIGHT / 2 + 20, "Begin", this.buttonClicked.bind(this, this.nextScreenToGoTo), 0, 0.8);
         startButton.disable();
@@ -104,86 +96,35 @@ MainMenu.prototype.createMainMenu = function()
     var linkExplanation = new PIXI.Text("The link below is your UNIQUE link to the study, please make a note of it. If you forget the link for any reason, simply come back to this page through Prolific Academic",
         { align: "center", font: "17px Arial", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: Main.WORD_WRAP_WIDTH });
 
-   
-
-
-    //todo ad the history button back in
+   //todo ad the history button back in
     linkExplanation.x = Math.round(Main.SCREEN_WIDTH / 2, 0) - Math.round(linkExplanation.width / 2, 0);
     linkExplanation.y = secondBlocky;
     
 
-    
+    var link = new InputElement(secondBlocky + 65, 600, Main.URL + "/task.html?prolific_pid=" + this.session.getID(), true);
 
-    var options2 = { text: { font: "15px Arial" }, valign: "middle", borderRadius: 0, borderWidth: 2, backgroundColor: "#d9d9d9", readonly: true, padding: 10, width: 600 }
-    //this.link = new PIXI.Input(options2, 1);
-
-    var solidBox = PIXI.Texture.fromImage("../resources/interface/textBackground.png");
-
-    //todo make this readonly somehow
-    this.link = new PIXI.UI.TextInput({
-        value: Main.URL + "/task.html?prolific_pid=" + this.session.getID(),
-        style: { fill: '#000000', fontSize: 15, fontFamily: 'Arial', align:'center' },
-        background: new PIXI.UI.Sprite(solidBox),
-        width: 600,
-        height: 35,
-        padding: 5,
-        tabIndex: 1,
-        multiLine: false,
-        lineHeight: 27
-    });
-    
-    //textInput.on("focusChanged", function (focus)
-    //{
-    //    textInput.background.alpha = focus ? 0.4 : 0.2;
-    //});
-//    textInput.on("change", function ()
-//    {
-//        //console.log("Change:", this.value);
-//    });
-    //this.addChild(this.link);
-
-    this.link.x = Main.SCREEN_WIDTH / 2 - this.link.width / 2;
-    this.link.y = secondBlocky + 65;
-
-
-    var self = this;
     var copytoclipboard = new ClickButton(secondBlocky + 140, "Copy link", function ()
     {
         var dummy = document.createElement("input");
         document.body.appendChild(dummy);
         dummy.style.display = 'hidden';
         dummy.setAttribute("id", "dummy_id");
-        document.getElementById("dummy_id").value = self.link.value;
+        document.getElementById("dummy_id").value = link.getValue();
         dummy.select();
         document.execCommand("copy");
         document.body.removeChild(dummy);
     }, 0, 0.36);
-
 
     var downloadInstructions = new ClickButton(Main.SCREEN_HEIGHT / 2 + 90, "Instructions", function ()
     {
         window.open("/task_instructions.pdf");
         focus();
     }, 0, 0.8);
-
-    var uiStage = new PIXI.UI.Stage(window.innerWidth, window.innerHeight);
-    uiStage.minHeight = 315;
-    uiStage.minWidth = 500;
-
-    var container = new PIXI.UI.Container();
-    container.anchorBottom = container.anchorTop = container.anchorRight = container.anchorLeft = 10;
-    container.minHeight = 285;
-    container.addChild(this.link);
-
-    uiStage.addChild(container);
-    this.addChild(uiStage);
-
-
-
+    
+    this.addChild(link);
     this.addChild(downloadInstructions);
     this.addChild(linkExplanation);
     this.addChild(copytoclipboard);
-    //this.addChild(this.link);
     this.addChild(startButton);
 };
 
