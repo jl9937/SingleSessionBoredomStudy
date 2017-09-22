@@ -14,7 +14,8 @@ function ClickButton(_ypos, _text, callback, _xpos , scale, choice)
 {
     PIXI.Graphics.call(this);
 
-    scale = scale || 1;
+    _ypos = _ypos || Main.SCREEN_HEIGHT - 150;
+    scale = scale || 1.2;
     this.text = _text;
     this.state = 0;
 
@@ -34,14 +35,14 @@ function ClickButton(_ypos, _text, callback, _xpos , scale, choice)
     this.yposVal = _ypos - this.heightVal/2;
     this.xposVal = _xpos || ((Main.SCREEN_WIDTH / 2) - (this.widthVal / 2));
     
-    this.lineStyle(3, 0x000000, 1);
+    this.lineStyle(3, 0x000000);
     this.buttonUp();
     
 
     this.hitArea = new PIXI.Rectangle(this.xposVal, this.yposVal, this.widthVal, this.heightVal);
     this.interactive = true;
     this.touchstart = this.mousedown = this.buttonDown.bind(this);
-    this.mouseout = this.touchout = this.buttonUp.bind(this);
+    this.mouseupoutside = this.touchendoutside = this.buttonUp.bind(this);
     this.touchend = this.mouseup = this.buttonUp.bind(this, callback);
 
     
@@ -61,7 +62,7 @@ function ClickButton(_ypos, _text, callback, _xpos , scale, choice)
     }
     else
     {
-        var buttonText = new PIXI.Text(this.text, { font: textsize + "px Arial" });
+        var buttonText = new PIXI.Text(this.text, { fontFamily: "Arial", fontSize: textsize});
         buttonText.x = this.xposVal + Math.round(0.5 * (this.widthVal - buttonText.width), 0);
         buttonText.y = this.yposVal + Math.round(0.5 * (this.heightVal - buttonText.height), 0);
         this.addChild(buttonText);

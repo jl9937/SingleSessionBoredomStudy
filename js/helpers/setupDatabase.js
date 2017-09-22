@@ -179,9 +179,9 @@ function getSessions(ref)
             {
                 var session = sessionSnapshot.val();
                 var line = session.id + "\t" +
-                    session.SESH_sessionNumber + "\t" +
+                    session.sessionNumber + "\t" +
                     session.condition + "\t" +
-                    session.SESH_completionLevel + "\t" +
+                    session.completionLevel + "\t" +
                     (sessionSnapshot.child("BERT_blocks").child("0").val() !== null ? sessionSnapshot.child("BERT_blocks").child("0").val().balancePoint : "undefined") + "\t" +
                     (sessionSnapshot.child("BERT_blocks").child("0").val() !== null ? sessionSnapshot.child("BERT_blocks").child("0").val().medianResponseTime : "undefined")+ "\t" +
                     (sessionSnapshot.child("BERT_blocks").child("1").val() !== null ? sessionSnapshot.child("BERT_blocks").child("1").val().balancePoint : "undefined")+ "\t" +
@@ -196,7 +196,7 @@ function getSessions(ref)
                     session.moneyWon + "\t" +
                     session.OS + "\t" +
                     session.browser + "\t" +
-                    session.SESH_date + "\n";
+                    session.date + "\n";
                 fullText += line;
             });
         });
@@ -263,7 +263,7 @@ function getActivity(ref)
                 {
                     var activity = activitySnapshot.val();
                     var line = activity.id +
-                        "\t" + activity.SESH_sessionNumber +
+                        "\t" + activity.sessionNumber +
                         "\t" + activity.view +
                         "\t" + activity.oldState +
                         "\t" + activity.oldStateBegan +

@@ -30,7 +30,7 @@ View.prototype.deconstruct = function (stage)
     this.moveToScreen = -1;
 }
 
-View.prototype.mainLoop = function ()
+View.prototype.mainLoop = function (delta)
 {
     return;
 }
@@ -51,23 +51,28 @@ View.prototype.buttonClicked = function (nextScreenToGoTo)
     this.moveToScreen = nextScreenToGoTo;
 }
 
+View.prototype.resize = function()
+{
+    
+}
+
 View.prototype.setSkin = function (session)
 {
-    if (session.condition === Main.CONDITION_NONGAME)
+    if (session.getCondition() === Main.CONDITION_NONGAME)
     {
         this.titleText = "Stop Signal Task";
         this.startButtonText = "Start"; this.startButtonText = "Start";
         this.historyButtonText = "View History";
         this.backgroundFile = "background.png"; this.backgroundFile = "background.png";
     }
-    else if (session.condition === Main.CONDITION_POINTS)
+    else if (session.getCondition() === Main.CONDITION_POINTS)
     {
         this.titleText = "STOPMASTER";
         this.startButtonText = "Start Game";
         this.historyButtonText = "View History";
         this.backgroundFile = "background.png";
     }
-    else if (session.condition === Main.CONDITION_THEME)
+    else if (session.getCondition() === Main.CONDITION_THEME)
     {
         this.titleText = "Packathon";
         this.startButtonText = "Start Game";

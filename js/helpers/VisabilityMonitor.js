@@ -28,7 +28,7 @@
 
 VisabilityMonitor.prototype.handleScreenVisabilityChange = function (onceRound, screenChange)
 {
-    if ((this.session !== null || this.session !== undefined) && this.session.SESH_sessionNumber !== "?")
+    if ((this.session !== null || this.session !== undefined) && this.session.getSessionNumber() !== "?")
         {
 
     var currState = this.state || "";
@@ -56,12 +56,12 @@ VisabilityMonitor.prototype.handleScreenVisabilityChange = function (onceRound, 
                     oldStateBegan = this.timeOfLastStateChange.toString("dd-MM-yyyy HH:mm:ss");
 
                 if (this.main.viewManager.currentView === undefined)
-                    currentScreen = "LOGIN";
+                    currentScreen = "MAINMENULOGIN";
                 else
                     currentScreen = this.main.viewManager.currentScreenName;
 
                 var stateChangeData = {
-                    "SESH_sessionNumber": this.session.SESH_sessionNumber,
+                    "sessionNumber": this.session.getSessionNumber(),
                     "id": this.session.id,
                     "view": currentScreen,
                     "oldState": currState,

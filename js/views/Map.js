@@ -20,7 +20,7 @@ Map.prototype.createHistory = function ()
     var progressLine = new PIXI.Sprite.fromImage("../resources/theme/themeMisc/progressLine" + (this.session.levelNum) + ".png");
     this.addChild(progressLine);
 
-    var backButton = new ClickButton(Main.SCREEN_HEIGHT - 15, "Main Menu", this.buttonClicked.bind(this, "LOGIN"), Main.SCREEN_WIDTH - 170, 0.5);
+    var backButton = new ClickButton(Main.SCREEN_HEIGHT - 15, "Main Menu", this.buttonClicked.bind(this, "MAINMENU"), Main.SCREEN_WIDTH - 170, 0.5);
     this.addChild(backButton);
 
     this.createInstructionText();

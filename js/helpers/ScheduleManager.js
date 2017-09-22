@@ -21,7 +21,7 @@ function makeBaselineScreens(session)
 {
     SCHEDULE = ["MOOD_QUESTIONNAIRES", "EFFORT_START", "ERT_START"];
 
-    VMan.addScreen("LOGIN", new MainMenu("CONSENT", session));
+    VMan.addScreen("MAINMENU", new MainMenu("CONSENT", session));
     addConsentScreen("CONSENT", "INTRO", session);
     addIntroScreen("INTRO", "MOOD_QUESTIONNAIRES", session);
     //addMoodQuestionnaires("MOOD_QUESTIONNAIRES", "EFFORT_START", session);
@@ -40,13 +40,13 @@ function makeAdLibScreens(session)
 {
     SCHEDULE = ["ERT_START"];
 
-    VMan.addScreen("LOGIN", new MainMenu("INTRO", session));
+    VMan.addScreen("MAINMENU", new MainMenu("INTRO", session));
     addShortIntroScreen("INTRO", "ERT_START", session);
     addERTandIMS("ERT_START", "POSTSESSION", session);
     VMan.addScreen("POSTSESSION", new GenericScreen(session.condition, {
         text: "You have completed today's session!\nPlease ensure you have completed 4 sessions before " + session.getTrainingEndDateString() + "\n\nDon't worry, we will send you reminders via the Prolific Academic messaging system\n\nPlease BOOKMARK this page so that you can return easily",
         buttonText: "Main Menu",
-        nextScreenToGoTo: "LOGIN",
+        nextScreenToGoTo: "MAINMENU",
         buttonYPos: Main.SCREEN_HEIGHT - 160
     }));
 }
@@ -55,7 +55,7 @@ function makeImmediateTestScreens(session)
 {
     SCHEDULE = ["ERT_START", "MOOD_QUESTIONNAIRES", "EFFORT_START"];
 
-    VMan.addScreen("LOGIN", new MainMenu("INTRO", session));
+    VMan.addScreen("MAINMENU", new MainMenu("INTRO", session));
     addIntroScreen("INTRO", "ERT_START", session);
     addERTandIMS("ERT_START", "MOOD_QUESTIONNAIRES", session);
     addMoodQuestionnaires("MOOD_QUESTIONNAIRES", "EFFORT_START", session);
@@ -63,7 +63,7 @@ function makeImmediateTestScreens(session)
     VMan.addScreen("POSTSESSION", new GenericScreen(session.condition, {
        text: "You have completed today's session, Well done!\n\nWe will send you a reminder on " + session.getEndDateString() + " to come back for the final test session, after which you will be paid!\n\nMany thanks for taking part so far, you may now close this window.",
         buttonText: "Next",
-        nextScreenToGoTo: "LOGIN",
+        nextScreenToGoTo: "MAINMENU",
         buttonYPos: Main.SCREEN_HEIGHT - 160
     }));
 }
@@ -72,7 +72,7 @@ function makeFinalTestScreens(session)
 {
     SCHEDULE = ["ERT_START", "MOOD_QUESTIONNAIRES", "EFFORT_START", "ENGAGEMENT_QUEST"];
 
-    VMan.addScreen("LOGIN", new MainMenu("INTRO", session));
+    VMan.addScreen("MAINMENU", new MainMenu("INTRO", session));
     addIntroScreen("INTRO", "ERT_START", session);
     addERTandIMS("ERT_START", "MOOD_QUESTIONNAIRES", session);
     addMoodQuestionnaires("MOOD_QUESTIONNAIRES", "EFFORT_START", session);
@@ -87,7 +87,7 @@ function makeFinalTestScreens(session)
     VMan.addScreen("POSTSESSION", new GenericScreen(session.condition, {
         text: "You have completed today's session, and the whole experiment. Well done!\n\nWe will be processing reimbursements via Prolific Academic as soon as possible.\nMany thanks for taking part, you may now close this window.",
         buttonText: "Next",
-        nextScreenToGoTo: "LOGIN",
+        nextScreenToGoTo: "MAINMENU",
         buttonYPos: Main.SCREEN_HEIGHT - 160
     }));
 }

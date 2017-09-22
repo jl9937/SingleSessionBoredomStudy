@@ -23,26 +23,26 @@ function Main()
         debug = console.log.bind(window.console);
     else
         debug = function () { }
-    
-    // Initialize Renderer
+
     PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
-    PIXI.settings.RESOLUTION = devicePixelRatio || 1;
-    this.app = new PIXI.Application(window.innerWidth, window.innerHeight, { backgroundColor: 0x9ED0E9, resolution: devicePixelRatio || 1, transparent: true, antialias: true});
-    document.body.appendChild(this.app.view);
+    PIXI.settings.RESOLUTION = 2;
+
+    this.app = new PIXI.Application(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT, { backgroundColor: 0x000000, resolution: PIXI.settings.RESOLUTION || 1, transparent: true, antialias: true, view: document.getElementById('game-canvas') });
 
     this.stage = this.app.stage;
 
-    var self =this;
+    var self = this;
     var resizeFunction = function ()
     {
         var scaleFactor = Math.min(window.innerWidth / Main.SCREEN_WIDTH, window.innerHeight / Main.SCREEN_HEIGHT);
-        scaleFactor = scaleFactor > 1 ? 1 : scaleFactor;
-        const newWidth = Math.ceil(Main.SCREEN_WIDTH * scaleFactor * 0.99);
-        const newHeight = Math.ceil(Main.SCREEN_HEIGHT * scaleFactor  * 0.99);
-        self.app.renderer.view.style.width = `${newWidth}px`;
-        self.app.renderer.view.style.height = `${newHeight}px`;
+        var newWidth = Math.ceil(Main.SCREEN_WIDTH * scaleFactor * 1);
+        var newHeight = Math.ceil(Main.SCREEN_HEIGHT * scaleFactor * 0.99);
+        self.app.renderer.view.style.width = newWidth + "px";
+        self.app.renderer.view.style.height = newHeight + "px";
         self.app.renderer.resize(newWidth, newHeight);
-        self.stage.scale.set(scaleFactor); 
+        self.stage.scale.set(scaleFactor);
+        if (self.viewManager)
+            self.viewManager.currentView.resize();
     }
     window.addEventListener("resize", resizeFunction);
     resizeFunction();
@@ -54,125 +54,245 @@ function Main()
         authDomain: "mindgamesmkii.firebaseapp.com",
         databaseURL: "https://mindgamesmkii.firebaseio.com",
         projectId: "mindgamesmkii",
-        storageBucket: "mindgamesmkii.appspot.com",
-        messagingSenderId: "561069159843"
+        storageBucket: "mindgamesmkii.appspot.com"//,
+        //messagingSenderId: "561069159843"
     };
     firebase.initializeApp(config);
 
     //Initialize Database Interface
     this.db = new DBInterface();
+    this.util = new Utils();
     this.login();
 };
 
 Main.prototype.login = function ()
 {
     //If URL contains an ID parameter, extract it.
-    var urlid = getUrlVars(["prolific_pid", "id"]);
-    urlid = urlid.prolific_pid || urlid.id;
+    var urlid = getUrlVars(["prolific_pid"]);
+    urlid = urlid.prolific_pid;
+    var forcedCondition = parseInt(getUrlVars(["sesh"]).sesh) || null;
 
-    if (urlid)
+    if (urlid && urlid.length === 24)
     {
         var self = this;
-        if (urlid.length !== 24)
-        {
-            alert("Are you sure you entered your Prolific ID correctly? It's not the correct length!\nPlease check the URL contains your full Prolific ID");
-            window.location.href = Main.URL + "/index.html";
-            return;
-        }
         //Check whether user ID exists already
-        DBInterface.logUserIn(urlid, function (id, condition)
+        DBInterface.logUserIn(urlid, function (participant)
         {
-            firebase.auth().onAuthStateChanged(function(user)
+            DBInterface.getTodaysSessions(participant.getID(), function (sessionData)
             {
-                if (user)
+                if (self.session === undefined)
                 {
-                    //debug("User signed in, and Auth state changed");
-                }
-                else
-                {
-                    debug("User signed out");
+                    self.session = new Session(sessionData, participant, forcedCondition);
+
+                    self.visMonitor = new VisabilityMonitor(self.session, self);
+                    self.viewManager = new VMan(self.stage, self);
+
+                    buildTodaysScreens(self.session, self.viewManager);
+                    self.loadSprites(self.session.getCondition());
                 }
             });
-                self.setupSession(id, condition);
         });
     }
     else
     {
-        //the link had no ID var as a parameter and so the task cannot load.
-        var instructions = new PIXI.Text("Error: Invalid link \n\nMake sure you entered the URL correctly. If the problem persists please contact jim.lumsden@bristol.ac.uk",
-                                        { align: "center", font: "40px Arial", fill: "#ff0000", stroke: "#000000", strokeThickness: 2, wordWrap: true, wordWrapWidth: Main.WORD_WRAP_WIDTH });
-        instructions.x = Main.SCREEN_WIDTH / 2;
-        instructions.y = Main.SCREEN_HEIGHT / 2;
-        instructions.anchor = new PIXI.Point(0.5, 0.5);
-        this.stage.addChild(instructions);
-        this.renderer.render(this.stage);
+        alert("Are you sure you entered your Prolific ID correctly? It's should be 24 characters long\nPlease check the URL contains your full Prolific ID");
+        window.location.href = Main.URL + "/index.html";
     }
 }
 
-Main.prototype.setupSession = function (id, condition)
-{
-    var self = this;
-    DBInterface.getTodaysSessions(id, function (sessionData)
-    {
-        function cont()
-        {
-            //create Schedule
-            self.visMonitor = new VisabilityMonitor(self.session, self);
-            self.viewManager = new VMan(self.stage, self);
-            buildTodaysScreens(self.session, self.viewManager);
-            self.loadSprites(self.session.condition);
-        }
-        if (sessionData === -1)
-            debug("Today's session has been completed already");
-        else if ((sessionData === null || sessionData === undefined) && self.session === undefined)
-        {
-            self.session = new Session().initSession(id, condition, cont);
-        }
-        else
-        {
-            debug("Resuming previous session");
-            self.session = new Session().initSessionFromData(sessionData, cont);
-        }
-    });
-}
-
-Main.prototype.loadSprites = function ()
+Main.prototype.loadSprites = function(condition, levelNum)
 {
     var allVariantAssets = [
         "../resources/interface/background.png",
-        "../resources/interface/bottombar.png",
-            "../resources/interface/textBackground.png"];
+        "../resources/interface/bottombar.png"
+    ];
+    var nongameAssets = [
+        "../resources/interface/instructions1.png"
+    ];
+    var pointsAssets = [
+        "../resources/interface/pointsbackground.png",
+        "../resources/interface/Points_instructions1.png"
+    ];
+    var themeAssets = [
+        "../resources/interface/themeLoginBackground.jpg",
+        "../resources/theme/themeMisc/Map.png",
+        "../resources/interface/themeBackground.png",
+        "../resources/interface/Theme_instructions1.png"
+    ];
+
+    var levelThemeAssets = [
+        ["../resources/theme/themeMisc/progressLine0.png"],
+        ["../resources/theme/themeMisc/progressLine1.png"],
+        ["../resources/theme/themeMisc/progressLine2.png"],
+        ["../resources/theme/themeMisc/progressLine3.png"],
+        ["../resources/theme/themeMisc/progressLine4.png"],
+        ["../resources/theme/themeMisc/progressLine5.png"],
+        ["../resources/theme/themeMisc/progressLine6.png"],
+        ["../resources/theme/themeMisc/progressLine7.png"],
+        ["../resources/theme/themeMisc/progressLine8.png"],
+        ["../resources/theme/themeMisc/progressLine9.png"]
+    ];
+
+    //Add the additional assets into the load Array
+    Main.themeAssets = levelThemeAssets[levelNum];
+    if(condition === 0)
+        allVariantAssets.push.apply(allVariantAssets, nongameAssets);
+    if (condition === 1)
+        allVariantAssets.push.apply(allVariantAssets, pointsAssets);
+    if (condition === 2)
+    {
+        allVariantAssets.push.apply(allVariantAssets, themeAssets);
+        allVariantAssets.push.apply(allVariantAssets, Main.themeAssets);
+    }
+
+
     PIXI.loader.add(allVariantAssets).load(this.spritesLoaded.bind(this));
 };
 
 Main.prototype.spritesLoaded = function ()
 {
-    this.viewManager.setScreen("LOGIN");
-
-    //requestAnimationFrame(this.update.bind(this));
-    this.app.ticker.add(this.update.bind(this));
+    this.viewManager.setScreen("MAINMENU");
+    this.app.ticker.add(this.prepareNextFrame.bind(this));
     this.loadOtherSprites();
 };
 
-Main.prototype.loadOtherSprites = function ()
+Main.prototype.loadOtherSprites = function(condition)
 {
     var allVariantAssets = [
         "../resources/taskElements/fixation.png",
-        "../resources/interface/logo.png",
-        "../resources/interface/transparent.png"
+        "../resources/taskElements/stopsignal.png",
+        "../resources/interface/markout.png",
+        "../resources/interface/down.png",
+        "../resources/interface/up.png"
+    ];
+    var nongameAssets = [
+        "../resources/interface/instructions2.png",
+        "../resources/interface/instructions3.png",
+        "../resources/taskElements/blue.png",
+        "../resources/taskElements/yellow.png",
+        "../resources/taskElements/zones.png"
+    ];
+    var pointsAssets = [
+        "../resources/taskElements/blue.png",
+        "../resources/taskElements/bonusGlow.png",
+        "../resources/taskElements/bonusGlowNew.png",
+        "../resources/taskElements/bonusGlowReset.png",
+        "../resources/taskElements/yellow.png",
+        "../resources/taskElements/zones.png",
+        "../resources/interface/Points_instructions2.png",
+        "../resources/interface/Points_instructions4.png",
+        "../resources/interface/Points_instructions3.png"
     ];
 
+    var themeAssets = [
+        "../resources/interface/themeDarkener.png",
+        "../resources/interface/Theme_instructions2.png",
+        "../resources/interface/Theme_instructions3.png",
+        "../resources/interface/Theme_instructions4.png",
+        "../resources/theme/themeMisc/overlayer.png",
+        "../resources/interface/textspace.png"
+    ];
+    
+    var levelThemeAssets = [
+       "../resources/theme/Packville.png",
+       "../resources/theme/objects/BPackville.png",
+       "../resources/theme/objects/YPackville.png",
+               "../resources/theme/Paris.png",
+       "../resources/theme/objects/BParis.png",
+       "../resources/theme/objects/YParis.png",
+
+               "../resources/theme/GBDocks.png",
+       "../resources/theme/objects/BGBDocks.png",
+       "../resources/theme/objects/YGBDocks.png",
+
+               "../resources/theme/Russia.png",
+       "../resources/theme/objects/BRussia.png",
+       "../resources/theme/objects/YRussia.png",
+
+               "../resources/theme/Alps.png",
+       "../resources/theme/objects/BAlps.png",
+       "../resources/theme/objects/YAlps.png",
+
+               "../resources/theme/Hawaii.png",
+       "../resources/theme/objects/BHawaii.png",
+       "../resources/theme/objects/YHawaii.png",
+
+               "../resources/theme/Morocco.png",
+       "../resources/theme/objects/BMorocco.png",
+       "../resources/theme/objects/YMorocco.png",
+
+               "../resources/theme/Nepal.png",
+       "../resources/theme/objects/BNepal.png",
+       "../resources/theme/objects/YNepal.png",
+
+               "../resources/theme/Tokyo.png",
+       "../resources/theme/objects/BTokyo.png",
+       "../resources/theme/objects/YTokyo.png",
+
+               "../resources/theme/ISS.png",
+       "../resources/theme/objects/BISS.png",
+       "../resources/theme/objects/YISS.png"
+    ];
+    Main.themeAssets = levelThemeAssets;
+
+    if (condition === 0)
+        allVariantAssets.push.apply(allVariantAssets, nongameAssets);
+    if (condition === 1)
+        allVariantAssets.push.apply(allVariantAssets, pointsAssets);
+    if (condition === 2)
+    {
+        allVariantAssets.push.apply(allVariantAssets, themeAssets);
+        allVariantAssets.push.apply(allVariantAssets, Main.themeAssets);
+    }
+    
     PIXI.loader.add(allVariantAssets).load();
 }
 
 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+var totalLoopTime = 0;
+var loopCounter = 0;
+
+var totalLatencyTime = 0;
+var timerCounter = 0;
+
+//todo reset this at the start of each block
+var longFramesSinceStart = 0;
+
+var globalTime = 0;
+
 //This is the game loop
-Main.prototype.update = function(delta) {
-    this.viewManager.currentView.mainLoop(delta);
+
+//This delta which comes in is effectively: how many times longer than the last frame is this frame (this is what you should multiple distances moved by etc)
+//called at the end of one frame being displayed
+Main.prototype.prepareNextFrame = function (speedfactor)
+{
+    delta = Math.round(this.app.ticker.elapsedMS);
+    globalTime += delta;
+
+    if (delta > 30)
+        longFramesSinceStart++;
+    
+    totalLoopTime += delta;
+    loopCounter++;
+
+    Utils.checkAllTimers(delta);
+    this.viewManager.currentView.mainLoop(speedfactor);
     this.viewManager.checkAllScreens();
 }
 
+function checkLag()
+{
+    console.log("Average LoopTime:", totalLoopTime / loopCounter);
+    console.log("Percentage of Slow Frames:", longFramesSinceStart / loopCounter * 100);
+    console.log("Average Timer Latency:", totalLatencyTime / timerCounter);
+}
 
-
+function timeFunction(name)
+{
+    if (this.start)
+        console.log(name, performance.now() - this.start);
+    this.start = performance.now();
+}

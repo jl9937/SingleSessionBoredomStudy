@@ -14,12 +14,12 @@ MainMenu.prototype.create = function(stage, session)
 {
     this.createBasic(stage, session);
 
-    if (this.session.condition === Main.CONDITION_THEME)
+    if (this.session.getCondition() === Main.CONDITION_THEME)
     {
         this.backgroundFile = "themeLoginBackground.jpg";
         this.createBackground();
     }
-    else if (this.session.condition === Main.CONDITION_POINTS)
+    else if (this.session.getCondition() === Main.CONDITION_POINTS)
     {
         this.backgroundFile = "pointsbackground.png";
         this.createBackground();
@@ -134,7 +134,7 @@ MainMenu.prototype.createUserDataText = function(y)
     DBInterface.getParticipantDetails(this.session.id,
         function(details)
         {
-            var text = "User ID: " + self.session.id + "\nSessions Completed: " + details.sessionsCompleted + "\nReimbursement due: " + formatMoney(details.moneyEarned);
+            var text = "User ID: " + self.session.participant.getID() + "\nSessions Completed: " + self.session.participant.getSessionsCompleted() + "\nReimbursement due: " + formatMoney(self.session.participant.getMoneyEarned());
             text = text + self.session.getMainMenuText();
 
             var dataText = new PIXI.Text(text, { align: "center", font: "17px Arial", fill: "#FFFFFF" });

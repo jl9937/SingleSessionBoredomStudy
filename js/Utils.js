@@ -28,6 +28,11 @@ function checkForConsecutiveDuplicates(array)
     return false;
 }
 
+function getScreenSize()
+{
+    return (window.innerWidth + "x" + window.innerHeight);
+}
+
 function getBrowser()
 {
     var nAgt = navigator.userAgent;
@@ -109,31 +114,6 @@ function getOS()
     return os;
 }
 
-function doTimer(length, oncomplete)
-{
-    //Time resolution adjustments
-    var resolution = 100;
-    length = length - 10;
-
-    var steps = Math.floor((length / 100) * (resolution / 10)),
-        speed = Math.floor(length / steps),
-        count = 0,
-        start = new Date().getTime();
-
-    function instance()
-    {
-        if (count++ === steps)
-        {
-            oncomplete(steps, count);
-        } else
-        {
-            var diff = (new Date().getTime() - start) - (count * speed);
-            window.setTimeout(instance, (speed - diff));
-        }
-    }
-
-    window.setTimeout(instance, speed);
-}
 
 function deleteKeyboards(keys)
 {
@@ -214,47 +194,93 @@ function formatMoney(moneyin)
    
 }
 
-
-(function (w)
+var timers; 
+function Utils()
 {
-    var oldST = w.setTimeout;
-    var oldSI = w.setInterval;
-    var oldCI = w.clearInterval;
-    var timers = [];
-    w.timers = timers;
-    w.setTimeout = function (fn, delay)
+    timers = [];
+}
+
+function Timer(time, callback)
+{
+    this.time = time;
+    this.started = Math.round(performance.now());
+    this.duration = 0;
+    this.callback = callback;
+    this.alive = true;
+    this.frameStarted = loopCounter;
+}
+
+Timer.prototype.print  = function()
+{
+    if (this.time === 150)
+        console.log("Intended Duration", this.time, "Duration:", this.duration, "Frames Alive", this.framesLive());
+}
+
+Timer.prototype.framesLive = function()
+{
+    return loopCounter - this.frameStarted;
+}
+
+Timer.prototype.check = function(delta)
+{
+    if (this.alive)
     {
-        var id = oldST(function ()
+        //ensure the frame has been displayed for at least 1 frame before we start timing.
+        if (this.framesLive() < 0)
         {
-            fn && fn();
-            removeTimer(id);
-        }, delay);
-        timers.push(id);
-        return id;
-    };
-    w.setInterval = function (fn, delay)
-    {
-        var id = oldSI(fn, delay);
-        timers.push(id);
-        return id;
-    };
-    w.clearInterval = function (id)
-    {
-        oldCI(id);
-        removeTimer(id);
-    };
-    w.clearTimeout = w.clearInterval;
+            this.alive = false;
+            this.callback();
+        }
+        else if (this.framesLive() <= 1)
+            this.duration = 0;
+        else
+            this.duration += delta;
 
-    function removeTimer(id)
-    {
-        var index = timers.indexOf(id);
-        if (index >= 0)
-            timers.splice(index, 1);
+        if (this.duration >= this.time)
+        {
+            this.alive = false;
+            this.callback();
+        }
     }
-}(window));
+}
 
-function clearAllTimers()
+Utils.checkAllTimers = function (delta)
 {
     for (var i = timers.length; i--;)
-        clearInterval(timers[i]);
+        timers[i].check(delta);
+    for (var i = timers.length; i--;)
+    {
+        if(!timers[i].alive)
+            timers.splice(i, 1);
+    }
 }
+
+Utils.setNewTimers = function (endofFrameTime)
+{
+    for (var i = timers.length; i--;)
+    {
+        if (timers[i].framesLive === 0)
+            this.started = endofFrameTime;
+    }
+}
+
+Utils.clearTimer = function(timer)
+{
+    for (var i = timers.length; i--;)
+    {
+        if (timers[i] === timer)
+        {
+            timers.splice(i, 1);
+        }
+    }
+}
+
+Utils.doTimer =function(time, callback)
+{
+    if (time <= 0)
+        time = 15000;
+    var newtimer = new Timer(time, callback);
+    timers.push(newtimer);
+    return newtimer;
+}
+

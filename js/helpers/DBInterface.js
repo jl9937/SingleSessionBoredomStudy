@@ -45,26 +45,10 @@ DBInterface.firebaseSignin = function (username, password, prolificID, callback,
     {
         if (user)
         {
-            debug("user signed in:", user.displayName, user.uid);
-            //Try to get the participant's details.
-            //If they don't exist, then make a new participant
-            //If they do exist, then pass the details back to the main menu
+            debug("User signed in:", user.displayName, user.uid);
             DBInterface.getParticipantDetails(prolificID, function (data)
             {
-                if (!data)
-                {
-                    debug("New Participant -> Assigning to condition");
-                    DBInterface.assignToCondition(function (newlyAssignedcondition)
-                    {
-                        DBInterface.createNewParticipant(newlyAssignedcondition, prolificID);
-                        callback(prolificID, newlyAssignedcondition);
-                    });
-                }
-                else
-                {
-                    debug("Returning Participant");
-                    callback(data.id, data.condition);
-                }
+                callback(new Participant(prolificID, data));
             });
         }
     }).catch(errorCallback);
@@ -76,77 +60,29 @@ function sendBugToLog(error)
     debug(error.message);
 }
 
-DBInterface.assignToCondition = function (callback)
-{
-    var self = this;
-    DBInterface.databaseRef.child("Conditions").once("value", function (snapshot)
-    {
-        var data = snapshot.val();
-        var assignedCondition;
 
-        //Is the DB initialised? If not, initialise it
-        if (!data)
-        {
-            self.databaseRef.child("Conditions").update(
-            {
-                "condition1": 0,
-                "condition2": 0
-            });
-            data = {};
-            data.condition1 = 0;
-            data.condition2 = 0;
-        }
-
-        //if (data.condition1 < data.condition2)
-        //    assignedCondition = 1;
-        //else
-        //    assignedCondition = 2;
-        assignedCondition = Math.floor(Math.random() * 2)+1;
-        
-        switch (assignedCondition)
-        {
-            case 1:
-                self.databaseRef.child("Conditions").update({ "condition1": data.condition1 + 1 });
-                break;
-            case 2:
-                self.databaseRef.child("Conditions").update({ "condition2": data.condition2 + 1 });
-                break;
-        }
-
-        callback(assignedCondition);
-    });
-}
 
 ///////////////////////////////////Savers////////////////////////////////////////
 DBInterface.saveSession = function (session)
 {
-    var blocks = session.BERT_blocks;
-    for (var i = 0; i < blocks.length; i++)
-    {
-        delete blocks[i].session;
-        delete blocks[i].stimuli;
-        delete blocks[i].trials;
-    }
-    var currblock = session.BERT_currentBlock;
-    delete session.BERT_currentBlock;
-
-    var stage = session.PART_studyStage;
-    var enddate = session.PART_enddate;
-    var trainingenddate = session.PART_trainingEndDate;
-    delete session.PART_studyStage;
-    delete session.PART_enddate;
-    delete session.PART_trainingEndDate;
+    var _participant = session.participant;
+    delete session.participant;
 
     var json = JSON.parse(JSON.stringify(session));
     DBInterface.databaseRef.child("Sessions")
-        .child("id_" + session.id)
+        .child("id_" + _participant.getID())
         .child(session.getDateSessionString())
         .update(json);
 
-    session.BERT_currentBlock = currblock;
-    session.PART_studyStage = stage;
-    session.PART_enddate = enddate;
-    session.PART_trainingEndDate = trainingenddate;
+    session.participant = _participant;
+}
+
+DBInterface.saveParticipant = function (participant)
+{
+    var json = JSON.parse(JSON.stringify(participant));
+    DBInterface.databaseRef.child("Participants")
+        .child("id_" + participant.id)
+        .update(json);
 }
 
 DBInterface.saveTrial = function (trial)
@@ -223,29 +159,7 @@ DBInterface.getParticipantDetails = function (id, callback)
     });
 }
 
-DBInterface.createNewParticipant = function (condition, id)
-{
-    var id_path = "id_" + id;
-    var dateRegistered = Date.now();
-    var trainingEndDate = new Date(dateRegistered).add(7).days();
-    //this is cumulative
-    var enddate = new Date(dateRegistered).add(21).days();
 
-    DBInterface.databaseRef.child("Participants").child(id_path).update(
-        {
-            "condition": condition,
-            "datetimeRegistered": dateRegistered.toString("dd-MM-yyyy HH:mm:ss"),
-            "id": id,
-            "moneyEarned": 0,
-            "sessionsCompleted": 0,
-            "sessionsBegun": 0,
-            "studyCompleted": false,
-            "studyStage": 0,
-            "endDate": enddate.toString("dd-MM-yyyy"),
-            "trainingEndDate": trainingEndDate.toString("dd-MM-yyyy")
-        }
-    );
-}
 
 DBInterface.increaseParticipantSessionsBegun = function (id)
 {

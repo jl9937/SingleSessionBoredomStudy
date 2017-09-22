@@ -14,7 +14,7 @@ History.prototype.create = function (stage, db, session)
 
 History.prototype.createHistory = function ()
 {
-    var backButton = new ClickButton(Main.SCREEN_HEIGHT - 30, "Main Menu", this.buttonClicked.bind(this, "LOGIN"), Main.SCREEN_WIDTH - 210, 0.65);
+    var backButton = new ClickButton(Main.SCREEN_HEIGHT - 30, "Main Menu", this.buttonClicked.bind(this, "MAINMENU"), Main.SCREEN_WIDTH - 210, 0.65);
     this.addChild(backButton);
 
     this.createTitleText();
