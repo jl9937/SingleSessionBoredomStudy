@@ -30,6 +30,16 @@ Session.prototype.initSession = function (participant, forcedCondition)
     this.date = Date.now().toString("dd-MM-yyyy");
 }
 
+Session.prototype.setSchedule = function(_schedule)
+{
+    this.schedule = _schedule;
+}
+
+Session.prototype.getSchedule = function()
+{
+    return this.schedule;
+}
+
 Session.prototype.initSessionFromData = function (sessionData)
 {
     var keys = Object.keys(sessionData);
@@ -68,16 +78,16 @@ Session.prototype.getCompletionLevel = function ()
 
 Session.prototype.getNextSessionElementScreenName = function ()
 {
-    if (this.completionLevel > SCHEDULE.length)
-        return "MAINMENULOGIN";
+    if (this.completionLevel > this.schedule.length)
+        return "MAINMENU";
     else
-        return SCHEDULE[this.completionLevel];
+        return this.schedule[this.completionLevel + 1];
 }
 
 Session.prototype.setCurrentSessionElementComplete = function ()
 {
     this.completionLevel++;
-    if (this.completionLevel >= SCHEDULE.length)
+    if (this.completionLevel >= this.schedule.length)
     {
         this.completionLevel = Session.COMPLETE_ALL;
         DBInterface.updateParticipantDataWithCompletedSession(this);
@@ -106,9 +116,9 @@ Session.prototype.getEndDateString = function ()
     return this.PART_enddate;
 }
 
-Session.prototype.getParticipantStage = function ()
+Session.prototype.getDayNumber = function ()
 {
-    return this.PART_studyStage;
+    return this.participant.getSessionsCompleted() + 1;
 }
 
 Session.prototype.getEmotionTaskInitialBlock = function ()
@@ -125,27 +135,27 @@ Session.prototype.getMainMenuText = function ()
     switch (this.getCompletionLevel())
     {
         case Session.COMPLETE_NOTHING:
-            text += "";
+            switch (this.getDayNumber())
+            {
+                case 1:
+                    text += "\n\nWelcome to the first session of this study\nPlease press 'Begin' to get started";
+                    break;
+                case 2:
+                    text += "\n\nThis is your second session of the study\nPlease press 'Begin' to get started" + this.getTrainingEndDateString();
+                    break;
+                case 3:
+                    text += "\n\nThis is your third and final session\nPlease press 'Begin' to get started" + this.getTrainingEndDateString();
+                    break;
+            }
             break;
         case Session.COMPLETE_ALL:
             text += "\n\nToday's session has been completed already";
             break;
         default:
-            text += "\n\nWe noticed that you left and have returned,\ndon't worry, you can pick up where you left off";
+            text += "\n\nIt seems that you closed the page!\nDon't worry, you can continue\nfrom where you left off";
             break;
     }
-    switch (this.getParticipantStage())
-    {
-        case Session.STAGE_BASELINE:
-            text += "\n\nWelcome to the first session of this study.\nPlease press 'Begin' to get started";
-            break;
-        case Session.STAGE_DAILYTRAINING1:
-            text += "\n\nThis is your second session of the study\nPlease press 'Begin' to get started" + this.getTrainingEndDateString();
-            break;
-        case Session.STAGE_DAILYTRAINING2:
-            text += "\n\nThis is your third and final session of the study\nPlease press 'Begin' to get started" + this.getTrainingEndDateString();
-            break;
-    }
+    
     return text;
 }
 

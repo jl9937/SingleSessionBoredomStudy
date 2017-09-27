@@ -9,6 +9,11 @@ function View()
     this.moveToScreen = -1;
 }
 
+View.prototype.setNextScreen = function (_defaultNextScreen)
+{
+    this.nextScreenToGoTo = _defaultNextScreen;
+}
+
 View.prototype.createBasic = function (stage, _session)
 {
     stage.addChild(this);

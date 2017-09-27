@@ -15,7 +15,7 @@ function ClickButton(_ypos, _text, callback, _xpos , scale, choice)
     PIXI.Graphics.call(this);
 
     _ypos = _ypos || Main.SCREEN_HEIGHT - 150;
-    scale = scale || 1.2;
+    scale = scale || 1;
     this.text = _text;
     this.state = 0;
 

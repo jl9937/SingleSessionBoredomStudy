@@ -25,6 +25,11 @@ function GenericScreen(_condition, _options)
     View.call(this);
 }
 
+GenericScreen.prototype.setNextScreen = function (_defaultNextScreen)
+{
+    this.options.nextScreenToGoTo = _defaultNextScreen;
+}
+
 GenericScreen.prototype.create = function(stage, db, session)
 {
     this.createBasic(stage, db, session);
@@ -80,7 +85,7 @@ GenericScreen.prototype.createScreenText = function (text)
     var instructions = new PIXI.Text(text, { align: "center", font: "28px Arial", fill: "#FFFFFF", wordWrapWidth: Main.WORD_WRAP_WIDTH , wordWrap: true });
     instructions.anchor = new PIXI.Point(0.5, 0.5);
     instructions.x = Main.SCREEN_WIDTH / 2;
-    instructions.y = Main.SCREEN_HEIGHT / 2;
+    instructions.y = Main.SCREEN_HEIGHT / 2 - 50;
     this.addChild(instructions);
 }
 

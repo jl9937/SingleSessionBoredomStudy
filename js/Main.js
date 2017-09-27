@@ -2,7 +2,7 @@
 Main.URL = "https://mindgamesmkii.firebaseapp.com";
 
 Main.SCREEN_WIDTH = 1024;
-Main.SCREEN_HEIGHT = 739;
+Main.SCREEN_HEIGHT = 730;
 Main.WORD_WRAP_WIDTH = 800;
 
 Main.CONDITION_NONGAME = 0;
@@ -10,7 +10,11 @@ Main.CONDITION_POINTS = 1;
 Main.CONDITION_THEME = 2;
 
 
-Main.COMPLETION_LINK = "https://www.prolific.ac/submissions/592d4b16b97ad000017443f2/complete?cc=G6NBHMYI";
+Main.COMPLETION_LINKS = [
+    "https://prolific.ac/submissions/complete?cc=QEEZRN9P", //Session 1
+    "https://prolific.ac/submissions/complete?cc=65XD4MES", //Session 2
+    "https://prolific.ac/submissions/complete?cc=OKF5BZ1W" //Session 3
+];
 
 //debug switch
 Main.isDebug = false;

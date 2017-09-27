@@ -7,10 +7,18 @@ function VMan(_stage, main)
 };
 
 //VMan.prototype.addScreen = function(name, object)
-VMan.addScreens = function (basename, objects)
+VMan.addScreens = function (basename, objects, nextScreen)
 {
-    for (var i = 0; i < objects.length; i++)
-        VMan.viewArray.push({ "name": basename + (i+1), "screen": objects[i] });
+    var i = 0;
+    for(; i < objects.length; i++)
+    {
+        objects[i].setNextScreen(basename + (i + 1));
+        if (i === 0)
+            VMan.viewArray.push({ "name": basename, "screen": objects[i] });
+        else
+            VMan.viewArray.push({ "name": basename + (i), "screen": objects[i] });
+    }
+    objects[i - 1].setNextScreen(nextScreen);
 }
 
 //VMan.prototype.addScreen = function(name, object)

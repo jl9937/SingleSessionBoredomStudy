@@ -28,7 +28,7 @@ function Block(_session, _blocktype)
 
 }
 
-Block.prototype.print = function ()
+Block.prototype.printSelf = function ()
 {
     var blocktype = "";
     var condition = "";
@@ -184,7 +184,7 @@ Block.prototype.endOfBlock = function ()
 
 Block.prototype.saveToDB = function()
 {
-    this.print();
+    this.printSelf();
     // also save to DB;
 }
 

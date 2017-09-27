@@ -1,133 +1,54 @@
-﻿Trial.HAPPY = 1;
-Trial.SAD = 2;
-
+﻿
 //object for a trial: Stores trial data and subsidiary calculation variables.
-function Trial(_session, _trialNum, _block, _stimulusNumber)
+function Trial(_id, _overallTrialNumber, _blockTrialNumber, _blockNumber, _colour, _stimulusPath, _stopTrial, _SSD, _staircase, _ITIDuration)
 {
-    this.session = _session;
-    this.trialNum = _trialNum;
-    this.block = _block;
-    this.stimulusNumber = _stimulusNumber;
-    this.stimulusPath = "../resources/faces/face_" + this.stimulusNumber + ".jpg";
+    this.id = _id;
+    this.overallTrialNumber = _overallTrialNumber;
+    this.blockTrialNumber = _blockTrialNumber;
+    this.blockNumber = _blockNumber;
+    this.colour = _colour;
+    this.stimulusPath = _stimulusPath;
+    this.stopTrial = _stopTrial;
+    this.SSD = _SSD;
+    this.staircase = _staircase || -1;
+    this.ITIDuration = _ITIDuration;
+    this.stopTrialVisibility = 0; // 0 = not yet displayed // -1 = hidden //  1 = displayed
 
-    this.fixationDuration = Math.floor(Math.random() * (Engine.HIGHITI - Engine.LOWITI)) + Engine.LOWITI;
+    this.pointsGained = 0;
+    this.score = -1;
+    this.bonus = -1;
+
+    this.date = Date.now().toString("dd-MM-yyyy");
     this.dateTime = Date.now().toString("dd-MM-yyyy HH:mm:ss");
-    
+
+
     this.response = -1;
     this.responseTime = -1;
     this.correct = -1;
 
-    this.classification = this.getClassification();
-
     //calculation only
     this.RTTimingStart = -1;
-
-    switch (this.block.getBlocktype())
-    {
-        case Block.BASELINE:
-            this.blocktype = "Baseline";
-            break;
-        case Block.TRAINING:
-            this.blocktype = "Training";
-            break;
-        case Block.TEST:
-            this.blocktype = "Test";
-            break;
-    };
-    this.id = this.session.getID();
-    this.sessionNum = this.session.getSessionNumber();
-    this.condition = this.session.getCondition();
 };
 
-Trial.prototype.print = function ()
+Trial.prototype.print = function (verbose)
 {
-    var blocktype = "";
-    switch (this.block.getBlocktype())
-    {
-    case Block.BASELINE:
-        blocktype = "Baseline";
-        break;
-    case Block.TRAINING:
-            blocktype = "Training";
-            break;
-    case Block.TEST:
-            blocktype = "Test";
-            break;
-    };
-    var response = this.response === Trial.HAPPY ? "Happy" : "Sad";
-    debug(blocktype + " T:" + this.trialNum + " Face:" + this.stimulusNumber + " R:" + response, this.responseTime + "ms Cr: " + this.correct + " Classif: " + this.classification);
+    verbose = verbose || 0;
+    //IF (verbose)
+    //.log("T: " + this.id, this.overallTrialNumber, this.blockTrialNumber, this.blockNumber, this.colour, this.stopTrial, this.SSD, this.ITIDuration, this.date, this.dateTime, this.response, this.responseTime, this.correct);
+    //else
+    //console.log("T: " + this.overallTrialNumber, this.colour + " St:" + this.stopTrial, this.hiddenStopTrial, this.SSD, this.staircase + " Cr:" + this.correct, this.responseTime);
 }
 
-Trial.prototype.saveToDB = function ()
-{
-    this.print();
-    DBInterface.saveTrial(this);
-}
-
-Trial.prototype.getFixationDuration = function()
-{
-    return this.fixationDuration;
-}
-
-Trial.prototype.getClassification = function ()
-{
-    if (this.block.getBlocktype() !== Block.TRAINING)
-        return "N/A";
-
-    if (this.stimulusNumber <= this.block.calculateBalancePoint())
-        return Trial.HAPPY;
-    if (this.stimulusNumber > this.block.calculateBalancePoint())
-        return Trial.SAD;
-
-    //Some stimulus are fixed regardless of balance point
-    if (this.stimulusNumber < 4)
-        return Trial.HAPPY;
-    if (this.stimulusNumber > 13)
-        return Trial.SAD;
-}
-
-Trial.prototype.getResponse = function()
-{
-    return this.response;
-}
-
-Trial.prototype.getCorrect = function()
-{
-    return this.correct;
-}
-
-Trial.prototype.getStimulusPath = function()
-{
-    return this.stimulusPath;
-}
-
-Trial.prototype.startTiming = function()
-{
-    this.RTTimingStart = Date.now().getTime();
-}
-
-Trial.prototype.getFeedbackPicture = function ()
-{
-    if (this.getCorrect())
-        return "../resources/interface/correct.png";
-    else
-        return "../resources/interface/incorrect.png";
-}
-
-Trial.prototype.getCategorisationPicture = function ()
-{
-    if (this.classification === Trial.HAPPY)
-        return "../resources/interface/thatFaceWasHappy.png";
-    else
-        return "../resources/interface/thatFaceWasSad.png";
-}
-
-Trial.prototype.submitResponse = function (_response)
+Trial.prototype.setResponse = function (_response, _responseTime, _correct)
 {
     this.response = _response;
-    this.responseTime = Date.now().getTime() - this.RTTimingStart;
-    this.correct = this.classification === this.response ? true : false;
-    if (this.block.getBlocktype() !== Block.TRAINING)
-        this.correct = "N/A";
-    this.saveToDB();
+    this.responseTime = _responseTime || this.responseTime;
+    this.correct = _correct;
+}
+
+Trial.prototype.saveToDB = function (db, session)
+{
+    this.unixTime = Number(Date.now());
+    this.print();
+    db.saveTrial(session, this);
 }

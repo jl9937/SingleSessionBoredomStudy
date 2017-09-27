@@ -74,21 +74,24 @@ MainMenu.prototype.createMainMenu = function()
     this.createUserDataText(Main.SCREEN_HEIGHT / 2 - 118);
     
     var startButton;
+
+    var startButtony = Main.SCREEN_HEIGHT / 2 + 20;
+
     if (this.session.getCompletionLevel() === Session.COMPLETE_NOTHING)
-        startButton = new ClickButton(Main.SCREEN_HEIGHT / 2, "Begin", this.buttonClicked.bind(this, this.nextScreenToGoTo), 0,0.8);
+        startButton = new ClickButton(startButtony, "Begin", this.buttonClicked.bind(this, this.nextScreenToGoTo));
     else if (this.session.getCompletionLevel() === Session.COMPLETE_ALL)
     {
-        startButton = new ClickButton(Main.SCREEN_HEIGHT / 2 + 20, "Begin", this.buttonClicked.bind(this, this.nextScreenToGoTo), 0, 0.8);
+        startButton = new ClickButton(startButtony, "Begin", this.buttonClicked.bind(this, this.nextScreenToGoTo));
         startButton.disable();
     }
     else
-        startButton = new ClickButton(Main.SCREEN_HEIGHT / 2 + 20, "Continue", this.buttonClicked.bind(this, this.session.getNextSessionElementScreenName()), 0, 0.8);
+        startButton = new ClickButton(startButtony, "Continue", this.buttonClicked.bind(this, this.session.getNextSessionElementScreenName()));
 
-    var downloadInstructions = new ClickButton(Main.SCREEN_HEIGHT / 2 + 90, "Instructions", function ()
+    var downloadInstructions = new ClickButton(startButtony + 145, "Instructions", function ()
     {
         window.open("/task_instructions.pdf");
         focus();
-    }, 0, 0.8);
+    });
 
     this.addChild(downloadInstructions);
     this.addChild(startButton);
@@ -103,7 +106,7 @@ MainMenu.prototype.createUserDataText = function(y)
             var text = "User ID: " + self.session.participant.getID() + "\nSessions Completed: " + self.session.participant.getSessionsCompleted() + "\nReimbursement due: " + formatMoney(self.session.participant.getMoneyEarned());
             text = text + self.session.getMainMenuText();
 
-            var dataText = new PIXI.Text(text, { align: "center", font: "17px Arial", fill: "#FFFFFF" });
+            var dataText = new PIXI.Text(text, { align: "center", font: "14px Arial", fill: "#FFFFFF" });
             dataText.x = Main.SCREEN_WIDTH / 2;
             dataText.anchor = new PIXI.Point(0.5, 0);
             dataText.y = Math.round(y - (dataText.height / 2));
