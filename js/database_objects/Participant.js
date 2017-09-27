@@ -1,23 +1,29 @@
-﻿function Participant(id, participantData)
+﻿function Participant(id, participantData, _callback)
 {
+    this.callback = _callback;
     if (participantData)
         this.initParticipantFromData(participantData);
     else
         this.initParticipant(id);
-    this.print();
+}
+
+Participant.prototype.loaded = function()
+{
+    //this.printSelf();
     this.saveToDB();
+    this.callback(this);
 }
 
 Participant.prototype.initParticipant = function(id)
 {
     this.id = id;
-    this.conditionOrder = this.assignToConditionOrder();
     this.sessionsCompleted = 0;
     this.datetimeRegistered = Date.now().toString("dd-MM-yyyy HH:mm:ss");
     this.moneyEarned = 0;
     this.sessionsBegun = 0;
     this.studyComplete = false;
-    this.optionalBlocksCompleted = {"0": 0, "1": 0, "2": 0}
+    this.optionalBlocksCompleted = { "0": 0, "1": 0, "2": 0 }
+    this.assignToConditionOrder(this.loaded.bind(this));
 }
 
 Participant.prototype.getID = function()
@@ -48,9 +54,10 @@ Participant.prototype.initParticipantFromData = function (participantData)
     var keys = Object.keys(participantData);
     for (var i = 0; i < keys.length; i++)
         this[keys[i]] = participantData[keys[i]];
+    this.loaded();
 }
 
-Participant.prototype.print = function ()
+Participant.prototype.printSelf = function ()
 {
     console.log(this);
 }
@@ -61,47 +68,14 @@ Participant.prototype.saveToDB = function ()
 }
 
 
-
-Participant.prototype.assignToConditionOrder = function ()
+Participant.prototype.assignToConditionOrder = function(callback)
 {
+    var self = this;
     debug("New Participant -> Assigning to condition");
-    return "012";
-
-    //todo Here assign participants to a counterbalanced order, and record it
-    //DBInterface.databaseRef.child("Conditions").once("value", function (snapshot)
-    //{
-    //    var data = snapshot.val();
-    //    var assignedCondition;
-
-    //    //Is the DB initialised? If not, initialise it
-    //    if (!data)
-    //    {
-    //        self.databaseRef.child("Conditions").update(
-    //        {
-    //            "condition1": 0,
-    //            "condition2": 0
-    //        });
-    //        data = {};
-    //        data.condition1 = 0;
-    //        data.condition2 = 0;
-    //    }
-
-    //    //if (data.condition1 < data.condition2)
-    //    //    assignedCondition = 1;
-    //    //else
-    //    //    assignedCondition = 2;
-    //    assignedCondition = Math.floor(Math.random() * 2) + 1;
-
-    //    switch (assignedCondition)
-    //    {
-    //        case 1:
-    //            self.databaseRef.child("Conditions").update({ "condition1": data.condition1 + 1 });
-    //            break;
-    //        case 2:
-    //            self.databaseRef.child("Conditions").update({ "condition2": data.condition2 + 1 });
-    //            break;
-    //    }
-
-    //    callback(assignedCondition);
-    //});
+    DBInterface.getSmallestConditionOrderGroup(function(_conditionOrder)
+    {
+        self.conditionOrder = _conditionOrder;
+        DBInterface.incrementConditionCounter(self.conditionOrder);
+        callback();
+    });
 }

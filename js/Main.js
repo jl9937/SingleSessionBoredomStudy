@@ -2,7 +2,7 @@
 Main.URL = "https://mindgamesmkii.firebaseapp.com";
 
 Main.SCREEN_WIDTH = 1024;
-Main.SCREEN_HEIGHT = 730;
+Main.SCREEN_HEIGHT = 739;
 Main.WORD_WRAP_WIDTH = 800;
 
 Main.CONDITION_NONGAME = 0;
@@ -35,8 +35,8 @@ function Main()
     var resizeFunction = function ()
     {
         var scaleFactor = Math.min(window.innerWidth / Main.SCREEN_WIDTH, window.innerHeight / Main.SCREEN_HEIGHT);
-        var newWidth = Math.ceil(Main.SCREEN_WIDTH * scaleFactor * 1);
-        var newHeight = Math.ceil(Main.SCREEN_HEIGHT * scaleFactor * 0.99);
+        var newWidth = Math.ceil(Main.SCREEN_WIDTH * scaleFactor);
+        var newHeight = Math.ceil(Main.SCREEN_HEIGHT * scaleFactor);
         self.app.renderer.view.style.width = newWidth + "px";
         self.app.renderer.view.style.height = newHeight + "px";
         self.app.renderer.resize(newWidth, newHeight);
@@ -269,6 +269,7 @@ var globalTime = 0;
 //called at the end of one frame being displayed
 Main.prototype.prepareNextFrame = function (speedfactor)
 {
+    
     delta = Math.round(this.app.ticker.elapsedMS);
     globalTime += delta;
 

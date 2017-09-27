@@ -80,3 +80,14 @@ View.prototype.setSkin = function (session)
         this.backgroundFile = "themeBackground.png";
     }
 }
+
+View.prototype.createBottomBar = function ()
+{
+    var sprite = new PIXI.Sprite.fromImage("../resources/interface/bottombar.png");
+    PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
+    sprite.scale.x = Main.SCREEN_WIDTH / sprite.width;
+    sprite.scale.y = sprite.scale.x;
+    sprite.x = 0;
+    sprite.y = Main.SCREEN_HEIGHT - sprite.height;
+    this.addChild(sprite);
+};

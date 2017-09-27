@@ -59,22 +59,15 @@ MainMenu.prototype.createBallLoop = function (slot)
         setTimeout(this.createBallLoop.bind(this, (slot + 1 % 8)), timeout);
     }
 }
-MainMenu.prototype.mainLoop = function ()
+MainMenu.prototype.mainLoop = function (speedfactor)
 {
     if (this.condition === Main.CONDITION_POINTS)
     {
         for (var i = 0 ; i < this.balls.length; i++)
-            this.balls[i].update();
+            this.balls[i].update(speedfactor);
     }
 }
 
-MainMenu.prototype.createBottomBar = function()
-{
-    var sprite = new PIXI.Sprite.fromImage("../resources/interface/bottombar.png");
-    sprite.x = 0;
-    sprite.y = 689;
-    this.addChild(sprite);
-};
 MainMenu.prototype.createMainMenu = function()
 {
     this.createTitleText();
@@ -90,41 +83,14 @@ MainMenu.prototype.createMainMenu = function()
     }
     else
         startButton = new ClickButton(Main.SCREEN_HEIGHT / 2 + 20, "Continue", this.buttonClicked.bind(this, this.session.getNextSessionElementScreenName()), 0, 0.8);
-    
-    var secondBlocky = Main.SCREEN_HEIGHT / 2 + 170;
-
-    var linkExplanation = new PIXI.Text("The link below is your UNIQUE link to the study, please make a note of it. If you forget the link for any reason, simply come back to this page through Prolific Academic",
-        { align: "center", font: "17px Arial", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: Main.WORD_WRAP_WIDTH });
-
-   //todo ad the history button back in
-    linkExplanation.x = Math.round(Main.SCREEN_WIDTH / 2, 0) - Math.round(linkExplanation.width / 2, 0);
-    linkExplanation.y = secondBlocky;
-    
-
-    var link = new InputElement(secondBlocky + 65, 600, Main.URL + "/task.html?prolific_pid=" + this.session.getID(), true);
-
-    var copytoclipboard = new ClickButton(secondBlocky + 140, "Copy link", function ()
-    {
-        var dummy = document.createElement("input");
-        document.body.appendChild(dummy);
-        dummy.style.display = 'hidden';
-        dummy.setAttribute("id", "dummy_id");
-        document.getElementById("dummy_id").value = link.getValue();
-        dummy.select();
-        document.execCommand("copy");
-        document.body.removeChild(dummy);
-    }, 0, 0.36);
 
     var downloadInstructions = new ClickButton(Main.SCREEN_HEIGHT / 2 + 90, "Instructions", function ()
     {
         window.open("/task_instructions.pdf");
         focus();
     }, 0, 0.8);
-    
-    this.addChild(link);
+
     this.addChild(downloadInstructions);
-    this.addChild(linkExplanation);
-    this.addChild(copytoclipboard);
     this.addChild(startButton);
 };
 
@@ -132,7 +98,7 @@ MainMenu.prototype.createUserDataText = function(y)
 {
     var self = this;
     DBInterface.getParticipantDetails(this.session.id,
-        function(details)
+        function()
         {
             var text = "User ID: " + self.session.participant.getID() + "\nSessions Completed: " + self.session.participant.getSessionsCompleted() + "\nReimbursement due: " + formatMoney(self.session.participant.getMoneyEarned());
             text = text + self.session.getMainMenuText();
@@ -144,6 +110,7 @@ MainMenu.prototype.createUserDataText = function(y)
             self.addChild(dataText);
         });
 };
+
 MainMenu.prototype.createTitleText = function()
 {
     var instructions = new PIXI.Text(this.titleText, { align: "center", font: "100px Verdana", fill: "#ffc000", stroke: "#000000", strokeThickness: 8, mitrelimit: 20 });

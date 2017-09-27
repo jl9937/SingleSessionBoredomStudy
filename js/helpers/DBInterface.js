@@ -48,7 +48,7 @@ DBInterface.firebaseSignin = function (username, password, prolificID, callback,
             debug("User signed in:", user.displayName, user.uid);
             DBInterface.getParticipantDetails(prolificID, function (data)
             {
-                callback(new Participant(prolificID, data));
+                var p = new Participant(prolificID, data, callback);
             });
         }
     }).catch(errorCallback);
@@ -159,7 +159,47 @@ DBInterface.getParticipantDetails = function (id, callback)
     });
 }
 
+DBInterface.getSmallestConditionOrderGroup = function(callback)
+{
+    function findMinKey(object)
+    {
+        var keys = Object.keys(object);
+        var minKeyIndex = 0;
+        for (var i = 0; i < keys.length; i++)
+            if(object[keys[i]] < object[keys[minKeyIndex]])
+                minKeyIndex = i;
+        return keys[minKeyIndex];
+    }
 
+    DBInterface.databaseRef.child("Conditions").once("value",
+        function(snapshot)
+        {
+            var data = snapshot.val();
+            //Is the DB initialised? If not, initialise it
+            if (!data)
+            {
+                var initialise = {
+                    "012": 0,
+                    "021": 0,
+                    "102": 0,
+                    "120": 0,
+                    "201": 0,
+                    "210": 0
+                }
+                DBInterface.databaseRef.child("Conditions").update(initialise);
+                data = initialise;
+            }
+            callback(findMinKey(data));
+        });
+}
+
+DBInterface.incrementConditionCounter = function (condition)
+{
+    DBInterface.databaseRef.child("Conditions").child(condition).transaction(function(value)
+    {
+        return (value || 0) + 1;
+    });
+}
 
 DBInterface.increaseParticipantSessionsBegun = function (id)
 {

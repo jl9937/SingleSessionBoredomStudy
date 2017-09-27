@@ -50,14 +50,14 @@ Session.prototype.getVersionHash = function ()
     xhttp.send();
 }
 
-Session.prototype.print = function ()
+Session.prototype.printSelf = function ()
 {
     console.log(this);
 }
 
 Session.prototype.saveToDB = function ()
 {
-    this.print();
+    this.printSelf();
     DBInterface.saveSession(this);
 }
 
@@ -140,16 +140,10 @@ Session.prototype.getMainMenuText = function ()
             text += "\n\nWelcome to the first session of this study.\nPlease press 'Begin' to get started";
             break;
         case Session.STAGE_DAILYTRAINING1:
-            text += "\n\nThis is your second session of the study\nPlease complete before four sessions before " + this.getTrainingEndDateString();
+            text += "\n\nThis is your second session of the study\nPlease press 'Begin' to get started" + this.getTrainingEndDateString();
             break;
         case Session.STAGE_DAILYTRAINING2:
-            text += "\n\nThis is your third session of the study\nPlease complete before four sessions before " + this.getTrainingEndDateString();
-            break;
-        case Session.STAGE_IMMEDIATETEST:
-            text += "\n\nThis is the final session of the week,\nand your fourth session of the study.\nPlease complete it before " + this.getTrainingEndDateString();
-            break;
-        case Session.STAGE_FINALTEST:
-            text += "\n\nThis is the final session\nit is only completable on/after " + this.getEndDateString();
+            text += "\n\nThis is your third and final session of the study\nPlease press 'Begin' to get started" + this.getTrainingEndDateString();
             break;
     }
     return text;

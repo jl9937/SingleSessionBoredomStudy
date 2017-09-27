@@ -19,13 +19,13 @@ function FallingBall(_stage)
     this.vy = 0;
     this.vx = 0;
 
-    this.limit = 580;
+    this.limit = 584;
     this.atFloor = false;
 
     this.stage.addChild(this);
 }
 
-FallingBall.prototype.update = function()
+FallingBall.prototype.update = function(speedfactor)
 {
     if (this.y > Main.SCREEN_HEIGHT && this.x > Main.SCREEN_WIDTH)
     {
@@ -42,8 +42,8 @@ FallingBall.prototype.update = function()
         this.vy += 0.005 ;
     }
 
-    this.y += this.vy;
-    this.x += this.vx;
+    this.y += this.vy * speedfactor;
+    this.x += this.vx * speedfactor;
 
     if (this.x >= 905)
     {

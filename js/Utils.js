@@ -210,7 +210,7 @@ function Timer(time, callback)
     this.frameStarted = loopCounter;
 }
 
-Timer.prototype.print  = function()
+Timer.prototype.printSelf  = function()
 {
     if (this.time === 150)
         console.log("Intended Duration", this.time, "Duration:", this.duration, "Frames Alive", this.framesLive());
@@ -284,3 +284,40 @@ Utils.doTimer =function(time, callback)
     return newtimer;
 }
 
+function getTrialsForBlock(first)
+{
+    first = first || 0;
+    var firstsubblockInit = [
+    "gB", "gB", "gB", "gB", "gB", "gB", "gB", "gB",
+    "gY", "gY", "gY", "gY", "gY", "gY", "gY", "gY"
+    ];
+    var subblockInit = [
+        "gB", "sB1", "gB", "gB", "gB", "sY3", "gB", "gB",
+        "gY", "sY0", "gY", "gY", "sB2", "gY", "gY", "gY"
+    ];
+    var allTrials = [];
+    for (var i = 0; i < Engine.SUBBLOCKS; i++)
+    {
+        var subblockCopy = subblockInit.slice();
+        if (first)
+            subblockCopy = firstsubblockInit.slice();
+        subblockCopy = shuffleArray(subblockCopy);
+        subblockCopy = shuffleArray(subblockCopy);
+        subblockCopy = shuffleArray(subblockCopy);
+        allTrials.push.apply(allTrials, subblockCopy);
+        first = 0;
+    }
+    return allTrials;
+
+    function shuffleArray(array)
+    {
+        for (var i = 0; i < array.length; i++)
+        {
+            var swapIndex = i + Math.floor(Math.random() * (array.length - i));
+            var temp = array[i];
+            array[i] = array[swapIndex];
+            array[swapIndex] = temp;
+        }
+        return array;
+    }
+}
