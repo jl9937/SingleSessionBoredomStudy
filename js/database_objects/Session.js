@@ -30,15 +30,6 @@ Session.prototype.initSession = function (participant, forcedCondition)
     this.date = Date.now().toString("dd-MM-yyyy");
 }
 
-Session.prototype.setSchedule = function(_schedule)
-{
-    this.schedule = _schedule;
-}
-
-Session.prototype.getSchedule = function()
-{
-    return this.schedule;
-}
 
 Session.prototype.initSessionFromData = function (sessionData)
 {
@@ -95,14 +86,11 @@ Session.prototype.setCurrentSessionElementComplete = function ()
     }
     DBInterface.saveSession(this);
     debug("Completion Level now ", this.completionLevel);
-
-
+    
     totalLoopTime = 0;
     longFramesSinceStart = 0;
     loopCounter = 0;
 }
-
-
 
 
 /////////////////////////////////////////////////////////////Setters and getters//////////////////////////////////////////////////////////////////////
@@ -119,14 +107,6 @@ Session.prototype.getEndDateString = function ()
 Session.prototype.getDayNumber = function ()
 {
     return this.participant.getSessionsCompleted() + 1;
-}
-
-Session.prototype.getEmotionTaskInitialBlock = function ()
-{
-    if (this.PART_studyStage === Session.STAGE_FINALTEST)
-        return Block.TEST;
-    else
-        return Block.BASELINE;
 }
 
 Session.prototype.getMainMenuText = function ()
@@ -159,74 +139,6 @@ Session.prototype.getMainMenuText = function ()
     return text;
 }
 
-Session.prototype.recordAverageBPS = function (bps, trialNumber)
-{
-    if (this.EFF_averageBPS === 0)
-        this.EFF_averageBPS = bps;
-    else
-        this.EFF_averageBPS = (((trialNumber - 1) * this.EFF_averageBPS) + bps) / trialNumber;
-};
-Session.prototype.recordChoice = function (difficulty)
-{
-    if (difficulty === EffortTrial.EASY)
-        this.EFF_easyChoices++;
-    else
-        this.EFF_hardChoices++;
-}
-
-//todo make changes here
-Session.prototype.setCalibrationPresses = function (trialNumber, presses)
-{
-    switch (trialNumber)
-    {
-        case 1:
-            this.EFF_calibration.easyPresses = presses;
-            break;
-        case 2:
-            this.EFF_calibration.hardPresses = presses;
-            break;
-        case 3:
-            this.EFF_calibration.mediumPresses = presses;
-            break;
-        case 4:
-            this.EFF_calibration.finalCalibrationPresses = presses;
-            break;
-    }
-    this.saveToDB();
-}
-
-Session.prototype.setAverageCalibrationBPS = function (calibration_bps)
-{
-    this.EFF_calibration.averageBPS = calibration_bps;
-    this.saveToDB();
-}
-
-Session.prototype.getAverageCalibrationBPS = function ()
-{
-    return this.EFF_calibration.averageBPS;
-}
-
-Session.prototype.getRequiredHardPresses = function ()
-{
-    var requiredPresses = this.EFF_calibration.averageBPS * 20 * 1.10;
-    if (requiredPresses > 300)
-        requiredPresses = 300;
-    if (requiredPresses < 50)
-        requiredPresses = 50;
-    return requiredPresses;
-};
-
-Session.prototype.setCurrentBlock = function (block)
-{
-    this.BERT_blocks[block.getBlocktype()] = block;
-    this.BERT_currentBlock = block.getBlocktype();
-}
-
-Session.prototype.getBaselineBP = function ()
-{
-    return this.BERT_blocks[Block.BASELINE].calculateBalancePoint();
-}
-
 Session.prototype.getCondition = function ()
 {
     return this.condition;
@@ -252,13 +164,13 @@ Session.prototype.setMoneyWon = function (earnings)
     this.moneyWon = earnings;
 }
 
-Session.prototype.getNextBlock = function ()
+Session.prototype.setSchedule = function (_schedule)
 {
-    switch (this.BERT_currentBlock)
-    {
-        case Block.BASELINE:
-            return Block.TRAINING;
-        case Block.TRAINING:
-            return Block.TEST;
-    };
+    this.schedule = _schedule;
 }
+
+Session.prototype.getSchedule = function ()
+{
+    return this.schedule;
+}
+

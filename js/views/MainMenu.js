@@ -106,7 +106,7 @@ MainMenu.prototype.createUserDataText = function(y)
             var text = "User ID: " + self.session.participant.getID() + "\nSessions Completed: " + self.session.participant.getSessionsCompleted() + "\nReimbursement due: " + formatMoney(self.session.participant.getMoneyEarned());
             text = text + self.session.getMainMenuText();
 
-            var dataText = new PIXI.Text(text, { align: "center", font: "14px Arial", fill: "#FFFFFF" });
+            var dataText = new PIXI.Text(text, { align: "center", font: "16px Arial", fill: "#FFFFFF" });
             dataText.x = Main.SCREEN_WIDTH / 2;
             dataText.anchor = new PIXI.Point(0.5, 0);
             dataText.y = Math.round(y - (dataText.height / 2));

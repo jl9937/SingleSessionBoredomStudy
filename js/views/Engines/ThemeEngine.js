@@ -25,13 +25,13 @@ ThemeEngine.prototype.mainLoop = function (speedfactor)
         //check for a position then activate rapid fadeout
         if(this.stimulusSprite.x < 280 || this.stimulusSprite.x > Main.SCREEN_WIDTH - 280)
             this.stimulusSprite.valpha = -0.08 * speedfactor;
-        if (this.stimulusSprite.y > Main.SCREEN_HEIGHT - Engine.THEME_YCUTOFFS[this.session.levelNum])
+        if (this.stimulusSprite.y > Main.SCREEN_HEIGHT - ThemeEngine.THEME_YCUTOFFS[this.locationIndex])
             this.stimulusSprite.alpha = 0;
     }
 }
 /////////////////////////////////////////////////////////////////////////////////
 
-ThemeEngine.prototype.setupForCondition = function ()
+ThemeEngine.prototype.setupTaskBackground = function ()
 {
     this.zones = new PIXI.Sprite.fromImage(Main.themeAssets[0]);
     this.overlayer = new PIXI.Sprite.fromImage("../resources/theme/themeMisc/overlayer.png");
@@ -39,7 +39,7 @@ ThemeEngine.prototype.setupForCondition = function ()
     this.yellowPath = Main.themeAssets[2];
 }
 
-ThemeEngine.prototype.setBlockForCondition = function (first)
+ThemeEngine.prototype.setupBlock = function ()
 {
     if (this.darkener)
         this.removeChild(this.darkener);
@@ -47,7 +47,8 @@ ThemeEngine.prototype.setBlockForCondition = function (first)
     this.addChild(this.zones);
     this.addChild(this.overlayer);
     this.addChild(this.progress);
-    this.runBlock(first);
+    //todo update this after each choice
+    this.locationIndex = 0;
 }
 
 ThemeEngine.prototype.getSlowdownText = function()
@@ -57,17 +58,17 @@ ThemeEngine.prototype.getSlowdownText = function()
 
 ThemeEngine.prototype.getyAdjustment =function()
 {
-    return Engine.THEME_yADJUSTMENT[this.session.levelNum];
+    return ThemeEngine.THEME_yADJUSTMENT[this.locationIndex];
 }
 
 ThemeEngine.prototype.startAnimation = function (stimulusSprite, direction)
 {
     stimulusSprite.gravity = 1.5;
-    stimulusSprite.vx = direction * ThemeEngine.THEME_XVELOCITY[this.session.levelNum];
+    stimulusSprite.vx = direction * ThemeEngine.THEME_XVELOCITY[this.locationIndex];
     stimulusSprite.vy = -17;
 }
 
-ThemeEngine.prototype.setupBreakForCondition = function()
+ThemeEngine.prototype.setupBreak = function()
 {
     this.removeChild(this.progress);
     this.darkener = new PIXI.Sprite.fromImage("../resources/interface/themeDarkener.png");

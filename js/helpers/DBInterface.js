@@ -88,22 +88,17 @@ DBInterface.saveParticipant = function (participant)
 DBInterface.saveTrial = function (trial)
 {
     var session = trial.session;
-    var block = trial.block;
-    var RTTimingStart = trial.RTTimingStart;
-
     delete trial.session;
-    delete trial.block;
+    delete trial.responseWindowOpen;
     delete trial.RTTimingStart;
 
-    var json = JSON.parse(JSON.stringify(trial));
-    DBInterface.databaseRef.child("BERTTrials")
-        .child("id_" + session.id)
-        .child(session.getDateSessionString()).child(block.getBlocktypeString()).child(trial.trialNum)
+   var json = JSON.parse(JSON.stringify(trial));
+    DBInterface.databaseRef.child("Trials")
+        .child("id_" + session.getID())
+        .child(session.getDateSessionString()).child(trial.overallTrialNumber)
         .update(json);
 
     trial.session = session;
-    trial.block = block;
-    trial.RTTimingStart = RTTimingStart;
 }
 
 DBInterface.saveEffortTrial = function (trial)

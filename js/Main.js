@@ -104,7 +104,7 @@ Main.prototype.login = function ()
     }
 }
 
-Main.prototype.loadSprites = function(condition, levelNum)
+Main.prototype.loadSprites = function(condition)
 {
     var allVariantAssets = [
         "../resources/interface/background.png",
@@ -124,21 +124,7 @@ Main.prototype.loadSprites = function(condition, levelNum)
         "../resources/interface/Theme_instructions1.png"
     ];
 
-    var levelThemeAssets = [
-        ["../resources/theme/themeMisc/progressLine0.png"],
-        ["../resources/theme/themeMisc/progressLine1.png"],
-        ["../resources/theme/themeMisc/progressLine2.png"],
-        ["../resources/theme/themeMisc/progressLine3.png"],
-        ["../resources/theme/themeMisc/progressLine4.png"],
-        ["../resources/theme/themeMisc/progressLine5.png"],
-        ["../resources/theme/themeMisc/progressLine6.png"],
-        ["../resources/theme/themeMisc/progressLine7.png"],
-        ["../resources/theme/themeMisc/progressLine8.png"],
-        ["../resources/theme/themeMisc/progressLine9.png"]
-    ];
-
     //Add the additional assets into the load Array
-    Main.themeAssets = levelThemeAssets[levelNum];
     if(condition === 0)
         allVariantAssets.push.apply(allVariantAssets, nongameAssets);
     if (condition === 1)
@@ -157,7 +143,7 @@ Main.prototype.spritesLoaded = function ()
 {
     this.viewManager.setScreen("MAINMENU");
     this.app.ticker.add(this.prepareNextFrame.bind(this));
-    this.loadOtherSprites();
+    this.loadOtherSprites(this.session.getCondition());
 };
 
 Main.prototype.loadOtherSprites = function(condition)
@@ -244,12 +230,17 @@ Main.prototype.loadOtherSprites = function(condition)
     if (condition === 1)
         allVariantAssets.push.apply(allVariantAssets, pointsAssets);
     if (condition === 2)
-    {
         allVariantAssets.push.apply(allVariantAssets, themeAssets);
-        allVariantAssets.push.apply(allVariantAssets, Main.themeAssets);
-    }
     
-    PIXI.loader.add(allVariantAssets).load();
+    PIXI.loader.add(allVariantAssets).load(function()
+    {
+        if (condition === 2)
+            PIXI.loader.add(levelThemeAssets).load();
+    });
+
+    
+
+
 }
 
 
