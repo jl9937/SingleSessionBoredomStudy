@@ -6,7 +6,7 @@ Engine.STIMULI_DUR = 900;
 Engine.SUBBLOCKS = 4;
 Engine.BREAKLENGTH = 10;
 
-Engine.TRIALLIMIT = 1000;
+Engine.TRIALLIMIT = 2;
 Engine.ALLSTOP = 0;
 
 /////////////////////////////////////Required////////////////////////////////////////
@@ -34,7 +34,6 @@ Engine.prototype.create = function(stage, db, session)
     this.progress.height = 5;
     this.setupTaskBackground();
 
-
     this.startBlock(1);
 }
 
@@ -60,16 +59,7 @@ Engine.prototype.runTrialorBreakorEndTask = function()
     if (this.blockTrialNum < Engine.TRIALLIMIT && this.blockTrialNum < this.trialArray.length)
         this.startTrial(this.trialArray[this.blockTrialNum]);
     else
-    {
-        this.blockNum++;
-        //if (this.blockNum === Engine.BLOCKS)
-        //{
-        //    this.session.endOfSession();
-        //    this.moveToScreen = "POSTTASK";
-        //}
-        //else
         this.setupBreak();
-    }
 }
 
 Engine.prototype.startTrial = function (trialType)
@@ -157,33 +147,42 @@ Engine.prototype.finishTrial = function ()
     this.overallTrialNum++;
     this.blockTrialNum++;
 
-    this.progress.width = (Main.SCREEN_WIDTH / (Engine.SUBBLOCKS * 16)) * this.overallTrialNum;
+    this.progress.width = (Main.SCREEN_WIDTH / (Engine.SUBBLOCKS * 16)) * this.blockTrialNum;
     this.runTrialorBreakorEndTask();
 }
 
-Engine.prototype.displayBreak = function ()
+//todo limit this from happening more than 8 times or whatever it is
+Engine.prototype.displayContinueChoice = function ()
 {
-    var time = Engine.BREAKLENGTH;
-    var breakText = new PIXI.Text(this.getBreakText() + time + " seconds",
-                                   { align: "center", font: "30px Arial", fill: "#FFFFFF" });
+    this.removeChild(this.zones);
+    this.removeChild(this.progress);
+
+    var self = this;
+    var choiceTextString = "Block completed!\n\n\nYou are free to end today's session now if you wish.\n\nAlternatively, you may complete another two-minute round of testing and earn an additional " + this.session.getNextBlockRewardString() + ".\n\nWould you like to continue?";
+    var breakText = new PIXI.Text(choiceTextString,
+                                   { align: "center", font: "30px Arial", fill: "#FFFFFF", wordWrapWidth: Main.WORD_WRAP_WIDTH , wordWrap: true });
     breakText.x = Main.SCREEN_WIDTH / 2;
     breakText.y = Main.SCREEN_HEIGHT / 2;
     breakText.anchor = new PIXI.Point(0.5, 0.5);
-    this.addChild(breakText);
-    
-    Utils.doTimer(1000, updateBreaktext.bind(this, breakText, 9));
-    function updateBreaktext(text, time)
+
+
+    var quitButton = new ClickButton(Main.SCREEN_HEIGHT - 100, "No", this.endTask.bind(this), breakText.x + 100, 1);
+    var continueButton = new ClickButton(Main.SCREEN_HEIGHT - 100, "Yes", function()
     {
-        if (time !== -1)
-        {
-            breakText.text = this.getBreakText() + time + " seconds";
-            Utils.doTimer(1000, updateBreaktext.bind(this, breakText, time - 1));
-        } else
-        {
-            this.removeChild(breakText);
-            this.startBlock();
-        }
-    }
+        self.removeChild(breakText);
+        self.removeChild(continueButton);
+        self.removeChild(quitButton);
+        self.postContinueChoice();
+    }, breakText.x-400, 1);
+    
+    this.addChild(continueButton);
+    this.addChild(quitButton);
+    this.addChild(breakText);
+}
+
+Engine.prototype.endTask = function () {
+    this.session.endOfSession();
+    this.moveToScreen = "POSTTASK";
 }
 
 
@@ -234,8 +233,6 @@ Engine.prototype.showForTimeThenCallback = function (picture, time, callback, _y
 
     return sprite;
 }
-
-
 
 ////////////////////////Get Trials for Block/////////////////////
 

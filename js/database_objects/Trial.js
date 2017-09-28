@@ -1,12 +1,12 @@
 ﻿
 //object for a trial: Stores trial data and subsidiary calculation variables.
-function Trial(_session, _overallTrialNumber, _blockTrialNumber, _blockNumber, trialType, staircases, bluePath, yellowPath)
+function Trial(_session, _overallTrialNumber, _blockTrialNum, _blockNumber, trialType, staircases, bluePath, yellowPath)
 {
     this.session = _session;
     this.participantID = this.session.getID();
 
     this.overallTrialNumber = _overallTrialNumber + 1;
-    this.blockTrialNumber = _blockTrialNumber;
+    this.blockTrialNum = _blockTrialNum;
     this.blockNumber = _blockNumber;
 
     this.colour = trialType[1];
@@ -41,7 +41,7 @@ Trial.prototype.print = function (verbose)
 {
     verbose = verbose || 0;
     if (verbose)
-        console.log("T: " + this.id, this.overallTrialNumber, this.blockTrialNumber, this.blockNumber, this.colour, this.stopTrial, this.SSD, this.ITIDuration, this.response, this.responseTime, this.correct);
+        console.log("T: " + this.id, this.overallTrialNumber, this.blockTrialNum, this.blockNumber, this.colour, this.stopTrial, this.SSD, this.ITIDuration, this.response, this.responseTime, this.correct);
     else
         console.log("T: " + this.overallTrialNumber, this.colour + " St:" + this.stopTrial, this.stopTrialVisibility, this.SSD, this.staircase + " Cr:" + this.correct, this.responseTime);
 }

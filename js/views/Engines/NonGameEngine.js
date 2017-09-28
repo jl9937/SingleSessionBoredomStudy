@@ -49,16 +49,17 @@ NonGameEngine.prototype.startAnimation = function (stimulusSprite, direction)
 
 NonGameEngine.prototype.setupBreak = function ()
 {
-    this.removeChild(this.progress);
-    this.displayBreak();
-}
-
-NonGameEngine.prototype.getBreakText = function ()
-{
-    return "Block completed:\n\nContinue responding as fast as you can\n\nThe task will continue\nin ";
+    this.displayContinueChoice();
 }
 
 NonGameEngine.prototype.conditionSpecificProcessing = function (trlObj)
 {
     
+}
+
+NonGameEngine.prototype.postContinueChoice = function ()
+{
+    //todo record everything in the DB here
+    this.blockNum++;
+    Utils.doTimer(300, this.startBlock.bind(this));
 }

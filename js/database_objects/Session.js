@@ -30,6 +30,11 @@ Session.prototype.initSession = function (participant, forcedCondition)
     this.date = Date.now().toString("dd-MM-yyyy");
 }
 
+Session.prototype.getNextBlockRewardString = function()
+{
+    //todo build this into the task with the money earner etc
+    return "63p";
+}
 
 Session.prototype.initSessionFromData = function (sessionData)
 {
