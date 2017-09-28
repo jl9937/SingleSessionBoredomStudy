@@ -92,6 +92,8 @@ GenericScreen.prototype.createScreenText = function (text)
 GenericScreen.prototype.createMainImage = function(imagepath)
 {
     var mainimage = new PIXI.Sprite.fromImage(imagepath);
+    mainimage.height = 730;
+    mainimage.width = 1024;
     this.addChild(mainimage);
 }
 

@@ -132,7 +132,7 @@ Session.prototype.getMainMenuText = function ()
             text += "\n\nToday's session has been completed already";
             break;
         default:
-            text += "\n\nIt seems that you closed the page!\nDon't worry, you can continue\nfrom where you left off";
+            text += "\n\nDid you close the page?\nDon't worry, you can continue\nfrom where you left off";
             break;
     }
     

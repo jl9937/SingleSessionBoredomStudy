@@ -5,8 +5,6 @@ Engine.FIXATION = 500;
 Engine.STIMULI_DUR = 900;
 Engine.SUBBLOCKS = 4;
 Engine.BREAKLENGTH = 10;
-Engine.BONUSSTREAK = 3;
-Engine.SCORETEXTY = Main.SCREEN_HEIGHT / 2 + 200;
 
 Engine.TRIALLIMIT = 1000;
 Engine.ALLSTOP = 0;
@@ -48,6 +46,7 @@ Engine.prototype.setupBasics = function ()
 
 Engine.prototype.startBlock = function(first)
 {
+    longFramesSinceStart = 0;
     this.setupBlockOnlyVisuals();
     this.blockTrialNum = 0;
     this.progress.width = 0;

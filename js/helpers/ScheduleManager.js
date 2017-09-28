@@ -89,24 +89,22 @@ function makeTask(name, nextpage, session)
                new GenericScreen(session.getCondition(), {
                    picture1: "../resources/interface/instructions1.png",
                    buttonText: "Next page",
-                   nextScreenToGoTo: "INSTRUCTIONS2",
-                   buttonYPos: Main.SCREEN_HEIGHT - 30,
+                   buttonYPos: Main.SCREEN_HEIGHT - 60,
                    buttonXPos: Main.SCREEN_WIDTH - 210,
                    buttonScale: 0.65
                }),
                new GenericScreen(session.getCondition(), {
                    picture1: "../resources/interface/instructions2.png",
                    buttonText: "Next page",
-                   nextScreenToGoTo: "INSTRUCTIONS3",
-                   buttonYPos: Main.SCREEN_HEIGHT - 30,
+                   buttonYPos: Main.SCREEN_HEIGHT - 60,
                    buttonXPos: Main.SCREEN_WIDTH - 210,
                    buttonScale: 0.65
                }),
                new GenericScreen(session.getCondition(), {
                    picture1: "../resources/interface/instructions3.png",
                    buttonText: "Start!",
-                   nextScreenToGoTo: "ENGINE",
-                   buttonYPos: Main.SCREEN_HEIGHT - 70
+                   buttonYPos: Main.SCREEN_HEIGHT - 60,
+                   buttonScale: 0.85
                }),
                new NonGameEngine()
             ], nextpage);
@@ -117,7 +115,7 @@ function makeTask(name, nextpage, session)
                    background: "../resources/interface/background.png",
                    picture1: "../resources/interface/Points_instructions1.png",
                    buttonText: "Next page",
-                   buttonYPos: Main.SCREEN_HEIGHT - 30,
+                   buttonYPos: Main.SCREEN_HEIGHT - 60,
                    buttonXPos: Main.SCREEN_WIDTH - 210,
                    buttonScale: 0.65
                }),
@@ -125,7 +123,7 @@ function makeTask(name, nextpage, session)
                    background: "../resources/interface/background.png",
                    picture1: "../resources/interface/Points_instructions2.png",
                    buttonText: "Next page",
-                   buttonYPos: Main.SCREEN_HEIGHT - 30,
+                   buttonYPos: Main.SCREEN_HEIGHT - 60,
                    buttonXPos: Main.SCREEN_WIDTH - 210,
                    buttonScale: 0.65
                }),
@@ -133,7 +131,7 @@ function makeTask(name, nextpage, session)
                    background: "../resources/interface/background.png",
                    picture1: "../resources/interface/Points_instructions3.png",
                    buttonText: "Next page",
-                   buttonYPos: Main.SCREEN_HEIGHT - 30,
+                   buttonYPos: Main.SCREEN_HEIGHT - 60,
                    buttonXPos: Main.SCREEN_WIDTH - 210,
                    buttonScale: 0.65
                }),
@@ -141,7 +139,7 @@ function makeTask(name, nextpage, session)
                    background: "../resources/interface/background.png",
                    picture1: "../resources/interface/Points_instructions4.png",
                    buttonText: "Start!",
-                   buttonYPos: Main.SCREEN_HEIGHT - 60,
+                   buttonYPos: Main.SCREEN_HEIGHT - 70,
                    buttonScale: 0.8
                }),
                new PointsEngine()

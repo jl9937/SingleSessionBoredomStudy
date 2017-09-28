@@ -28,6 +28,7 @@ function Main()
     else
         debug = function () { }
 
+    //PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
     PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
     PIXI.settings.RESOLUTION = 2;
 
@@ -45,8 +46,6 @@ function Main()
         self.app.renderer.view.style.height = newHeight + "px";
         self.app.renderer.resize(newWidth, newHeight);
         self.stage.scale.set(scaleFactor);
-        if (self.viewManager)
-            self.viewManager.currentView.resize();
     }
     window.addEventListener("resize", resizeFunction);
     resizeFunction();

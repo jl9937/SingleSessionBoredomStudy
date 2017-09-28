@@ -130,3 +130,30 @@ Trial.prototype.isResponseWindowOpen = function()
 {
     return this.responseWindowOpen;
 }
+
+//Returns -1, 0, 1
+//  1 : Correct Go Trial or HiddenStopTrial
+//  0 : Incorrect Go Trial or HiddenStopTrial
+// -1 : Failed inhibition 
+
+Trial.prototype.calculateScore = function(currentscore, currentbonus)
+{
+    this.score = currentscore;
+    this.bonus = currentbonus;
+
+    this.pointsGained = 0;
+    if ((this.correct && !this.isStopTrial()) || this.wasStopTrialHidden() && this.response === this.colour)
+    {
+        this.pointsGained = currentbonus * Math.floor((Engine.STIMULI_DUR - this.getResponseTime()) / 5);
+        return 1;
+    }
+    if (!this.correct && this.isStopTrial() && !this.wasStopTrialHidden())
+        return -1;
+    if (this.correct === false)
+        return 0;
+}
+
+Trial.prototype.getTrialPoints = function ()
+{
+    return this.pointsGained;
+}
