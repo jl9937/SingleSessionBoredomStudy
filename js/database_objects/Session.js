@@ -118,7 +118,7 @@ Session.prototype.getMainMenuText = function ()
             switch (this.getDayNumber())
             {
                 case 1:
-                    text += "\n\nWelcome to the first session of this study\nPlease press 'Begin' to get started";
+                    text += "\n\nWelcome to your first session\nPlease press 'Begin' to get started";
                     break;
                 case 2:
                     text += "\n\nThis is your second session of the study\nPlease press 'Begin' to get started" + this.getTrainingEndDateString();

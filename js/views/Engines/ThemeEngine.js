@@ -39,7 +39,7 @@ ThemeEngine.prototype.setupTaskBackground = function ()
     this.yellowPath = Main.themeAssets[2];
 }
 
-ThemeEngine.prototype.setupBlock = function ()
+ThemeEngine.prototype.setupBlockOnlyVisuals = function ()
 {
     if (this.darkener)
         this.removeChild(this.darkener);
@@ -76,7 +76,12 @@ ThemeEngine.prototype.setupBreak = function()
     this.displayBreak();
 }
 
-ThemeEngine.prototype.getBreaktext = function()
+ThemeEngine.prototype.getBreakText = function()
 {
     return  "Round completed:\n\nContinue sorting as fast as you can\n\nThe game will continue\nin ";
+}
+
+ThemeEngine.prototype.conditionSpecificProcessing = function(trlObj)
+{
+    
 }

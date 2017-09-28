@@ -1,14 +1,12 @@
-Engine.LOWITI = 500;
-Engine.HIGHITI = 1000;
+Engine.LOWITI = 300;
+Engine.HIGHITI = 700;
 
 Engine.FIXATION = 500;
 Engine.STIMULI_DUR = 900;
-Engine.BLOCKS = 5;
-Engine.SUBBLOCKS = 3;
+Engine.SUBBLOCKS = 4;
 Engine.BREAKLENGTH = 10;
 Engine.BONUSSTREAK = 3;
 Engine.SCORETEXTY = Main.SCREEN_HEIGHT / 2 + 200;
-
 
 Engine.TRIALLIMIT = 1000;
 Engine.ALLSTOP = 0;
@@ -20,53 +18,64 @@ function Engine(_condition)
     View.call(this);
     this.condition = _condition;
 }
+
 Engine.prototype.create = function(stage, db, session)
 {
     this.createBasic(stage, db, session);
-    this.setupBasics();
-    this.setupTaskBackground();
-    this.setupBlock(1);
-    this.blockTrialNum = 0;
-    this.trialArray = getTrialsForBlock(1);
 
-    this.runTrial();
-}
-
-Engine.prototype.setupBasics = function ()
-{
+    //setup taask parameters
     this.overallTrialNum = 0;
     this.blockNum = 0;
-    this.staircases = [new Staircase(150, 0.5), new Staircase(250, 0.5), new Staircase(350, 0.5), new Staircase(400, 0.5)];
+    this.staircases = [new Staircase(100, 0.5), new Staircase(200, 0.5), new Staircase(300, 0.5), new Staircase(400, 0.5)];
+
+    this.currentSubBlockSumRT = 0;
+    this.baseSubBlockAverageRT = 1000;
 
     this.progress = new PIXI.Sprite.fromImage("../resources/interface/markout.png");
     this.progress.y = 5;
     this.progress.height = 5;
+    this.setupTaskBackground();
 
-    this.currentSubBlockSumRT = 0;
-    this.baseSubBlockAverageRT = 1000;
+
+    this.startBlock(1);
+}
+
+Engine.prototype.setupBasics = function ()
+{
+
 }
 /////////////////////////////////////////////////////////////////////////////////
 
-Engine.prototype.runTrial = function()
+Engine.prototype.startBlock = function(first)
+{
+    this.setupBlockOnlyVisuals();
+    this.blockTrialNum = 0;
+    this.progress.width = 0;
+    this.trialArray = getTrialsForBlock(first);
+
+    this.runTrialorBreakorEndTask();
+}
+
+Engine.prototype.runTrialorBreakorEndTask = function()
 {
     if (this.blockTrialNum < Engine.TRIALLIMIT && this.blockTrialNum < this.trialArray.length)
         this.startTrial(this.trialArray[this.blockTrialNum]);
     else
     {
         this.blockNum++;
-        if (this.blockNum === Engine.BLOCKS)
-        {
-            this.session.endOfSession();
-            this.moveToScreen = "POSTTASK";
-        }
-        else
-            this.displayBreak();
+        //if (this.blockNum === Engine.BLOCKS)
+        //{
+        //    this.session.endOfSession();
+        //    this.moveToScreen = "POSTTASK";
+        //}
+        //else
+        this.setupBreak();
     }
 }
 
 Engine.prototype.startTrial = function (trialType)
 {
-    //Subblock shift
+    //Subblock RT shift?
     if (this.overallTrialNum % 16 === 15)
     {
         var currentAVRT = this.currentSubBlockSumRT / 16;
@@ -77,97 +86,80 @@ Engine.prototype.startTrial = function (trialType)
         this.currentSubBlockSumRT = 0;
     }
 
-    //////////////Set up trial//////////////
-    var stopTrial = 0;
-    var SSD = -1;
-    if (trialType[0] === "s")
-    {
-        stopTrial = 1;
-        SSD = this.staircases[trialType[2]].getSSD();
-    }
-    var stimulus = trialType[1] === "Y" ? this.yellowPath : this.bluePath;
-    var colour = trialType[1];
-    var ITIDuration = Math.floor(Math.random() * (Engine.HIGHITI - Engine.LOWITI)) + Engine.LOWITI;
-    //todo build all this into the Trial object generation, so it's neater
-    var trialObject = new Trial(this.session.getID(), this.overallTrialNum, this.blockTrialNum, this.blockNum, colour, stimulus, stopTrial, SSD, trialType[2], ITIDuration, this.session);
-
-
-    this.showForTimeThenThenCallback("../resources/taskElements/fixation.png", Engine.FIXATION, this.openResponseWindow.bind(this, trialObject, this.getyAdjustment()), this.getyAdjustment());
+    var trlObj = new Trial(this.session,this.overallTrialNum,this.blockTrialNum,this.blockNum,trialType,this.staircases,this.bluePath,this.yellowPath);
+    this.showForTimeThenCallback("../resources/taskElements/fixation.png", Engine.FIXATION, this.openResponseWindow.bind(this, trlObj), this.getyAdjustment());
 }
 
 
-Engine.prototype.openResponseWindow = function (trialObject, yAdjustment)
+Engine.prototype.openResponseWindow = function (trlObj)
 {
-    trialObject.startTiming();
-    var stimulusSprite = this.stimulusSprite = this.displayStimulusThenCallback(trialObject.stimulusPath, Engine.STIMULI_DUR, this.closeResponseWindow.bind(this, trialObject), yAdjustment); //stimulus displayed here
+    trlObj.startTiming();
+    this.stimulusSprite = this.dispTrialThenCallback(trlObj, this.closeResponseWindow.bind(this, trlObj)); 
 
     var left = keyboard(37);
     var right = keyboard(39);
     var processResponse = this.processResponse.bind(this);
     var self = this;
+
     left.press = function ()
     {
         deleteKeyboards([left, right]);
-        if (processResponse(trialObject, "Y"))
-            self.startAnimation(stimulusSprite, -1); //the parameter indicates direction
+        if (processResponse(trlObj, "Y"))
+            self.startAnimation(self.stimulusSprite, -1); //the parameter indicates direction
     };
     right.press = function ()
     {
         deleteKeyboards([left, right]);
-        if(processResponse(trialObject, "B"))
-            self.startAnimation(stimulusSprite, 1);
+        if(processResponse(trlObj, "B"))
+            self.startAnimation(self.stimulusSprite, 1);
     };
-    if (trialObject.stopTrial === 1)
-        Utils.doTimer(trialObject.SSD, this.showForTimeThenThenCallback.bind(this, "../resources/taskElements/stopsignal.png", (Engine.STIMULI_DUR - trialObject.SSD), null, yAdjustment));
+
+    if (trlObj.isStopTrial())
+        Utils.doTimer(trlObj.getSSD(), this.showForTimeThenCallback.bind(this, "../resources/taskElements/stopsignal.png", (Engine.STIMULI_DUR - trlObj.getSSD()), null, this.getyAdjustment()));
 }
 
-Engine.prototype.displayStimulusThenCallback = function (picture, time, callback, yAdjustment, _trialObject)
+Engine.prototype.dispTrialThenCallback = function (trlObj, callback)
 {
-    var trialObject = _trialObject || null;
-    if (trialObject && trialObject.stopTrial === 1 && trialObject.stopTrialVisibility === -1)
+    //stimulus displayed here
+    if (trlObj && trlObj.isStopTrial() && trlObj.wasStopTrialHidden())
         return null;
-    if (trialObject && trialObject.stopTrial === 1)
-        trialObject.stopTrialVisibility = 1;
-    return this.showForTimeThenThenCallback(picture, time, callback, yAdjustment, 300);
+    if (trlObj && trlObj.isStopTrial())
+        trlObj.setStopTrialShown();
+    return this.showForTimeThenCallback(trlObj.getStimulusPath(), Engine.STIMULI_DUR, callback, this.getyAdjustment(), 300);
 }
 
-Engine.prototype.startAnimation = function (stimulusSprite, direction)
+Engine.prototype.closeResponseWindow = function (trlObj)
 {
-    stimulusSprite.vx = direction * 25;
+    if (trlObj.wasNoResponse())
+        this.processResponse(trlObj, "none");
+
+    trlObj.saveToDB(this.db, this.session);
+    this.showForTimeThenCallback("../resources/taskElements/transparent.png", trlObj.getITIDuration(), this.finishTrial.bind(this, trlObj));
 }
 
-Engine.prototype.closeResponseWindow = function (trialObject)
+Engine.prototype.processResponse = function (trlObj, keypressed)
 {
-    console.log("Closed");
-    if (trialObject.responseTime === -1)
-        this.processResponse(trialObject, "none");
-
-    trialObject.saveToDB(this.db, this.session);
-    this.displayStimulusThenCallback("../resources/taskElements/transparent.png", trialObject.ITIDuration, this.finishTrial.bind(this, trialObject));
-}
-
-Engine.prototype.processResponse = function (trialObject, keypressed)
-{
-    if (trialObject.responseWindowOpen === false)
+    if (!trlObj.isResponseWindowOpen())
         return false;
 
-    var correct = trialObject.stopTimingAndGetCorrect(keypressed);
+    var correct = trlObj.stopTimingAndGetCorrect(keypressed);
 
-    if (trialObject.stopTrial)
-        this.staircases[(trialObject.staircase)].adjust(correct);
-    if (trialObject.responseTime !== -1)
-        this.currentSubBlockSumRT += trialObject.responseTime;
+    if (trlObj.isStopTrial())
+        this.staircases[(trlObj.getStaircaseNumber())].adjust(correct);
+    if (!trlObj.wasNoResponse())
+        this.currentSubBlockSumRT += trlObj.getResponseTime();
+    this.conditionSpecificProcessing(trlObj);
 
     return true;
 }
 
-Engine.prototype.finishTrial = function (trialObject)
+Engine.prototype.finishTrial = function ()
 {
     this.overallTrialNum++;
     this.blockTrialNum++;
 
-    this.progress.width = (Main.SCREEN_WIDTH / (Engine.BLOCKS * Engine.SUBBLOCKS * 16)) * this.overallTrialNum;
-    this.runTrial();
+    this.progress.width = (Main.SCREEN_WIDTH / (Engine.SUBBLOCKS * 16)) * this.overallTrialNum;
+    this.runTrialorBreakorEndTask();
 }
 
 Engine.prototype.displayBreak = function ()
@@ -179,8 +171,7 @@ Engine.prototype.displayBreak = function ()
     breakText.y = Main.SCREEN_HEIGHT / 2;
     breakText.anchor = new PIXI.Point(0.5, 0.5);
     this.addChild(breakText);
-
-
+    
     Utils.doTimer(1000, updateBreaktext.bind(this, breakText, 9));
     function updateBreaktext(text, time)
     {
@@ -191,15 +182,13 @@ Engine.prototype.displayBreak = function ()
         } else
         {
             this.removeChild(breakText);
-            this.createBlock();
+            this.startBlock();
         }
     }
 }
 
 
 //////////////////////////////////////////////////Generic Display Functions/////////////////////////////////////////////////
-
-
 Engine.prototype.clearPicture = function (sprite, callback, fadeTime)
 {
     var self = this;
@@ -231,7 +220,7 @@ Engine.prototype.showTextForTimeThenClear = function (text, time, yPos)
     Utils.doTimer(time, function () { outer.removeChild(textObject) });
 }
 
-Engine.prototype.showForTimeThenThenCallback = function (picture, time, callback, _yadjustment, _fadeTime)
+Engine.prototype.showForTimeThenCallback = function (picture, time, callback, _yadjustment, _fadeTime)
 {
     var yadjustment = _yadjustment || 0;
     var fadeTime = _fadeTime || 0;
@@ -245,4 +234,47 @@ Engine.prototype.showForTimeThenThenCallback = function (picture, time, callback
     Utils.doTimer(time, this.clearPicture.bind(this, sprite, callback, fadeTime));
 
     return sprite;
+}
+
+
+
+////////////////////////Get Trials for Block/////////////////////
+
+function getTrialsForBlock(first)
+{
+    first = first || 0;
+    var firstsubblockInit = [
+    "gB", "gB", "gB", "gB", "gB", "gB", "gB", "gB",
+    "gY", "gY", "gY", "gY", "gY", "gY", "gY", "gY"
+    ];
+    var subblockInit = [
+        "gB", "sB1", "gB", "gB", "gB", "sY3", "gB", "gB",
+        "gY", "sY0", "gY", "gY", "sB2", "gY", "gY", "gY"
+    ];
+    var allTrials = [];
+    for (var i = 0; i < Engine.SUBBLOCKS; i++)
+    {
+        var subblockCopy = subblockInit.slice();
+        if (first)
+            subblockCopy = firstsubblockInit.slice();
+        subblockCopy = shuffleArray(shuffleArray(subblockCopy));
+        subblockCopy = shuffleArray(shuffleArray(subblockCopy));
+        subblockCopy = shuffleArray(shuffleArray(subblockCopy));
+        subblockCopy = shuffleArray(shuffleArray(subblockCopy));
+        allTrials.push.apply(allTrials, subblockCopy);
+        first = 0;
+    }
+    return allTrials;
+
+    function shuffleArray(array)
+    {
+        for (var i = 0; i < array.length; i++)
+        {
+            var swapIndex = i + Math.floor(Math.random() * (array.length - i));
+            var temp = array[i];
+            array[i] = array[swapIndex];
+            array[swapIndex] = temp;
+        }
+        return array;
+    }
 }
