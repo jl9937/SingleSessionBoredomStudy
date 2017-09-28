@@ -78,20 +78,17 @@ MainMenu.prototype.createMainMenu = function()
     var startButtony = Main.SCREEN_HEIGHT / 2 + 20;
 
     if (this.session.getCompletionLevel() === Session.COMPLETE_NOTHING)
-        startButton = new ClickButton(startButtony, "Begin", this.buttonClicked.bind(this, this.nextScreenToGoTo));
-    else if (this.session.getCompletionLevel() === Session.COMPLETE_ALL)
-    {
-        startButton = new ClickButton(startButtony, "Begin", this.buttonClicked.bind(this, this.nextScreenToGoTo));
-        startButton.disable();
-    }
+        startButton = new ClickButton("Begin", this.buttonClicked.bind(this, this.nextScreenToGoTo), { yPos: startButtony });
     else
-        startButton = new ClickButton(startButtony, "Continue", this.buttonClicked.bind(this, this.session.getNextSessionElementScreenName()));
-
-    var downloadInstructions = new ClickButton(startButtony + 145, "Instructions", function ()
+        startButton = new ClickButton("Continue", this.buttonClicked.bind(this, this.session.getNextSessionElementScreenName()), { yPos: startButtony });
+    if (this.session.getCompletionLevel() === Session.COMPLETE_ALL)
+        startButton.disable();
+    
+    var downloadInstructions = new ClickButton("Instructions", function ()
     {
         window.open("/task_instructions.pdf");
         focus();
-    });
+    }, { yPos: startButtony + 145});
 
     this.addChild(downloadInstructions);
     this.addChild(startButton);

@@ -42,10 +42,12 @@ GenericScreen.prototype.create = function(stage, db, session)
     if (this.options.picture2)
         this.createMainImage(this.options.picture2);
 
-   //create button
+    //create button
     if (this.options.buttonText)
-        this.addChild(new ClickButton(this.options.buttonYPos, this.options.buttonText, this.buttonClicked.bind(this, this.options.nextScreenToGoTo), this.options.buttonXPos, this.options.buttonScale));
-    
+        this.addChild(new ClickButton(this.options.buttonText,
+            this.buttonClicked.bind(this, this.options.nextScreenToGoTo),
+            { "yPos": this.options.buttonYPos, "xPos": this.options.buttonXPos, "scale": this.options.buttonScale }));
+
     //create text
     if (this.options.textFilepath)
         this.loadandDisplayFileText();

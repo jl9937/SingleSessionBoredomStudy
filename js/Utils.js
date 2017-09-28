@@ -284,3 +284,23 @@ Utils.doTimer =function(time, callback)
     return newtimer;
 }
 
+function colorLuminance(hexNum, lum) {
+
+    // validate hex string
+    hex = hexNum.toString(16);
+    hex = String(hex).replace(/[^0-9a-f]/gi, '');
+    if (hex.length < 6) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    lum = lum || 0;
+    var rgb = "0x", colourVal, i, digit;
+    for (i = 0; i < 3; i++)
+    {
+        digit = hex.substr(i * 2, 2);
+        colourVal = parseInt("0x"+digit);
+        digit = Math.round(Math.min(Math.max(0, (colourVal * lum)), 255)).toString(16);
+        rgb += digit;
+    }
+
+    return rgb;
+}

@@ -17,7 +17,7 @@ ConsentForm.prototype.create = function (stage, db, session)
     this.createBasic(stage, db, session);
     this.createScreenText(this.question);
  
-    this.nextButton = new ClickButton(Main.SCREEN_HEIGHT - 180, this.buttonText, this.buttonClicked.bind(this, this.nextScreenToGoTo), 0, 1);
+    this.nextButton = new ClickButton(this.buttonText, this.buttonClicked.bind(this, this.nextScreenToGoTo));
     this.addChild(this.nextButton);
 
 }

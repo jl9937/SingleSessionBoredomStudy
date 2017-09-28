@@ -90,14 +90,14 @@ function makeTask(name, nextpage, session)
                    picture1: "../resources/interface/instructions1.png",
                    buttonText: "Next page",
                    buttonYPos: Main.SCREEN_HEIGHT - 60,
-                   buttonXPos: Main.SCREEN_WIDTH - 210,
+                   buttonXPos: Main.SCREEN_WIDTH - 125,
                    buttonScale: 0.65
                }),
                new GenericScreen(session.getCondition(), {
                    picture1: "../resources/interface/instructions2.png",
                    buttonText: "Next page",
                    buttonYPos: Main.SCREEN_HEIGHT - 60,
-                   buttonXPos: Main.SCREEN_WIDTH - 210,
+                   buttonXPos: Main.SCREEN_WIDTH - 125,
                    buttonScale: 0.65
                }),
                new GenericScreen(session.getCondition(), {
@@ -116,7 +116,7 @@ function makeTask(name, nextpage, session)
                    picture1: "../resources/interface/Points_instructions1.png",
                    buttonText: "Next page",
                    buttonYPos: Main.SCREEN_HEIGHT - 60,
-                   buttonXPos: Main.SCREEN_WIDTH - 210,
+                   buttonXPos: Main.SCREEN_WIDTH - 125,
                    buttonScale: 0.65
                }),
                new GenericScreen(session.getCondition(), {
@@ -124,7 +124,7 @@ function makeTask(name, nextpage, session)
                    picture1: "../resources/interface/Points_instructions2.png",
                    buttonText: "Next page",
                    buttonYPos: Main.SCREEN_HEIGHT - 60,
-                   buttonXPos: Main.SCREEN_WIDTH - 210,
+                   buttonXPos: Main.SCREEN_WIDTH - 125,
                    buttonScale: 0.65
                }),
                new GenericScreen(session.getCondition(), {
@@ -132,7 +132,7 @@ function makeTask(name, nextpage, session)
                    picture1: "../resources/interface/Points_instructions3.png",
                    buttonText: "Next page",
                    buttonYPos: Main.SCREEN_HEIGHT - 60,
-                   buttonXPos: Main.SCREEN_WIDTH - 210,
+                   buttonXPos: Main.SCREEN_WIDTH - 125,
                    buttonScale: 0.65
                }),
                new GenericScreen(session.getCondition(), {
@@ -156,7 +156,7 @@ function makeTask(name, nextpage, session)
                     picture1: "../resources/interface/Theme_instructions1.png",
                     buttonText: "Next page",
                     buttonYPos: Main.SCREEN_HEIGHT - 60,
-                    buttonXPos: Main.SCREEN_WIDTH - 210,
+                    buttonXPos: Main.SCREEN_WIDTH - 125,
                     buttonScale: 0.65
                 }),
                 new GenericScreen(session.getCondition(),
@@ -166,7 +166,7 @@ function makeTask(name, nextpage, session)
                     picture2: "../resources/interface/Theme_instructions2.png",
                     buttonText: "Next page",
                     buttonYPos: Main.SCREEN_HEIGHT - 60,
-                    buttonXPos: Main.SCREEN_WIDTH - 210,
+                    buttonXPos: Main.SCREEN_WIDTH - 125,
                     buttonScale: 0.65
                 }),
                 new GenericScreen(session.getCondition(),
@@ -176,7 +176,7 @@ function makeTask(name, nextpage, session)
                     picture2: "../resources/interface/Theme_instructions3.png",
                     buttonText: "Next page",
                     buttonYPos: Main.SCREEN_HEIGHT - 60,
-                    buttonXPos: Main.SCREEN_WIDTH - 210,
+                    buttonXPos: Main.SCREEN_WIDTH - 125,
                     buttonScale: 0.65
                 }),
                 new GenericScreen(session.getCondition(),
@@ -186,7 +186,7 @@ function makeTask(name, nextpage, session)
                     picture2: "../resources/interface/Theme_instructions4.png",
                     buttonText: "Next page",
                     buttonYPos: Main.SCREEN_HEIGHT - 60,
-                    buttonXPos: Main.SCREEN_WIDTH - 210,
+                    buttonXPos: Main.SCREEN_WIDTH - 125,
                     buttonScale: 0.65
                 }),
                 new GenericScreen(session.getCondition(),

@@ -166,14 +166,14 @@ Engine.prototype.displayContinueChoice = function ()
     breakText.anchor = new PIXI.Point(0.5, 0.5);
 
 
-    var quitButton = new ClickButton(Main.SCREEN_HEIGHT - 100, "No", this.endTask.bind(this), breakText.x + 100, 1);
-    var continueButton = new ClickButton(Main.SCREEN_HEIGHT - 100, "Yes", function()
+    var quitButton = new ClickButton("No", this.endTask.bind(this), { 'yPos': Main.SCREEN_HEIGHT - 100, 'xPos': breakText.x + 200, 'up_colour': 0xd72c2c });
+    var continueButton = new ClickButton("Yes", function()
     {
         self.removeChild(breakText);
         self.removeChild(continueButton);
         self.removeChild(quitButton);
         self.postContinueChoice();
-    }, breakText.x-400, 1);
+    }, { 'yPos': Main.SCREEN_HEIGHT - 100, 'xPos': breakText.x - 200, 'up_colour': 0x2cd744 });
     
     this.addChild(continueButton);
     this.addChild(quitButton);
