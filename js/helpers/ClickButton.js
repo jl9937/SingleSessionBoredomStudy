@@ -12,6 +12,7 @@ function ClickButton(text, callback, options) {
     PIXI.Graphics.call(this);
     this.state = 0;
 
+    options = options || {};
     var yPos = options.yPos || Main.SCREEN_HEIGHT - 150;
     var xPos = options.xPos || Main.SCREEN_WIDTH / 2;
     var scale = options.scale || 1;

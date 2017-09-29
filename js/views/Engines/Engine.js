@@ -23,7 +23,6 @@ Engine.prototype.create = function(stage, db, session)
 
     //setup taask parameters
     this.overallTrialNum = 0;
-    this.blockNum = 0;
     this.staircases = [new Staircase(100, 0.5), new Staircase(200, 0.5), new Staircase(300, 0.5), new Staircase(400, 0.5)];
 
     this.currentSubBlockSumRT = 0;
@@ -75,7 +74,7 @@ Engine.prototype.startTrial = function (trialType)
         this.currentSubBlockSumRT = 0;
     }
 
-    var trlObj = new Trial(this.session,this.overallTrialNum,this.blockTrialNum,this.blockNum,trialType,this.staircases,this.bluePath,this.yellowPath);
+    var trlObj = new Trial(this.session,this.overallTrialNum,this.blockTrialNum,this.session.getOptionalBlocksCompleted(),trialType,this.staircases,this.bluePath,this.yellowPath);
     this.showForTimeThenCallback("../resources/taskElements/fixation.png", Engine.FIXATION, this.openResponseWindow.bind(this, trlObj), this.getyAdjustment());
 }
 
@@ -156,9 +155,10 @@ Engine.prototype.displayContinueChoice = function ()
 {
     this.removeChild(this.zones);
     this.removeChild(this.progress);
+    this.session.blockComplete();
 
     var self = this;
-    var choiceTextString = "Block completed!\n\n\nYou are free to end today's session now if you wish.\n\nAlternatively, you may complete another two-minute round of testing and earn an additional " + this.session.getNextBlockRewardString() + ".\n\nWould you like to continue?";
+    var choiceTextString = "Block completed!\n\n\nYou are free to end today's session now if you wish.\n\nAlternatively, you may complete another two-minute round of testing and earn an additional " + this.session.getBlockRewardString() + ".\n\nWould you like to continue?";
     var breakText = new PIXI.Text(choiceTextString,
                                    { align: "center", font: "30px Arial", fill: "#FFFFFF", wordWrapWidth: Main.WORD_WRAP_WIDTH , wordWrap: true });
     breakText.x = Main.SCREEN_WIDTH / 2;
@@ -181,9 +181,10 @@ Engine.prototype.displayContinueChoice = function ()
 }
 
 Engine.prototype.endTask = function () {
-    this.session.endOfSession();
-    this.moveToScreen = "POSTTASK";
+    this.session.setCurrentSessionElementComplete();
+    this.moveToScreen = this.nextScreenToGoTo;
 }
+
 
 
 //////////////////////////////////////////////////Generic Display Functions/////////////////////////////////////////////////

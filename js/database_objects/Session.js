@@ -3,7 +3,7 @@
 
 Session.COMPLETE_NOTHING = 0;
 Session.COMPLETE_TASK = 1;
-Session.COMPLETE_ALL = 2;
+Session.COMPLETE_ALL = 6;
 
 //SessioN container object. Stores all info on the participant session and also grabs browser/os data
 function Session(sessionData, participant, forcedCondition)
@@ -30,10 +30,15 @@ Session.prototype.initSession = function (participant, forcedCondition)
     this.date = Date.now().toString("dd-MM-yyyy");
 }
 
-Session.prototype.getNextBlockRewardString = function()
+Session.prototype.getBlockReward = function(blockNum)
 {
-    //todo build this into the task with the money earner etc
-    return "63p";
+    var rewardArray = [0.75, 0.66, 0.57, 0.48, 0.39, 0.3, 0.21, 0.12, 0.03]
+    return rewardArray[blockNum];
+}
+
+Session.prototype.getBlockRewardString = function()
+{
+    return formatMoney(this.getBlockReward(this.optionalBlocksCompleted))
 }
 
 Session.prototype.initSessionFromData = function (sessionData)
@@ -41,6 +46,8 @@ Session.prototype.initSessionFromData = function (sessionData)
     var keys = Object.keys(sessionData);
     for (var i = 0; i < keys.length; i++)
         this[keys[i]] = sessionData[keys[i]];
+    if (this.getOptionalBlocksCompleted > 0)
+        this.completionLevel = Session.COMPLETE_TASK;
 }
 
 Session.prototype.getVersionHash = function ()
@@ -72,6 +79,10 @@ Session.prototype.getCompletionLevel = function ()
     return this.completionLevel;
 }
 
+Session.prototype.getOptionalBlocksCompleted = function () {
+    return this.optionalBlocksCompleted;
+}
+
 Session.prototype.getNextSessionElementScreenName = function ()
 {
     if (this.completionLevel > this.schedule.length)
@@ -89,7 +100,7 @@ Session.prototype.setCurrentSessionElementComplete = function ()
         DBInterface.updateParticipantDataWithCompletedSession(this);
         debug("Session Complete!", this.completionLevel);
     }
-    DBInterface.saveSession(this);
+    this.saveToDB();
     debug("Completion Level now ", this.completionLevel);
     
     totalLoopTime = 0;
@@ -97,18 +108,15 @@ Session.prototype.setCurrentSessionElementComplete = function ()
     loopCounter = 0;
 }
 
+Session.prototype.blockComplete = function ()
+{
+    this.participant.blockComplete(this.getCondition(), this.getBlockReward(this.optionalBlocksCompleted));
+    this.optionalBlocksCompleted += 1;
+    this.saveToDB()
+}
+
 
 /////////////////////////////////////////////////////////////Setters and getters//////////////////////////////////////////////////////////////////////
-Session.prototype.getTrainingEndDateString = function ()
-{
-    return this.PART_trainingEndDate;
-}
-
-Session.prototype.getEndDateString = function ()
-{
-    return this.PART_enddate;
-}
-
 Session.prototype.getDayNumber = function ()
 {
     return this.participant.getSessionsCompleted() + 1;
@@ -162,11 +170,6 @@ Session.prototype.getSessionNumber = function ()
 Session.prototype.getDateSessionString = function ()
 {
     return this.date + "_" + this.sessionNumber;
-}
-
-Session.prototype.setMoneyWon = function (earnings)
-{
-    this.moneyWon = earnings;
 }
 
 Session.prototype.setSchedule = function (_schedule)
