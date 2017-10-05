@@ -25,8 +25,8 @@ function ClickButton(text, callback, options) {
     this.up_colour = options.up_colour || ClickButton.DEFAULT_UP_COLOUR;
     this.down_colour = options.down_colour || colorLuminance(this.up_colour, 0.585253456);
     
-    this.yposVal = yPos - (this.heightVal / 2);
-    this.xposVal = xPos - (this.widthVal / 2);
+    this.yposVal = yPos - this.heightVal / 2;
+    this.xposVal = xPos - this.widthVal / 2;
 
     this.lineStyle(3, 0x000000);
 
@@ -45,21 +45,20 @@ function ClickButton(text, callback, options) {
 }
 
 
-ClickButton.prototype.disable =function()
+ClickButton.prototype.disable = function()
 {
     this.interactive = false;
     this.buttonDown();
-}
+};
 
-ClickButton.prototype.enable = function ()
+ClickButton.prototype.enable = function()
 {
     this.interactive = true;
     this.buttonUp();
-}
+};
 
-ClickButton.prototype.buttonDown = function ()
+ClickButton.prototype.buttonDown = function()
 {
-    
     if (this.state === 1)
     {
         //debug("button down");
@@ -67,9 +66,9 @@ ClickButton.prototype.buttonDown = function ()
         this.drawRoundedRect(this.xposVal, this.yposVal, this.widthVal, this.heightVal, this.radVal);
         this.state = 0;
     }
-}
+};
 
-ClickButton.prototype.buttonUp = function (callback)
+ClickButton.prototype.buttonUp = function(callback)
 {
     if (this.state === 0)
     {
@@ -77,7 +76,7 @@ ClickButton.prototype.buttonUp = function (callback)
         this.beginFill(this.up_colour);
         this.state = 1;
         this.drawRoundedRect(this.xposVal, this.yposVal, this.widthVal, this.heightVal, this.radVal);
-        if (typeof (callback) == "function")
+        if (typeof callback === "function")
             callback();
     }
-}
+};

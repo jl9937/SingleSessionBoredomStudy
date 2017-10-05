@@ -63,7 +63,7 @@ NonGameEngine.prototype.postContinueChoice = function ()
     var time = Engine.BREAKLENGTH;
 
     var breakTextString1 = "The task will resume in "
-    var breakTextString2 = "seconds.\n\nPlease continue responding as fast as you can.";
+    var breakTextString2 = " seconds.\n\nPlease continue responding as fast as you can.";
     var breakText = new PIXI.Text(breakTextString1 + time + breakTextString2, 
         { align: "center", font: "30px Arial", fill: "#FFFFFF" });
     breakText.x = Main.SCREEN_WIDTH / 2;
@@ -71,11 +71,11 @@ NonGameEngine.prototype.postContinueChoice = function ()
     breakText.anchor = new PIXI.Point(0.5, 0.5);
     this.addChild(breakText);
 
-    doTimer(1000, updateBreaktext.bind(this, breakText, 9));
-    function updateBreaktext(text, time) {
-        if (time !== -1) {
-            breakText.text = breakTextString + time + " seconds";
-            doTimer(1000, updateBreaktext.bind(self, breakText, time - 1));
+    Utils.doTimer(1000, updateBreaktext.bind(this, breakText, 9));
+    function updateBreaktext(text, newtime) {
+        if (newtime !== -1) {
+            breakText.text = breakTextString1 + newtime + breakTextString2, 
+                Utils.doTimer(1000, updateBreaktext.bind(self, breakText, newtime - 1));
         } else {
             self.removeChild(breakText);
             self.startBlock();

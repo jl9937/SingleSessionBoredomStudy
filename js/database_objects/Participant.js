@@ -80,6 +80,12 @@ Participant.prototype.assignToConditionOrder = function(callback)
     });
 }
 
+
+Participant.prototype.getOptionalBlocksCompleted =function(condition)
+{
+    return this.optionalBlocksCompleted[condition];
+}
+
 Participant.prototype.blockComplete = function(condition, moneyEarned)
 {
     this.moneyEarned += moneyEarned

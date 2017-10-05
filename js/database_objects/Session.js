@@ -24,7 +24,6 @@ Session.prototype.initSession = function (participant, forcedCondition)
     this.summaryData = { "medianRT": -1, "stopAccuracy": -1, "goAccuracy": -1 };
     this.metadata = {"browser": getBrowser(), "versionHash": this.getVersionHash(), "OS": getOS(), "screenSize": getScreenSize()}
 
-    this.optionalBlocksCompleted = 0;
     this.condition = parseInt(forcedCondition) || parseInt(this.participant.conditionOrder[this.participant.sessionsCompleted]);
     this.completionLevel = Session.COMPLETE_NOTHING;
     this.date = Date.now().toString("dd-MM-yyyy");
@@ -38,7 +37,7 @@ Session.prototype.getBlockReward = function(blockNum)
 
 Session.prototype.getBlockRewardString = function()
 {
-    return formatMoney(this.getBlockReward(this.optionalBlocksCompleted))
+    return formatMoney(this.getBlockReward(this.getOptionalBlocksCompleted()))
 }
 
 Session.prototype.initSessionFromData = function (sessionData)
@@ -46,7 +45,7 @@ Session.prototype.initSessionFromData = function (sessionData)
     var keys = Object.keys(sessionData);
     for (var i = 0; i < keys.length; i++)
         this[keys[i]] = sessionData[keys[i]];
-    if (this.getOptionalBlocksCompleted > 0)
+    if (this.getOptionalBlocksCompleted() > 0)
         this.completionLevel = Session.COMPLETE_TASK;
 }
 
@@ -80,7 +79,7 @@ Session.prototype.getCompletionLevel = function ()
 }
 
 Session.prototype.getOptionalBlocksCompleted = function () {
-    return this.optionalBlocksCompleted;
+    return this.participant.getOptionalBlocksCompleted(this.getCondition());
 }
 
 Session.prototype.getNextSessionElementScreenName = function ()
@@ -110,8 +109,7 @@ Session.prototype.setCurrentSessionElementComplete = function ()
 
 Session.prototype.blockComplete = function ()
 {
-    this.participant.blockComplete(this.getCondition(), this.getBlockReward(this.optionalBlocksCompleted));
-    this.optionalBlocksCompleted += 1;
+    this.participant.blockComplete(this.getCondition());
     this.saveToDB()
 }
 
