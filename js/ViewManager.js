@@ -38,9 +38,10 @@ VMan.prototype.checkAllScreens = function ()
 VMan.prototype.setScreen = function (screenName)
 {
     //if not in a view, then don't deconstruct one
+    var session = this.currentView.session;
     if (typeof this.currentView !== "undefined")
     {
-        var session = this.currentView.session;
+        session = this.currentView.session;
         this.currentView.deconstruct(this.stage);
     }
 

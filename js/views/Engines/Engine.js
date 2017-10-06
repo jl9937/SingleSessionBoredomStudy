@@ -225,7 +225,6 @@ Engine.prototype.clearPicture = function(sprite, callback, fadeTime)
 {
     var self = this;
 
-    //todo animateNicely
     if (fadeTime !== 0 && sprite.vx !== 0)
     {
         sprite.valpha = -0.008;

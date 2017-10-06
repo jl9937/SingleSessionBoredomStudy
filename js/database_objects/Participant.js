@@ -88,7 +88,7 @@ Participant.prototype.getOptionalBlocksCompleted =function(condition)
 
 Participant.prototype.blockComplete = function(condition, moneyEarned)
 {
-    this.moneyEarned += moneyEarned
+    this.moneyEarned += moneyEarned;
     this.optionalBlocksCompleted[condition] += 1;
     this.saveToDB();
 }

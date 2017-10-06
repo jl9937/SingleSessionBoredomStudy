@@ -27,7 +27,7 @@ function checkLogin(callback)
 
     var result = firebase.auth().signInWithEmailAndPassword(id, pw).catch(function (error)
     {
-        output("Login Failed");
+        output("Login Failed" + error);
     }
        );
     result.then(function (user)
@@ -306,7 +306,7 @@ function clearAllData()
             apiKey: "AIzaSyBFagpiWXN9tTQtanFCMyEdg7g6CvOUqW8",
             authDomain: Main.URL,
             databaseURL: Main.DBURL,
-            storageBucket: "project-1770268941460198008.appspot.com",
+            storageBucket: "project-1770268941460198008.appspot.com"
         };
         initialised = firebase.initializeApp(config);
     }

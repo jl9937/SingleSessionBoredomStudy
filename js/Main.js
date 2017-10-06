@@ -9,6 +9,10 @@ Main.CONDITION_NONGAME = 0;
 Main.CONDITION_POINTS = 1;
 Main.CONDITION_THEME = 2;
 
+$ = $;
+PIXI = PIXI;
+DBInterface = DBInterface;
+firebase = firebase;
 
 Main.COMPLETION_LINKS = [
     "https://prolific.ac/submissions/complete?cc=QEEZRN9P", //Session 1
@@ -252,7 +256,6 @@ var loopCounter = 0;
 var totalLatencyTime = 0;
 var timerCounter = 0;
 
-//todo reset this at the start of each block
 var longFramesSinceStart = 0;
 
 var globalTime = 0;

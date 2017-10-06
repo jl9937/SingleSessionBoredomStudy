@@ -4,10 +4,11 @@ function FallingBall(_stage)
 {
     this.stage = _stage;
     var colour = Math.random() > 0.5 ? "b" : "y";
+    var texture;
     if (colour === "b")
-        var texture = PIXI.Texture.fromImage("../resources/taskElements/blue.png");
+        texture = PIXI.Texture.fromImage("../resources/taskElements/blue.png");
     else
-        var texture = PIXI.Texture.fromImage("../resources/taskElements/yellow.png");
+        texture = PIXI.Texture.fromImage("../resources/taskElements/yellow.png");
 
     PIXI.Sprite.call(this, texture);
 

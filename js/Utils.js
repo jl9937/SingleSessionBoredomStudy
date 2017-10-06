@@ -248,10 +248,10 @@ Utils.checkAllTimers = function (delta)
 {
     for (var i = timers.length; i--;)
         timers[i].check(delta);
-    for (var i = timers.length; i--;)
+    for (var j = timers.length; j--;)
     {
-        if(!timers[i].alive)
-            timers.splice(i, 1);
+        if(!timers[j].alive)
+            timers.splice(j, 1);
     }
 }
 
@@ -287,7 +287,7 @@ Utils.doTimer =function(time, callback)
 function colorLuminance(hexNum, lum) {
 
     // validate hex string
-    hex = hexNum.toString(16);
+    var hex = hexNum.toString(16);
     hex = String(hex).replace(/[^0-9a-f]/gi, '');
     if (hex.length < 6) {
         hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];

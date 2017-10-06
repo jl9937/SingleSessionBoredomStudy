@@ -80,7 +80,6 @@ EmbeddedGForm.prototype.create = function (stage, db, session)
         $("#game-canvas").hide();
         $("#embeddedQuestionnaire").show();
         self.createBypassButton();
-        //Todo I think this might be the bug that caused the questionnaire to fail to passthrough. E.g. it would write to the DB, then read and swap screens, then load the second page and swap back.
         document.getElementById('gFormsiframe').onload = function() {};
     }
 }

@@ -1006,8 +1006,8 @@ var DynamicAtlas = function (padding) {
 
         //set new basetexture
         baseTexture = PIXI.BaseTexture.fromCanvas(canvas);
-        baseTexture.mipmap = false; //if not, pixi bug resizing POW2
-        baseTexture.resolution = 1; //todo: support all resolutions
+        baseTexture.mipmap = false; 
+        baseTexture.resolution = 1; 
         baseTexture.update();
 
         //Debug Spritesheet
@@ -1062,7 +1062,7 @@ var DynamicAtlas = function (padding) {
             }
 
 
-            //todo: cleanup when we know whats needed
+         
             obj = {
                 metrics: metrics,
                 font: font,
@@ -2637,7 +2637,7 @@ function SliceSprite(texture, borderWidth, horizontalSlice, verticalSlice, tile)
             ff = new PIXI.Rectangle(f.x, f.y + bw, f.width, f.height - bw * 2);
         }
 
-        //TODO: swap frames if rotation
+  
 
 
 
@@ -3080,8 +3080,6 @@ SortableList.prototype._sort = function () {
         if (typeof item.altering === "function")
             item.altering(alt);
     }
-
-    //force it to update parents when sort animation is done (prevent scrolling container bug)
     if (this.tweenTime > 0) {
         setTimeout(function () {
             self.updatesettings(false, true);

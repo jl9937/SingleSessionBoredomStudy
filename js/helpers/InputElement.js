@@ -12,7 +12,6 @@ function InputElement(yPos, width, value, readonly)
 
     var solidBox = PIXI.Texture.fromImage("../resources/interface/textBackground.png");
 
-    //todo make this readonly somehow
     this.input = new PIXI.UI.TextInput({
         value: value,
         style: { fill: '#000000', fontSize: 15, fontFamily: 'Arial', align: 'center' },
