@@ -1,15 +1,10 @@
-//These two arrays stop the level specific values for animation in the Theme condition
-                           //1      2       3       4       5       6       7       8       9       10
-ThemeEngine.THEME_YCUTOFFS = [230, 310, 240, 290, 310, 330, 310, 315, 330, 350];
-ThemeEngine.THEME_XVELOCITY = [12.5, 13, 12.5, 12.5, 14.5, 13.5, 14, 13, 13.5, 13.3];
-ThemeEngine.THEME_yADJUSTMENT = [10, -30, 5, -35, 10, -10, 0, -16, -10, 0];
-
 /////////////////////////////////////Required////////////////////////////////////////
 ThemeEngine.prototype = Object.create(Engine.prototype);
 
 function ThemeEngine()
 {
     View.call(this);
+    this.themeHolder = new ThemeHolder();
 }
 
 ThemeEngine.prototype.mainLoop = function (speedfactor)
@@ -25,7 +20,7 @@ ThemeEngine.prototype.mainLoop = function (speedfactor)
         //check for a position then activate rapid fadeout
         if(this.stimulusSprite.x < 280 || this.stimulusSprite.x > Main.SCREEN_WIDTH - 280)
             this.stimulusSprite.valpha = -0.08 * speedfactor;
-        if (this.stimulusSprite.y > Main.SCREEN_HEIGHT - ThemeEngine.THEME_YCUTOFFS[this.locationIndex])
+        if (this.stimulusSprite.y > Main.SCREEN_HEIGHT - this.themeHolder.data.yCutOff)
             this.stimulusSprite.alpha = 0;
     }
 }
@@ -33,10 +28,10 @@ ThemeEngine.prototype.mainLoop = function (speedfactor)
 
 ThemeEngine.prototype.setupTaskBackground = function ()
 {
-    this.zones = new PIXI.Sprite.fromImage(Main.themeAssets[0]);
+    this.zones = new PIXI.Sprite.fromImage(this.themeHolder.data.background);
     this.overlayer = new PIXI.Sprite.fromImage("../resources/theme/themeMisc/overlayer.png");
-    this.bluePath = Main.themeAssets[1];
-    this.yellowPath = Main.themeAssets[2];
+    this.bluePath = this.themeHolder.data.bluePath;
+    this.yellowPath = this.themeHolder.data.yellowPath;
 }
 
 ThemeEngine.prototype.setupBlockOnlyVisuals = function ()
@@ -47,8 +42,6 @@ ThemeEngine.prototype.setupBlockOnlyVisuals = function ()
     this.addChild(this.zones);
     this.addChild(this.overlayer);
     this.addChild(this.progress);
-    //todo update this after each choice
-    this.locationIndex = 0;
 }
 
 ThemeEngine.prototype.getSlowdownText = function()
@@ -58,13 +51,13 @@ ThemeEngine.prototype.getSlowdownText = function()
 
 ThemeEngine.prototype.getyAdjustment =function()
 {
-    return ThemeEngine.THEME_yADJUSTMENT[this.locationIndex];
+    return this.themeHolder.data.yAdjustment;
 }
 
 ThemeEngine.prototype.startAnimation = function (stimulusSprite, direction)
 {
     stimulusSprite.gravity = 1.5;
-    stimulusSprite.vx = direction * ThemeEngine.THEME_XVELOCITY[this.locationIndex];
+    stimulusSprite.vx = direction * this.themeHolder.data.xVelocity;
     stimulusSprite.vy = -17;
 }
 
@@ -73,7 +66,7 @@ ThemeEngine.prototype.setupBreak = function()
     this.removeChild(this.progress);
     this.darkener = new PIXI.Sprite.fromImage("../resources/interface/themeDarkener.png");
     this.addChild(this.darkener);
-    this.displayBreak();
+    this.displayContinueChoice();
 }
 
 ThemeEngine.prototype.getBreakText = function()
@@ -82,6 +75,76 @@ ThemeEngine.prototype.getBreakText = function()
 }
 
 ThemeEngine.prototype.conditionSpecificProcessing = function(trlObj)
+{         
+}
+
+ThemeEngine.prototype.postContinueChoice = function () {
+    var self = this;
+    var choiceTextString =
+        "Good to hear you're still on board Commander!\n\nSadly the world is still is a right mess, so where would you like to sort out next?";
+    var breakText = new PIXI.Text(choiceTextString,
+        { align: "center", font: "30px Arial", fill: "#FFFFFF", wordWrapWidth: Main.WORD_WRAP_WIDTH, wordWrap: true });
+    breakText.x = Main.SCREEN_WIDTH / 2;
+    breakText.y = Main.SCREEN_HEIGHT / 2;
+    breakText.anchor = new PIXI.Point(0.5, 0.5);
+
+    var left = this.themeHolder.getNextLevelChoice();
+    var right = this.themeHolder.getNextLevelChoice();
+
+    var leftChoice =null, rightChoice = null;
+
+    leftChoice = new ClickButton(this.themeHolder.getLevelname(left), function()
+    {
+        self.removeChild(rightChoice);
+        self.removeChild(leftChoice);
+        self.removeChild(breakText);
+        self.themeHolder.setLevelChoice(left, right, self.displayLevelText.bind(self));  
+    },
+        { 'yPos': Main.SCREEN_HEIGHT - 200, 'xPos': breakText.x + 200, 'up_colour': 0x8c69ef });
+
+    rightChoice = new ClickButton(this.themeHolder.getLevelname(right), function () {
+        self.removeChild(rightChoice);
+        self.removeChild(leftChoice);
+            self.removeChild(breakText);
+        self.themeHolder.setLevelChoice(right, left, self.displayLevelText.bind(self));},
+        { 'yPos': Main.SCREEN_HEIGHT - 200, 'xPos': breakText.x - 200, 'up_colour': 0xefa569 });
+
+    this.addChild(leftChoice);
+    this.addChild(rightChoice);
+    this.addChild(breakText);
+}
+
+ThemeEngine.prototype.displayLevelText = function()
 {
-    
+    var self = this;
+    //Set Level here:
+    this.bluePath = this.themeHolder.data.bluePath;
+    this.yellowPath = this.themeHolder.data.yellowPath;
+    this.zones = new PIXI.Sprite.fromImage(this.themeHolder.data.background);
+    this.overlayer = new PIXI.Sprite.fromImage("../resources/theme/themeMisc/overlayer.png");
+
+
+    var instructions = new PIXI.Text(this.themeHolder.data.screenText,
+        { align: "center", font: "28px Arial", fill: "#FFFFFF", wordWrapWidth: Main.WORD_WRAP_WIDTH, wordWrap: true });
+    instructions.anchor = new PIXI.Point(0.5, 0.5);
+    instructions.x = Main.SCREEN_WIDTH / 2;
+    instructions.y = Main.SCREEN_HEIGHT / 2 - 50;
+
+    var mainimage = new PIXI.Sprite.fromImage("../resources/interface/textspace.png");
+    mainimage.height = 730;
+    mainimage.width = 1024;
+
+    this.addChild(this.zones);
+    this.removeChild(this.darkener);
+    this.addChild(mainimage);
+    this.addChild(instructions);
+
+    var button = this.addChild(new ClickButton("Begin!",
+        function () {
+            self.removeChild(self.zones);
+            self.removeChild(button);
+            self.removeChild(instructions);
+            self.removeChild(mainimage);
+            self.startBlock();
+        }));
 }

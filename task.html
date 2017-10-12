@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>Mindgame MK II</title>
     <style>
         body {
@@ -24,86 +24,82 @@
             height: 100%;
         }
 
-        #embeddedQuestionnaire {
-            -webkit-overflow-scrolling: touch !important;
-            overflow-y: scroll !important;
-        }
+        
     </style>
 
-    <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />-->
+    <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height"/>-->
 </head>
 <body onload="init()">
 
-
-
 <canvas id="game-canvas" tabindex="1"></canvas>
-<div id="embeddedQuestionnaire" style="display: none; overflow:hidden;">
-</div>
+
+<script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+<script src="js/libs/jquery-3.2.0.min.js"></script>
+<script src="js/libs/date.js"></script>
+<script src="js/libs/pixi.min.js"></script>
+<script src="js/libs/pixi-ui.js"></script>
+
+<script src="js/Main.js"></script>
+<script src="js/Utils.js"></script>
+<script src="js/ViewManager.js"></script>
+
+<script src="js/helpers/DBInterface.js"></script>
+<script src="js/helpers/Interface/VisabilityMonitor.js"></script>
+<script src="js/helpers/ScheduleManager.js"></script>
+<script src="js/helpers/Interface/VAS.js"></script>
+<script src="js/helpers/Interface/Likert.js"></script>
+<script src="js/helpers/Interface/InputElement.js"></script>
+<script src="js/helpers/Interface/ClickButton.js"></script>
+<script src="js/helpers/Interface/FallingBall.js"></script>
+<script src="js/helpers/Staircase.js"></script>
+
+<script src="js/views/View.js"></script>
+<script src="js/views/MainMenu.js"></script>
+<script src="js/views/Engines/Engine.js"></script>
+<script src="js/views/Engines/ThemeEngine.js"></script>
+<script src="js/views/Engines/PointsEngine.js"></script>
+<script src="js/views/Engines/NonGameEngine.js"></script>
+<script src="js/views/GenericScreen.js"></script>
+<script src="js/views/Engines/ThemeHolder.js"></script>
+
+<script src="js/views/Questionnaires/ConsentForm.js"></script>
+
+<script src="js/views/Questionnaires/ComboBoxScreen.js"></script>
+<script src="js/views/Questionnaires/NumberChooserScreen.js"></script>
+<script src="js/views/Questionnaires/VASScreen.js"></script>
+<script src="js/views/Questionnaires/LikertScreen.js"></script>
+
+<script src="js/database_objects/Trial.js"></script>
+<script src="js/database_objects/Session.js"></script>
+<script src="js/database_objects/Participant.js"></script>
 
 
-    <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
-    <script src="js/libs/jquery-3.2.0.min.js"></script>
-    <script src="js/libs/date.js"></script>
-    <script src="js/libs/pixi.min.js"></script>
-    <script src="js/libs/pixi-ui.js"></script>
-
-    <script src="js/Main.js"></script>
-    <script src="js/Utils.js"></script>
-    <script src="js/ViewManager.js"></script>
-
-    <script src="js/helpers/DBInterface.js"></script>
-    <script src="js/helpers/VisabilityMonitor.js"></script>
-    <script src="js/helpers/ScheduleManager.js"></script>
-    <script src="js/helpers/InputElement.js"></script>
-    <script src="js/helpers/ClickButton.js"></script>
-    <script src="js/helpers/FallingBall.js"></script>
-    <script src="js/helpers/Staircase.js"></script>
-
-    <script src="js/views/View.js"></script>
-    <script src="js/views/MainMenu.js"></script>
-    <script src="js/views/Engines/Engine.js"></script>
-    <script src="js/views/Engines/ThemeEngine.js"></script>
-    <script src="js/views/Engines/PointsEngine.js"></script>
-    <script src="js/views/Engines/NonGameEngine.js"></script>
-    <script src="js/views/GenericScreen.js"></script>
-
-    <script src="js/views/Questionnaires/ConsentForm.js"></script>
-    <script src="js/views/Questionnaires/EmbeddedQuestionnaire.js"></script>
-
-    <script src="js/database_objects/Trial.js"></script>
-    <script src="js/database_objects/Session.js"></script>
-    <script src="js/database_objects/Participant.js"></script>
-
-
-    <script>
-        function init()
+<script>
+    function init()
+    {
+        var oldIE;
+        if (document.all && !window.atob)
         {
+            oldIE = true;
+        }
 
-            var oldIE;
-            if (document.all && !window.atob )
-            {
-                oldIE = true;
-            }
-
-            if (oldIE)
-            {
-                var para = document.createElement("h1");
-                document.getElementById("game-canvas").style.display = "none";
-                para.style.color = "white";
-                para.style.margin = "10px";
-                var node = document.createTextNode("Sorry, this study is not supported by Internet Explorer 9 or lower. Please swtich to IE 10, Edge, Chrome, Safari or Firefox");
-                para.appendChild(node);
-                document.body.appendChild(para);
-            } else
-            {
-                main = new Main();
-            }
-
-
-
-
-        };
-    </script>
+        if (oldIE)
+        {
+            var para = document.createElement("h1");
+            document.getElementById("game-canvas").style.display = "none";
+            para.style.color = "white";
+            para.style.margin = "10px";
+            var node = document.createTextNode(
+                "Sorry, this study is not supported by Internet Explorer 9 or lower. Please swtich to IE 10, Edge, Chrome, Safari or Firefox");
+            para.appendChild(node);
+            document.body.appendChild(para);
+        }
+        else
+        {
+            main = new Main();
+        }
+    };
+</script>
 
 
 </body>

@@ -38,7 +38,7 @@ VMan.prototype.checkAllScreens = function ()
 VMan.prototype.setScreen = function (screenName)
 {
     //if not in a view, then don't deconstruct one
-    var session = this.currentView.session;
+    var session = null;
     if (typeof this.currentView !== "undefined")
     {
         session = this.currentView.session;
@@ -49,7 +49,7 @@ VMan.prototype.setScreen = function (screenName)
     this.currentScreenName = tempScreenObject.name;
     this.currentView = tempScreenObject.screen;
 
-    this.main.visMonitor.handleScreenVisabilityChange(0,1);
+    this.main.visMonitor.handleScreenVisabilityChange(0, 1);
     this.currentView.create(this.stage,session);
 }
 

@@ -178,6 +178,8 @@ Engine.prototype.finishTrial = function()
 //todo limit this from happening more than 8 times or whatever it is
 Engine.prototype.displayContinueChoice = function()
 {
+  
+
     this.removeChild(this.zones);
     this.removeChild(this.progress);
     this.session.blockComplete();
@@ -186,13 +188,28 @@ Engine.prototype.displayContinueChoice = function()
     var choiceTextString =
         "Block completed!\n\n\nYou are free to end today's session now if you wish.\n\nAlternatively, you may complete another two-minute round of testing and earn an additional " +
             this.session.getBlockRewardString() +
-            ".\n\nWould you like to continue?";
+        ".\n\nWould you like to continue?";
+
+    if (this.session.getBlockRewardString() === "NaN")
+    {
+        choiceTextString =
+            "Well done, you have completed every level we have to offer!\n\nPlease click the button below to continue";
+    }
+
     var breakText = new PIXI.Text(choiceTextString,
         { align: "center", font: "30px Arial", fill: "#FFFFFF", wordWrapWidth: Main.WORD_WRAP_WIDTH, wordWrap: true });
     breakText.x = Main.SCREEN_WIDTH / 2;
     breakText.y = Main.SCREEN_HEIGHT / 2;
     breakText.anchor = new PIXI.Point(0.5, 0.5);
 
+    this.addChild(breakText);
+    if (this.session.getBlockRewardString() === "NaN") {
+        var continueToQuestionnaire = new ClickButton("Continue",
+            this.endTask.bind(this),
+            { 'yPos': Main.SCREEN_HEIGHT - 100, 'xPos': breakText.x + 200, 'up_colour': 0xd72c2c });
+        this.addChild(continueToQuestionnaire);
+        return;
+    }
 
     var quitButton = new ClickButton("No",
         this.endTask.bind(this),

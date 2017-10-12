@@ -2,7 +2,7 @@
 /// <reference path="*.js" /> 
 
 Session.COMPLETE_NOTHING = 0;
-Session.COMPLETE_TASK = 1;
+Session.COMPLETE_TASK = 2;
 Session.COMPLETE_ALL = 6;
 
 //SessioN container object. Stores all info on the participant session and also grabs browser/os data
@@ -31,7 +31,7 @@ Session.prototype.initSession = function (participant, forcedCondition)
 
 Session.prototype.getBlockReward = function(blockNum)
 {
-    var rewardArray = [0.75, 0.66, 0.57, 0.48, 0.39, 0.3, 0.21, 0.12, 0.03]
+    var rewardArray = [0.75, 0.66, 0.57, 0.48, 0.39, 0.3, 0.21, 0.12, 0.03];
     return rewardArray[blockNum];
 }
 
@@ -79,7 +79,7 @@ Session.prototype.getCompletionLevel = function ()
 }
 
 Session.prototype.getOptionalBlocksCompleted = function () {
-    return this.participant.getOptionalBlocksCompleted(this.getCondition());
+    return this.participant.getblocksCompleted(this.getCondition());
 }
 
 Session.prototype.getNextSessionElementScreenName = function ()
@@ -100,7 +100,8 @@ Session.prototype.setCurrentSessionElementComplete = function ()
         debug("Session Complete!", this.completionLevel);
     }
     this.saveToDB();
-    debug("Completion Level now ", this.completionLevel);
+    this.participant.saveToDB();
+    console.log("Completion Level now ", this.completionLevel);
     
     totalLoopTime = 0;
     longFramesSinceStart = 0;
@@ -109,8 +110,8 @@ Session.prototype.setCurrentSessionElementComplete = function ()
 
 Session.prototype.blockComplete = function ()
 {
-    this.participant.blockComplete(this.getCondition());
-    this.saveToDB()
+    this.participant.blockComplete(this.getCondition(), this.getBlockReward(this.participant.getblocksCompleted(this.getCondition())));
+    this.saveToDB();
 }
 
 

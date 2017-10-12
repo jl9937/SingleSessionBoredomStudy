@@ -4,19 +4,17 @@
 
 
     switch (session.getDayNumber())
-    {
-        case 1:
-            session.setSchedule(["MAINMENU", "CONSENT", "TASK", "QUESTIONNAIRE", "DEMOGRAPHICS", "POSTSESSION"]);
+    {             
+        default:
+            session.setSchedule(["MAINMENU", "CONSENT", "TASK", "ENGAGEMENT_QUEST", "DEMOGRAPHICS", "POSTSESSION"]);
             break;
         case 2:
-            session.setSchedule(["MAINMENU", "TASK", "QUESTIONNAIRE", "POSTSESSION"]);
+            session.setSchedule(["MAINMENU", "CONSENT", "TASK", "ENGAGEMENT_QUEST", "POSTSESSION"]);
             break;
         case 3:
-            session.setSchedule(["MAINMENU", "TASK", "QUESTIONNAIRE", "POSTSESSION", "POSTSTUDY"]);
+            session.setSchedule(["MAINMENU", "CONSENT", "TASK", "ENGAGEMENT_QUEST", "POSTSESSION", "POSTSTUDY"]);
             break;
-        default:
-            session.setSchedule(["MAINMENU", "CONSENT", "TASK", "QUESTIONNAIRE", "DEMOGRAPHICS", "POSTSESSION"]);
-            break;
+        
     }
     makeScreens(session);
 }
@@ -27,8 +25,8 @@ function makeScreens(session)
         "MAINMENU": this.makeMainMenu, //done
         "CONSENT": this.makeConsent, //done
         "TASK": this.makeTask, //done
-        "QUESTIONNAIRE": this.makeQuestionnaire,
-        "DEMOGRAPHICS": this.makeDemographics,
+        "ENGAGEMENT_QUEST": this.createQuestionnaire,
+        "DEMOGRAPHICS": this.createQuestionnaire,
         "POSTSESSION": this.makePostSession, //done
         "POSTSTUDY": this.makePostStudy //done
     }
@@ -204,25 +202,38 @@ function makeTask(name, nextpage, session)
 }
 
 
-//todo finish this
-function makeQuestionnaire(name, nextpage, session)
+function createQuestionnaire(screenName, nextScreenToGoTo, session)
 {
-    VMan.addScreen(name, new EmbeddedGForm(session, {
-        text: "Thank you for completing those questionnaires, please click below to move onto the next part of the session",
-        buttonText: "Next",
-        nextScreenToGoTo: nextpage,
-        buttonYPos: Main.SCREEN_HEIGHT - 80,
-        form: EmbeddedGForm.MOOD_MERGED
-    }));
-}
+    var questionnaireArray = [];
+    if (screenName === "ENGAGEMENT_QUEST")
+    {
+        questionnaireArray = [
+            new LikertScreen(session, screenName, "How strongly did you experience INTEREST?", "interest"),
+            new LikertScreen(session, screenName, "How strongly did you experience INTRIGUE?", "intrigue"),
+            new LikertScreen(session, screenName, "How strongly did you experience FOCUS?", "focus"),
+            new LikertScreen(session, screenName, "How strongly did you experience INATTENTION?", "inattention"),
+            new LikertScreen(session, screenName, "How strongly did you experience DISTRACTION?", "distraction"),
+            new LikertScreen(session, screenName, "How strongly did you experience ENJOYMENT?", "enjoyment"),
+            new LikertScreen(session, screenName, "How strongly did you experience ANNOYANCE?", "annoyance"),
+            new LikertScreen(session, screenName, "How strongly did you experience PLEASURE?", "pleasure")
+        ];
+    }
+    else if (screenName === "DEMOGRAPHICS")
+    {
+        questionnaireArray = [];
+        questionnaireArray[0] = new NumberChooserScreen(session, "demographics", "What is your age?", "age", 18, 70);
+        questionnaireArray[1] =
+            new ComboBoxScreen(session, "demographics", "What is your sex?", "sex", ["Male", "Female"]);
+        questionnaireArray[2] = new ComboBoxScreen(session,
+            "demographics",
+            "What is your ethnicity?",
+            "ethnicity",
+            ["Caucasian", "Central Asian", "South Asian", "East Asian", "Afro-carribean", "Hispanic", "Other"]);
+        questionnaireArray[3] = new ComboBoxScreen(session, "demographics", "What is the highest level of education you have attained?",
+            "education", ["None", "GCSEs/High School", "A-levels/Higher Education", "Bachelors Degree/University","Postgraduate Degree"]);                              
+        questionnaireArray[4] = new NumberChooserScreen(session, "demographics", "Roughly how many hours a week do you spend playing video games?", "videogamehours", 0, 100);
+    }
 
-function makeDemographics(name, nextpage, session)
-{
-    VMan.addScreen(name, new EmbeddedGForm(session, {
-        text: "Thank you for completing the questionnaire\nPlease press the button below to start the Emotion Recognition Task",
-        buttonText: "Begin",
-        form: EmbeddedGForm.IMS_PRE,
-        nextScreenToGoTo: nextpage,
-        buttonYPos: Main.SCREEN_HEIGHT - 80
-    }));
+    shuffleArray(questionnaireArray);
+    VMan.addScreens(screenName, questionnaireArray, nextScreenToGoTo);
 }

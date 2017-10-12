@@ -62,7 +62,7 @@ NonGameEngine.prototype.postContinueChoice = function ()
     var self = this;
     var time = Engine.BREAKLENGTH;
 
-    var breakTextString1 = "The task will resume in "
+    var breakTextString1 = "The task will resume in ";
     var breakTextString2 = " seconds.\n\nPlease continue responding as fast as you can.";
     var breakText = new PIXI.Text(breakTextString1 + time + breakTextString2, 
         { align: "center", font: "30px Arial", fill: "#FFFFFF" });

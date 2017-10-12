@@ -22,7 +22,7 @@ Participant.prototype.initParticipant = function(id)
     this.moneyEarned = 0;
     this.sessionsBegun = 0;
     this.studyComplete = false;
-    this.optionalBlocksCompleted = { "0": 0, "1": 0, "2": 0 }
+    this.blocksCompleted = { "0": 0, "1": 0, "2": 0 }
     this.assignToConditionOrder(this.loaded.bind(this));
 }
 
@@ -71,7 +71,7 @@ Participant.prototype.saveToDB = function ()
 Participant.prototype.assignToConditionOrder = function(callback)
 {
     var self = this;
-    debug("New Participant -> Assigning to condition");
+    debug("New Participant -> Assigning to condition");                 
     DBInterface.getSmallestConditionOrderGroup(function(_conditionOrder)
     {
         self.conditionOrder = _conditionOrder;
@@ -81,14 +81,16 @@ Participant.prototype.assignToConditionOrder = function(callback)
 }
 
 
-Participant.prototype.getOptionalBlocksCompleted =function(condition)
+Participant.prototype.getblocksCompleted =function(condition)
 {
-    return this.optionalBlocksCompleted[condition];
+    return this.blocksCompleted[condition];
 }
 
 Participant.prototype.blockComplete = function(condition, moneyEarned)
 {
     this.moneyEarned += moneyEarned;
-    this.optionalBlocksCompleted[condition] += 1;
-    this.saveToDB();
+    this.moneyEarned = Math.round((this.moneyEarned + 0.00001) * 100) / 100;
+    this.blocksCompleted[condition] += 1;
+
+    console.log("Money Earned:" + this.moneyEarned + "   BlocksCompleted" + this.blocksCompleted[condition]);
 }

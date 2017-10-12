@@ -11,7 +11,6 @@ Main.CONDITION_THEME = 2;
 
 $ = $;
 PIXI = PIXI;
-DBInterface = DBInterface;
 firebase = firebase;
 
 Main.COMPLETION_LINKS = [
@@ -183,51 +182,11 @@ Main.prototype.loadOtherSprites = function(condition)
         "../resources/interface/Theme_instructions3.png",
         "../resources/interface/Theme_instructions4.png",
         "../resources/theme/themeMisc/overlayer.png",
-        "../resources/interface/textspace.png"
-    ];
-    
-    var levelThemeAssets = [
-       "../resources/theme/Packville.png",
-       "../resources/theme/objects/BPackville.png",
-       "../resources/theme/objects/YPackville.png",
-               "../resources/theme/Paris.png",
-       "../resources/theme/objects/BParis.png",
-       "../resources/theme/objects/YParis.png",
-
-               "../resources/theme/GBDocks.png",
-       "../resources/theme/objects/BGBDocks.png",
-       "../resources/theme/objects/YGBDocks.png",
-
-               "../resources/theme/Russia.png",
-       "../resources/theme/objects/BRussia.png",
-       "../resources/theme/objects/YRussia.png",
-
-               "../resources/theme/Alps.png",
-       "../resources/theme/objects/BAlps.png",
-       "../resources/theme/objects/YAlps.png",
-
-               "../resources/theme/Hawaii.png",
-       "../resources/theme/objects/BHawaii.png",
-       "../resources/theme/objects/YHawaii.png",
-
-               "../resources/theme/Morocco.png",
-       "../resources/theme/objects/BMorocco.png",
-       "../resources/theme/objects/YMorocco.png",
-
-               "../resources/theme/Nepal.png",
-       "../resources/theme/objects/BNepal.png",
-       "../resources/theme/objects/YNepal.png",
-
-               "../resources/theme/Tokyo.png",
-       "../resources/theme/objects/BTokyo.png",
-       "../resources/theme/objects/YTokyo.png",
-
-               "../resources/theme/ISS.png",
-       "../resources/theme/objects/BISS.png",
-       "../resources/theme/objects/YISS.png"
-    ];
-    Main.themeAssets = levelThemeAssets;
-
+        "../resources/interface/textspace.png",
+        "../resources/theme/Packville.png",
+        "../resources/theme/objects/BPackville.png",
+        "../resources/theme/objects/YPackville.png"
+    ];     
     if (condition === 0)
         allVariantAssets.push.apply(allVariantAssets, nongameAssets);
     if (condition === 1)
@@ -236,14 +195,7 @@ Main.prototype.loadOtherSprites = function(condition)
         allVariantAssets.push.apply(allVariantAssets, themeAssets);
     
     PIXI.loader.add(allVariantAssets).load(function()
-    {
-        if (condition === 2)
-            PIXI.loader.add(levelThemeAssets).load();
-    });
-
-    
-
-
+        {});     
 }
 
 
