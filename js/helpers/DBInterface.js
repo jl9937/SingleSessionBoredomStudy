@@ -48,6 +48,7 @@ DBInterface.firebaseSignin = function (username, password, prolificID, callback,
             debug("User signed in:", user.displayName, user.uid);
             DBInterface.getParticipantDetails(prolificID, function (data)
             {
+               
                 var p = new Participant(prolificID, data, callback);
             });
         }
@@ -207,53 +208,7 @@ DBInterface.increaseParticipantSessionsBegun = function (id)
     });
 }
 
-DBInterface.updateParticipantDataWithCompletedSession = function (session)
-{
-    //get participant details from database
-    var id = session.id;
-    var self = this;
-    var id_path = "id_" + id;
-    DBInterface.getParticipantDetails(id, function (details)
-    {
-        if (details)
-        {
-            var studyCompleted = false;
-            var sessionsCompleted = details.sessionsCompleted + 1;
-            var moneyEarned = details.moneyEarned + session.moneyWon;
-            var studyStage = Session.STAGE_BASELINE;
 
-            switch (details.studyStage)
-            {
-                case Session.STAGE_BASELINE:
-                    studyStage = Session.STAGE_DAILYTRAINING;
-                    break;
-                case Session.STAGE_DAILYTRAINING:
-                    if (sessionsCompleted >= 3)
-                        studyStage = Session.STAGE_IMMEDIATETEST;
-                    else
-                        studyStage = Session.STAGE_DAILYTRAINING;
-                    break;
-                case Session.STAGE_IMMEDIATETEST:
-                    studyStage = Session.STAGE_FINALTEST;
-                    break;
-                case Session.STAGE_FINALTEST:
-                    //todo Payment scheme set here
-                    moneyEarned += 10;
-                    studyCompleted = true;
-                    studyStage = Session.STAGE_FINALTEST;
-                    break;
-            }
-            self.databaseRef.child("Participants").child(id_path).update(
-            {
-                "moneyEarned": moneyEarned,
-                "lastSessionCompleted": Date.now().toString("dd-MM-yyyy"),
-                "sessionsCompleted": sessionsCompleted,
-                "studyCompleted": studyCompleted,
-                "studyStage": studyStage
-            });
-        }
-    });
-}
 
 
 

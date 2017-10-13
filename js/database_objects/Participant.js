@@ -48,6 +48,17 @@ Participant.prototype.newSessionBegun =function()
     this.saveToDB();
 }
 
+Participant.prototype.sessionComplete = function(session)
+{
+    this.addMoney(0.5);
+    this.lastSessionCompleted = Date.now().toString("dd-MM-yyyy");
+    this.sessionsCompleted++;   
+    if (this.sessionsCompleted === 3)
+        this.studyComplete = true;
+
+    this.saveToDB();
+}
+
 Participant.prototype.initParticipantFromData = function (participantData)
 {
     debug("Returning Participant");
@@ -88,9 +99,17 @@ Participant.prototype.getblocksCompleted =function(condition)
 
 Participant.prototype.blockComplete = function(condition, moneyEarned)
 {
-    this.moneyEarned += moneyEarned;
-    this.moneyEarned = Math.round((this.moneyEarned + 0.00001) * 100) / 100;
+    this.addMoney(moneyEarned);
     this.blocksCompleted[condition] += 1;
 
-    console.log("Money Earned:" + this.moneyEarned + "   BlocksCompleted" + this.blocksCompleted[condition]);
+    console.log("BlocksCompleted " + this.blocksCompleted[condition]);
+    //todo reenable this
+    //this.saveToDB();
+}
+
+Participant.prototype.addMoney = function(add)
+{
+    this.moneyEarned += add;
+    this.moneyEarned = Math.round((this.moneyEarned + 0.00001) * 100) / 100;
+    console.log("Money Earned: $" + this.moneyEarned);
 }

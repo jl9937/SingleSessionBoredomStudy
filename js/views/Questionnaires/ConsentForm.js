@@ -34,7 +34,6 @@ ConsentForm.prototype.createScreenText = function (text)
 ConsentForm.prototype.buttonClicked = function (nextScreenToGoTo)
 {
     DBInterface.saveQuestionnaireResultToDb(this.session, this.questionnaireTitle, this.shortQuestion, "I give consent");
-    this.session.setCurrentSessionElementComplete();
     this.moveToScreen = nextScreenToGoTo;
 }
 

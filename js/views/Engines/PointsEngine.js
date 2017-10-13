@@ -53,14 +53,16 @@ PointsEngine.prototype.setupTaskBackground = function ()
     this.zones = new PIXI.Sprite.fromImage("../resources/taskElements/zones.png");
     this.bluePath = "../resources/taskElements/blue.png";
     this.yellowPath = "../resources/taskElements/yellow.png";
+    this.Phighscore = 0;
 }
 
 PointsEngine.prototype.setupBlockOnlyVisuals = function ()
 {
+    this.pointsUIElements = new PIXI.Container();
+
     this.addChild(this.zones);
     this.addChild(this.progress);
     
-    this.Phighscore = 0;
     this.Pscore = 0;
     this.Pbonus = 1;
     this.bonusCounter = 0;
@@ -76,9 +78,9 @@ PointsEngine.prototype.setupBlockOnlyVisuals = function ()
     this.bonusGlow.va = 0.01;
 
 
-    this.addChild(this.bonusGlow);
+    this.pointsUIElements.addChild(this.bonusGlow);
     this.createPointsText();
-    
+    this.addChild(this.pointsUIElements);
 }
 
 PointsEngine.prototype.getSlowdownText = function ()
@@ -99,13 +101,63 @@ PointsEngine.prototype.startAnimation = function (stimulusSprite, direction)
 PointsEngine.prototype.setupBreak = function ()
 {
     this.removeChild(this.progress);
-    this.displayBreak();
+    this.removeChild(this.pointsUIElements);
+    this.displayContinueChoice();
 }
 
-PointsEngine.prototype.getBreakText = function ()
+PointsEngine.prototype.postContinueChoice = function()
 {
-    return "Round completed:\n\nContinue responding as fast as you can\nRemember, sort three balls correctly in a\nrow to grow your multiplier bonus!\n\nThe game will continue\nin ";
+    var self = this;
+    var time = Engine.BREAKLENGTH;
+
+    var breakTextContainer = new PIXI.Container();
+
+    var breakTextString1 = "The game will resume in ";
+    var breakTextString2 = " seconds.\n\nRemember, sort three balls correctly in a row to grow your multiplier bonus!\nPlease continue responding as fast as you can.";
+
+    var textArray = [
+        new PIXI.Text(breakTextString1 + time + breakTextString2,
+            { align: "center", font: "30px Arial", fill: "#FFFFFF" }),
+        new PIXI.Text("Previous Score", { align: "center", font: "36px Arial Black", fill: "#0094fb" }),
+        new PIXI.Text(this.Pscore, { align: "center", font: "45px Arial", fill: "#ffc000" }),
+        new PIXI.Text("Current Highscore", { align: "center", font: "36px Arial Black", fill: "#0094fb" }),
+        new PIXI.Text(this.Phighscore, { align: "center", font: "65px Arial", fill: "#ffc000", fontWeight: 'bold' }),
+        new PIXI.Text("Can you beat your highscore in the next round?",
+            { align: "center", font: "36px Arial", fill: "#FFFFFF" })
+    ];
+
+    for (var i = 0; i < textArray.length; i++)
+    {
+        if (i > 0)
+            textArray[i].y = textArray[i - 1].y + textArray[i - 1].height + 10;
+        else
+            textArray[i].y = 0;
+        textArray[i].x = Main.SCREEN_WIDTH / 2; 
+        textArray[i].anchor = new PIXI.Point(0.5, 0.5);
+        breakTextContainer.addChild(textArray[i]);
+    }                  
+    breakTextContainer.y = Main.SCREEN_HEIGHT / 2 - (textArray[textArray.length-1].y +textArray[textArray.length-1].height)/2 ;
+
+    var countdownText = textArray[0];
+    this.addChild(breakTextContainer);        
+    Utils.doTimer(1000, updateBreaktext.bind(this, countdownText, 9));
+
+
+    function updateBreaktext(text, newtime) {
+        if (newtime !== -1) {
+            countdownText.text = breakTextString1 + newtime + breakTextString2,
+                Utils.doTimer(1000, updateBreaktext.bind(self, countdownText, newtime - 1));
+        } else {
+            this.removeChild(breakTextContainer);
+            self.startBlock();
+        }
+    }
+
+
 }
+
+
+
 
 PointsEngine.prototype.conditionSpecificProcessing = function (trlObj)
 {
@@ -114,29 +166,26 @@ PointsEngine.prototype.conditionSpecificProcessing = function (trlObj)
 
 PointsEngine.prototype.createPointsText = function ()
 {
-    var highscoretext = new PIXI.Text("High Score: " + this.Phighscore, { align: "right", font: "bold 35px Arial", fill: "#FFFFFF" });
-    highscoretext.anchor = new PIXI.Point(1, 0);
-    highscoretext.x = Main.SCREEN_WIDTH - 10;
-    highscoretext.y = 10;
-
-    this.PhighscoreText = highscoretext;
-    this.PhighscoreText.text = "High Score: " + 0;
-    this.Phighscore = 0;
-    this.addChild(highscoretext);
+    this.PhighscoreText = new PIXI.Text("High Score: " + this.Phighscore, { align: "right", font: "bold 35px Arial", fill: "#FFFFFF" });
+    this.PhighscoreText.anchor = new PIXI.Point(1, 0);
+    this.PhighscoreText.x = Main.SCREEN_WIDTH - 10;
+    this.PhighscoreText.y = 10;
+                       
+    this.pointsUIElements.addChild(this.PhighscoreText);
     
     var scoretext = new PIXI.Text("Score: " + this.Pscore, { align: "center", font: "bold 60px Arial", fill: "#e3a400" });
     scoretext.anchor = new PIXI.Point(0.5, 0.5);
     scoretext.x = Main.SCREEN_WIDTH / 2;
     scoretext.y = PointsEngine.SCORETEXTY - 10;
     this.PscoreText = scoretext;
-    this.addChild(scoretext);
+    this.pointsUIElements.addChild(scoretext);
 
     var bonusText = new PIXI.Text("Bonus: x" + this.Pbonus, { align: "center", font: "bold 30px Arial", fill: "#FFFFFF" });
     bonusText.anchor = new PIXI.Point(0.5, 0.5);
     bonusText.x = Main.SCREEN_WIDTH / 2;
     bonusText.y = PointsEngine.SCORETEXTY + 45;
     this.PbonusText = bonusText;
-    this.addChild(bonusText);
+    this.pointsUIElements.addChild(bonusText);
 }
 
 PointsEngine.prototype.adjustBonusCounter =function(adjustment)
@@ -188,13 +237,6 @@ PointsEngine.prototype.calculatePointsAndUpdatePointsText = function (trlObj)
     this.PscoreText.text = "Score: " + this.Pscore;
 }
 
-PointsEngine.prototype.removePointsText = function ()
-{
-    this.removeChild(this.PhighscoreText);
-    this.removeChild(this.PbonusText);
-    this.removeChild(this.PscoreText);
-}
-
 PointsEngine.prototype.playerBonusUpgradeAnimation = function ()
 {
     var glow = new PIXI.Sprite.fromImage("../resources/taskElements/bonusGlowNew.png");
@@ -204,7 +246,7 @@ PointsEngine.prototype.playerBonusUpgradeAnimation = function ()
     glow.alpha = 0.5;
     glow.va = 0.2;
     this.bonusGlowRefresh = glow;
-    this.addChildAt(glow, 2);
+    this.pointsUIElements.addChildAt(glow, 2);
 }
 
 PointsEngine.prototype.playerBonusResetAnimation = function ()
@@ -216,5 +258,5 @@ PointsEngine.prototype.playerBonusResetAnimation = function ()
     glow.alpha = 0;
     glow.va = 0.1;
     this.bonusGlowReset = glow;
-    this.addChild(glow);
+    this.pointsUIElements.addChild(glow);
 }

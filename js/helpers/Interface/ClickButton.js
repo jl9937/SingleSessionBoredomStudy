@@ -24,6 +24,7 @@ function ClickButton(text, callback, options) {
     this.radVal = scale * ClickButton.DEFAULTRAD;
     this.up_colour = options.up_colour || ClickButton.DEFAULT_UP_COLOUR;
     this.down_colour = options.down_colour || colorLuminance(this.up_colour, 0.585253456);
+
     
     this.yposVal = yPos - this.heightVal / 2;
     this.xposVal = xPos - this.widthVal / 2;
@@ -38,10 +39,26 @@ function ClickButton(text, callback, options) {
     this.mouseupoutside = this.touchendoutside = this.buttonUp.bind(this);
     this.touchend = this.mouseup = this.buttonUp.bind(this, callback);
     
-    var buttonText = new PIXI.Text(text, { fontFamily: "Arial", fontSize: textsize });
-    buttonText.x = this.xposVal + Math.round(0.5 * (this.widthVal - buttonText.width), 0);
-    buttonText.y = this.yposVal + Math.round(0.5 * (this.heightVal - buttonText.height), 0);
-    this.addChild(buttonText);
+
+
+
+    if (options.picture !== "" & options.picture !== undefined)
+    {
+        var pic = new PIXI.Sprite.fromImage(options.picture);
+        pic.scale = new PIXI.Point(0.15, 0.15);
+        //pic.anchor = new PIXI.Point(0.5, 0.5);
+        
+        pic.x = this.xposVal + Math.round(0.5 * (this.widthVal - pic.width), 0);
+        pic.y = this.yposVal + Math.round(0.5 * (this.heightVal - pic.height), 0);
+        this.addChild(pic);
+    }
+    else
+    {
+        var buttonText = new PIXI.Text(text, { fontFamily: "Arial", fontSize: textsize });
+        buttonText.x = this.xposVal + Math.round(0.5 * (this.widthVal - buttonText.width), 0);
+        buttonText.y = this.yposVal + Math.round(0.5 * (this.heightVal - buttonText.height), 0);
+        this.addChild(buttonText);
+    }        
 }
 
 

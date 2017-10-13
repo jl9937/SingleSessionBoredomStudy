@@ -1,20 +1,17 @@
 ﻿function buildTodaysScreens(session)
-{
-
-
-
+{   
     switch (session.getDayNumber())
     {             
         default:
-            session.setSchedule(["MAINMENU", "CONSENT", "TASK", "ENGAGEMENT_QUEST", "DEMOGRAPHICS", "POSTSESSION"]);
+            //session.setSchedule(["MAINMENU", "CONSENT", "TASK", "ENGAGEMENT_QUEST", "DEMOGRAPHICS", "POSTSESSION"]);
+            session.setSchedule(["MAINMENU", "CONSENT", "TASK", "POSTTASK", "ENGAGEMENT_QUEST", "DEMOGRAPHICS", "POSTSESSION"]);
             break;
         case 2:
-            session.setSchedule(["MAINMENU", "CONSENT", "TASK", "ENGAGEMENT_QUEST", "POSTSESSION"]);
+            session.setSchedule(["MAINMENU", "TASK", "POSTTASK","ENGAGEMENT_QUEST", "POSTSESSION"]);
             break;
         case 3:
-            session.setSchedule(["MAINMENU", "CONSENT", "TASK", "ENGAGEMENT_QUEST", "POSTSESSION", "POSTSTUDY"]);
-            break;
-        
+            session.setSchedule(["MAINMENU", "TASK", "POSTTASK","ENGAGEMENT_QUEST", "POSTSESSION", "POSTSTUDY"]);
+            break;        
     }
     makeScreens(session);
 }
@@ -25,6 +22,7 @@ function makeScreens(session)
         "MAINMENU": this.makeMainMenu, //done
         "CONSENT": this.makeConsent, //done
         "TASK": this.makeTask, //done
+        "POSTTASK": this.makePostTask,
         "ENGAGEMENT_QUEST": this.createQuestionnaire,
         "DEMOGRAPHICS": this.createQuestionnaire,
         "POSTSESSION": this.makePostSession, //done
@@ -63,6 +61,17 @@ function makePostSession(name, _nextpage, session)
             nextScreenToGoTo: "MAINMENU",
             special: Main.COMPLETION_LINKS[session.getDayNumber() - 1]
         }));
+}
+
+function makePostTask(name, _nextpage, session) {
+    VMan.addScreen(name,
+        new GenericScreen(session.getCondition(),
+            {
+                text:
+                    "Thanks for completing the task. We just have a short questionnaire for you to do, and then today's session will be complete, thanks!\n\nWe'll give you 50p as thanks for completing the questionnaire.\nPlease press the button below to continue.",
+                buttonText: "Next",
+                nextScreenToGoTo: "ENGAGEMENT_QUEST"
+            }));
 }
 
 function makePostStudy(name, _nextpage, session)
@@ -208,14 +217,14 @@ function createQuestionnaire(screenName, nextScreenToGoTo, session)
     if (screenName === "ENGAGEMENT_QUEST")
     {
         questionnaireArray = [
-            new LikertScreen(session, screenName, "How strongly did you experience INTEREST?", "interest"),
-            new LikertScreen(session, screenName, "How strongly did you experience INTRIGUE?", "intrigue"),
-            new LikertScreen(session, screenName, "How strongly did you experience FOCUS?", "focus"),
-            new LikertScreen(session, screenName, "How strongly did you experience INATTENTION?", "inattention"),
-            new LikertScreen(session, screenName, "How strongly did you experience DISTRACTION?", "distraction"),
-            new LikertScreen(session, screenName, "How strongly did you experience ENJOYMENT?", "enjoyment"),
-            new LikertScreen(session, screenName, "How strongly did you experience ANNOYANCE?", "annoyance"),
-            new LikertScreen(session, screenName, "How strongly did you experience PLEASURE?", "pleasure")
+            new LikertScreen(session, screenName, "Thinking about the task you just completed,\nhow strongly did you experience INTEREST?", "interest"),
+            new LikertScreen(session, screenName, "Thinking about the task you just completed,\nhow strongly did you experience INTRIGUE?", "intrigue"),
+            new LikertScreen(session, screenName, "Thinking about the task you just completed,\nhow strongly did you experience FOCUS?", "focus"),
+            new LikertScreen(session, screenName, "Thinking about the task you just completed,\nhow strongly did you experience INATTENTION?", "inattention"),
+            new LikertScreen(session, screenName, "Thinking about the task you just completed,\nhow strongly did you experience DISTRACTION?", "distraction"),
+            new LikertScreen(session, screenName, "Thinking about the task you just completed,\nhow strongly did you experience ENJOYMENT?", "enjoyment"),
+            new LikertScreen(session, screenName, "Thinking about the task you just completed,\nhow strongly did you experience ANNOYANCE?", "annoyance"),
+            new LikertScreen(session, screenName, "Thinking about the task you just completed,\nhow strongly did you experience PLEASURE?", "pleasure")
         ];
     }
     else if (screenName === "DEMOGRAPHICS")
@@ -231,7 +240,7 @@ function createQuestionnaire(screenName, nextScreenToGoTo, session)
             ["Caucasian", "Central Asian", "South Asian", "East Asian", "Afro-carribean", "Hispanic", "Other"]);
         questionnaireArray[3] = new ComboBoxScreen(session, "demographics", "What is the highest level of education you have attained?",
             "education", ["None", "GCSEs/High School", "A-levels/Higher Education", "Bachelors Degree/University","Postgraduate Degree"]);                              
-        questionnaireArray[4] = new NumberChooserScreen(session, "demographics", "Roughly how many hours a week do you spend playing video games?", "videogamehours", 0, 100);
+        questionnaireArray[4] = new NumberChooserScreen(session, "demographics", "Roughly how many hours a week do you spend playing video games?", "videogamehours", 0, 99);
     }
 
     shuffleArray(questionnaireArray);

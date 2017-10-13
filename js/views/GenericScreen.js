@@ -60,6 +60,7 @@ GenericScreen.prototype.buttonClicked = function (nextScreenToGoTo)
 {
     if (this.options.special)
     {
+        this.session.setCurrentSessionElementComplete();
         window.open(this.options.special);
         focus();
     }

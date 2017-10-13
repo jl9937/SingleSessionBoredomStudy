@@ -33,14 +33,14 @@ ComboBoxScreen.prototype.createScreenText = function (text)
 
 ComboBoxScreen.prototype.showButton =function()
 {
-    this.nextButton = new ClickButton(Main.SCREEN_HEIGHT - 30, this.buttonText, this.buttonClicked.bind(this, this.nextScreenToGoTo), Main.SCREEN_WIDTH - 210, 0.65);
+    this.nextButton = new ClickButton(this.buttonText, this.buttonClicked.bind(this, this.nextScreenToGoTo));
     this.addChild(this.nextButton);
 }
 
 
 ComboBoxScreen.prototype.buttonClicked = function (nextScreenToGoTo)
 {
-    this.db.saveQuestionnaireResultToDb(this.session, this.questionnaireTitle, this.shortQuestion, this.valueArray[this.chooser.value]);
+    DBInterface.saveQuestionnaireResultToDb(this.session, this.questionnaireTitle, this.shortQuestion, this.valueArray[this.chooser.value]);
     document.removeEventListener("mousewheel", this.chooser.mousewheelEventListener);
     this.moveToScreen = nextScreenToGoTo;
 }

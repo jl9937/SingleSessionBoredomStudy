@@ -4,7 +4,7 @@ Engine.HIGHITI = 700;
 Engine.FIXATION = 500;
 Engine.STIMULI_DUR = 900;
 Engine.SUBBLOCKS = 4;
-Engine.BREAKLENGTH = 10;
+Engine.BREAKLENGTH = 9;
 
 Engine.TRIALLIMIT = 2;
 Engine.ALLSTOP = 0;
@@ -81,7 +81,7 @@ Engine.prototype.startTrial = function(trialType)
     var trlObj = new Trial(this.session,
         this.overallTrialNum,
         this.blockTrialNum,
-        this.session.getOptionalBlocksCompleted(),
+        this.session.getBlocksCompleted(),
         trialType,
         this.staircases,
         this.bluePath,
@@ -177,9 +177,7 @@ Engine.prototype.finishTrial = function()
 
 //todo limit this from happening more than 8 times or whatever it is
 Engine.prototype.displayContinueChoice = function()
-{
-  
-
+{           
     this.removeChild(this.zones);
     this.removeChild(this.progress);
     this.session.blockComplete();

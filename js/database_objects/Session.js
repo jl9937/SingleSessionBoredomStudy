@@ -1,9 +1,6 @@
-/// <reference path="../pixi.js-master/bin/pixi.js" />
-/// <reference path="*.js" /> 
-
-Session.COMPLETE_NOTHING = 0;
-Session.COMPLETE_TASK = 2;
-Session.COMPLETE_ALL = 6;
+Session.COMPLETED_NOTHING = "NOTHING";
+Session.COMPLETED_TASK = "TASK";
+Session.COMPLETED_ALL = "ALL";
 
 //SessioN container object. Stores all info on the participant session and also grabs browser/os data
 function Session(sessionData, participant, forcedCondition)
@@ -25,7 +22,7 @@ Session.prototype.initSession = function (participant, forcedCondition)
     this.metadata = {"browser": getBrowser(), "versionHash": this.getVersionHash(), "OS": getOS(), "screenSize": getScreenSize()}
 
     this.condition = parseInt(forcedCondition) || parseInt(this.participant.conditionOrder[this.participant.sessionsCompleted]);
-    this.completionLevel = Session.COMPLETE_NOTHING;
+    this.completionLevel = Session.COMPLETED_NOTHING;
     this.date = Date.now().toString("dd-MM-yyyy");
 }
 
@@ -37,7 +34,7 @@ Session.prototype.getBlockReward = function(blockNum)
 
 Session.prototype.getBlockRewardString = function()
 {
-    return formatMoney(this.getBlockReward(this.getOptionalBlocksCompleted()))
+    return formatMoney(this.getBlockReward(this.getBlocksCompleted()));
 }
 
 Session.prototype.initSessionFromData = function (sessionData)
@@ -45,8 +42,8 @@ Session.prototype.initSessionFromData = function (sessionData)
     var keys = Object.keys(sessionData);
     for (var i = 0; i < keys.length; i++)
         this[keys[i]] = sessionData[keys[i]];
-    if (this.getOptionalBlocksCompleted() > 0)
-        this.completionLevel = Session.COMPLETE_TASK;
+    if (this.getBlocksCompleted() > 0 && this.completionLevel === Session.COMPLETED_NOTHING)
+        this.completionLevel = Session.COMPLETED_TASK;
 }
 
 Session.prototype.getVersionHash = function ()
@@ -78,27 +75,24 @@ Session.prototype.getCompletionLevel = function ()
     return this.completionLevel;
 }
 
-Session.prototype.getOptionalBlocksCompleted = function () {
+Session.prototype.getBlocksCompleted = function () {
     return this.participant.getblocksCompleted(this.getCondition());
 }
-
-Session.prototype.getNextSessionElementScreenName = function ()
-{
-    if (this.completionLevel > this.schedule.length)
-        return "MAINMENU";
-    else
-        return this.schedule[this.completionLevel + 1];
-}
-
+           
 Session.prototype.setCurrentSessionElementComplete = function ()
 {
-    this.completionLevel++;
-    if (this.completionLevel >= this.schedule.length)
+    switch (this.completionLevel)
     {
-        this.completionLevel = Session.COMPLETE_ALL;
-        DBInterface.updateParticipantDataWithCompletedSession(this);
+    case Session.COMPLETED_NOTHING:
+        this.completionLevel = Session.COMPLETED_TASK;
+        break;
+    case Session.COMPLETED_TASK:
+        this.completionLevel = Session.COMPLETED_ALL;
+        this.participant.sessionComplete(this);           
         debug("Session Complete!", this.completionLevel);
+        break;
     }
+         
     this.saveToDB();
     this.participant.saveToDB();
     console.log("Completion Level now ", this.completionLevel);
@@ -121,12 +115,25 @@ Session.prototype.getDayNumber = function ()
     return this.participant.getSessionsCompleted() + 1;
 }
 
+Session.prototype.getNextSessionElementScreenName = function () {
+    switch (this.completionLevel)
+    {
+    case Session.COMPLETED_NOTHING:
+        return this.schedule[1];
+    case Session.COMPLETED_TASK:
+        return "POSTTASK";
+
+    case Session.COMPLETED_ALL:
+        return "MAINMENU";
+    }
+}
+
 Session.prototype.getMainMenuText = function ()
 {
     var text = "";
     switch (this.getCompletionLevel())
     {
-        case Session.COMPLETE_NOTHING:
+        case Session.COMPLETED_NOTHING:
             switch (this.getDayNumber())
             {
                 case 1:
@@ -140,8 +147,8 @@ Session.prototype.getMainMenuText = function ()
                     break;
             }
             break;
-        case Session.COMPLETE_ALL:
-            text += "\n\nToday's session has been completed already";
+        case Session.COMPLETED_ALL:
+            text += "\n\nToday's session is completed!";
             break;
         default:
             text += "\n\nDid you close the page?\nDon't worry, you can continue\nfrom where you left off";

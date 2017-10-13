@@ -12,6 +12,7 @@ function MainMenu(nextpage, _session)
 
 MainMenu.prototype.create = function(stage, session)
 {
+    
     this.createBasic(stage, session);
 
     if (this.session.getCondition() === Main.CONDITION_THEME)
@@ -77,11 +78,11 @@ MainMenu.prototype.createMainMenu = function()
 
     var startButtony = Main.SCREEN_HEIGHT / 2 + 20;
 
-    if (this.session.getCompletionLevel() === Session.COMPLETE_NOTHING)
+    if (this.session.getCompletionLevel() === Session.COMPLETED_NOTHING)
         startButton = new ClickButton("Begin", this.buttonClicked.bind(this, this.nextScreenToGoTo), { yPos: startButtony });
     else
         startButton = new ClickButton("Continue", this.buttonClicked.bind(this, this.session.getNextSessionElementScreenName()), { yPos: startButtony });
-    if (this.session.getCompletionLevel() === Session.COMPLETE_ALL)
+    if (this.session.getCompletionLevel() === Session.COMPLETED_ALL)
         startButton.disable();
     
     var downloadInstructions = new ClickButton("Instructions", function ()
@@ -96,19 +97,14 @@ MainMenu.prototype.createMainMenu = function()
 
 MainMenu.prototype.createUserDataText = function(y)
 {
-    var self = this;
-    DBInterface.getParticipantDetails(this.session.id,
-        function()
-        {
-            var text = "User ID: " + self.session.participant.getID() + "\nSessions Completed: " + self.session.participant.getSessionsCompleted() + "\nReimbursement due: " + formatMoney(self.session.participant.getMoneyEarned());
-            text = text + self.session.getMainMenuText();
+    var text = "User ID: " + this.session.participant.getID() + "\nSessions Completed: " + this.session.participant.getSessionsCompleted() + "\nReimbursement due: " + formatMoney(this.session.participant.getMoneyEarned());
+    text = text + this.session.getMainMenuText();
 
-            var dataText = new PIXI.Text(text, { align: "center", font: "16px Arial", fill: "#FFFFFF" });
-            dataText.x = Main.SCREEN_WIDTH / 2;
-            dataText.anchor = new PIXI.Point(0.5, 0);
-            dataText.y = Math.round(y - (dataText.height / 2));
-            self.addChild(dataText);
-        });
+    var dataText = new PIXI.Text(text, { align: "center", font: "16px Arial", fill: "#FFFFFF" });
+    dataText.x = Main.SCREEN_WIDTH / 2;
+    dataText.anchor = new PIXI.Point(0.5, 0);
+    dataText.y = Math.round(y - (dataText.height / 2));
+    this.addChild(dataText);
 };
 
 MainMenu.prototype.createTitleText = function()
