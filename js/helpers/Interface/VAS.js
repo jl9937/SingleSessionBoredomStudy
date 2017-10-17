@@ -68,7 +68,7 @@ VAS.prototype.clickDown = function(mouseData)
     this.placeMarker(mouseData.data.getLocalPosition(this).x);
 }
 
-VAS.prototype.clickUp = function (mouseData)
+VAS.prototype.clickUp = function ()
 {
     this.holding = false;
 }

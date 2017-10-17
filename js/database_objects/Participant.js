@@ -48,7 +48,7 @@ Participant.prototype.newSessionBegun =function()
     this.saveToDB();
 }
 
-Participant.prototype.sessionComplete = function(session)
+Participant.prototype.sessionComplete = function()
 {
     this.addMoney(0.5);
     this.lastSessionCompleted = Date.now().toString("dd-MM-yyyy");

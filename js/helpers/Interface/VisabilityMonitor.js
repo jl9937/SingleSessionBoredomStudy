@@ -56,7 +56,7 @@ VisabilityMonitor.prototype.handleScreenVisabilityChange = function (onceRound, 
                     oldStateBegan = this.timeOfLastStateChange.toString("dd-MM-yyyy HH:mm:ss");
 
                 if (this.main.viewManager.currentView === undefined)
-                    currentScreen = "MAINMENULOGIN";
+                    currentScreen = "MAINMENU";
                 else
                     currentScreen = this.main.viewManager.currentScreenName;
 
@@ -71,7 +71,7 @@ VisabilityMonitor.prototype.handleScreenVisabilityChange = function (onceRound, 
                     "durationOfOldState": delta
                 }
                 //debug(stateChangeData);
-                if (stateChangeData.view === "ENGINE" || stateChangeData.view === "EFFORTTEST")
+                if (stateChangeData.view === "TASK")
                     DBInterface.saveVisabilityActivity(this.session, this.session.id, stateChangeData);
                 this.timeOfLastStateChange = Date.now();
             }

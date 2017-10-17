@@ -4,13 +4,13 @@
     {             
         default:
             //session.setSchedule(["MAINMENU", "CONSENT", "TASK", "ENGAGEMENT_QUEST", "DEMOGRAPHICS", "POSTSESSION"]);
-            session.setSchedule(["MAINMENU", "CONSENT", "TASK", "POSTTASK", "ENGAGEMENT_QUEST", "DEMOGRAPHICS", "POSTSESSION"]);
+            session.setSchedule(["MAINMENU", "CONSENT", "TASK", "POSTTASK", "ENGAGEMENT_QUEST", "SDT_QUEST", "DEMOGRAPHICS", "POSTSESSION"]);
             break;
         case 2:
-            session.setSchedule(["MAINMENU", "TASK", "POSTTASK","ENGAGEMENT_QUEST", "POSTSESSION"]);
+            session.setSchedule(["MAINMENU", "TASK", "POSTTASK", "ENGAGEMENT_QUEST", "SDT_QUEST", "POSTSESSION"]);
             break;
         case 3:
-            session.setSchedule(["MAINMENU", "TASK", "POSTTASK","ENGAGEMENT_QUEST", "POSTSESSION", "POSTSTUDY"]);
+            session.setSchedule(["MAINMENU", "TASK", "POSTTASK", "ENGAGEMENT_QUEST", "SDT_QUEST","POSTSESSION", "POSTSTUDY"]);
             break;        
     }
     makeScreens(session);
@@ -24,6 +24,7 @@ function makeScreens(session)
         "TASK": this.makeTask, //done
         "POSTTASK": this.makePostTask,
         "ENGAGEMENT_QUEST": this.createQuestionnaire,
+        "SDT_QUEST": this.createQuestionnaire,
         "DEMOGRAPHICS": this.createQuestionnaire,
         "POSTSESSION": this.makePostSession, //done
         "POSTSTUDY": this.makePostStudy //done
@@ -225,6 +226,18 @@ function createQuestionnaire(screenName, nextScreenToGoTo, session)
             new LikertScreen(session, screenName, "Thinking about the task you just completed,\nhow strongly did you experience ENJOYMENT?", "enjoyment"),
             new LikertScreen(session, screenName, "Thinking about the task you just completed,\nhow strongly did you experience ANNOYANCE?", "annoyance"),
             new LikertScreen(session, screenName, "Thinking about the task you just completed,\nhow strongly did you experience PLEASURE?", "pleasure")
+        ];
+    }
+    else if (screenName === "SDT_QUEST") {
+        questionnaireArray = [      
+            new LikertScreen(session, screenName, "How much is the following statement true?\nI had some choice in how I approached this task", "choice"), //PChoice
+            new LikertScreen(session, screenName, "How much is the following statement true?\nI continued to take part because I wanted to", "willing"),    //PChoice
+            new LikertScreen(session, screenName, "How much is the following statement true?\nI performed well on this task", "performance"),    //PComp
+            new LikertScreen(session, screenName, "How much is the following statement true?\nIt was clear how well I was performing on the task", "performance"),    //PComp
+            new LikertScreen(session, screenName, "How much is the following statement true?\nI was skilled at this task", "skill"),      //PComp
+            new LikertScreen(session, screenName, "How much is the following statement true?\nI would recommend this task to a friend", "recommend"),        
+            new LikertScreen(session, screenName, "How much is the following statement true?\nWhile I was working on the task I was thinking about how much I enjoyed it", "enjoyed"),
+            new LikertScreen(session, screenName, "How much is the following statement true?\nI thought the task was very boring", "boring")
         ];
     }
     else if (screenName === "DEMOGRAPHICS")

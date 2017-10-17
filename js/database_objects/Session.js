@@ -140,10 +140,10 @@ Session.prototype.getMainMenuText = function ()
                     text += "\n\nWelcome to your first session\nPlease press 'Begin' to get started";
                     break;
                 case 2:
-                    text += "\n\nThis is your second session of the study\nPlease press 'Begin' to get started" + this.getTrainingEndDateString();
+                    text += "\n\nThis is your second session of the study\nThings may look a little different...\nPlease press 'Begin' to get started";
                     break;
                 case 3:
-                    text += "\n\nThis is your third and final session\nPlease press 'Begin' to get started" + this.getTrainingEndDateString();
+                    text += "\n\nThis is your third and final session\nThings may look a little different...\nPlease press 'Begin' to get started";
                     break;
             }
             break;
