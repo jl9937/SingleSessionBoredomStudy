@@ -18,7 +18,7 @@ Participant.prototype.initParticipant = function(id)
 {
     this.id = id;
     this.sessionsCompleted = 0;
-    this.datetimeRegistered = Date.now().toString("dd-MM-yyyy HH:mm:ss");
+    this.datetimeRegistered = new Date();
     this.moneyEarned = 0;
     this.sessionsBegun = 0;
     this.studyComplete = false;
@@ -51,7 +51,7 @@ Participant.prototype.newSessionBegun =function()
 Participant.prototype.sessionComplete = function()
 {
     this.addMoney(0.5);
-    this.lastSessionCompleted = Date.now().toString("dd-MM-yyyy");
+    this.lastSessionCompleted = getSimpleDateString();
     this.sessionsCompleted++;   
     if (this.sessionsCompleted === 3)
         this.studyComplete = true;

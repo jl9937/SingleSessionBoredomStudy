@@ -176,6 +176,17 @@ function dateIsToday(date)
     return false;
 }
 
+function getSimpleDateString()
+{
+    var date = new Date();
+    var d = date.getDate();
+    d = d.length === 2 ? "0" + d : d;
+    var m = date.getMonth() + 1;
+    m = m.length === 2 ? "0" + m : m;
+
+    return d + "-" + m + "-" + date.getFullYear();
+}      
+
 function formatMoney(moneyin)
 {
     if (window.hasOwnProperty("Intl") === false)

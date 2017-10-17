@@ -6,7 +6,7 @@ Engine.STIMULI_DUR = 900;
 Engine.SUBBLOCKS = 4;
 Engine.BREAKLENGTH = 9;
 
-Engine.TRIALLIMIT = 2;
+Engine.TRIALLIMIT = 1000;
 Engine.ALLSTOP = 0;
 
 /////////////////////////////////////Required////////////////////////////////////////

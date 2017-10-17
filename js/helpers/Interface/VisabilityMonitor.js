@@ -44,17 +44,7 @@ VisabilityMonitor.prototype.handleScreenVisabilityChange = function (onceRound, 
     /////Handle the change
             if (screenChange || (currState !== this.state))
             {
-                var delta = Date.now() - this.timeOfLastStateChange;
-                var oldStateBegan, currentScreen;
-
-                if (this.timeOfLastStateChange === undefined)
-                {
-                    oldStateBegan = -1;
-                    delta = -1;
-                }
-                else
-                    oldStateBegan = this.timeOfLastStateChange.toString("dd-MM-yyyy HH:mm:ss");
-
+                var currentScreen;    
                 if (this.main.viewManager.currentView === undefined)
                     currentScreen = "MAINMENU";
                 else
@@ -62,18 +52,17 @@ VisabilityMonitor.prototype.handleScreenVisabilityChange = function (onceRound, 
 
                 var stateChangeData = {
                     "sessionNumber": this.session.getSessionNumber(),
-                    "id": this.session.id,
-                    "view": currentScreen,
-                    "oldState": currState,
-                    "oldStateBegan": oldStateBegan,
-                    "newState": this.state,
-                    "newStateBegan": Date.now().toString("dd-MM-yyyy HH:mm:ss"),
-                    "durationOfOldState": delta
+                    "id": this.session.getID(),
+                    "view": currentScreen,        
+                    "state": this.state,
+                    "timestamp": Date.now()
                 }
-                //debug(stateChangeData);
-                if (stateChangeData.view === "TASK")
-                    DBInterface.saveVisabilityActivity(this.session, this.session.id, stateChangeData);
-                this.timeOfLastStateChange = Date.now();
+                           
+                if (stateChangeData.view.substr(0,4) === "TASK")
+                {
+                    DBInterface.saveVisabilityActivity(this.session, this.session.getID(), stateChangeData);
+                    debug(stateChangeData);
+                } 
             }
         }
 };

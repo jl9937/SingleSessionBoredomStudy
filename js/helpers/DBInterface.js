@@ -126,9 +126,8 @@ DBInterface.saveEffortTrial = function (trial)
 
 DBInterface.saveVisabilityActivity = function (session, id, data)
 {
-    var id_path = "id_" + session.id;
     DBInterface.databaseRef.child("Activity")
-        .child("id_" + session.id)
+        .child("id_" + id)
         .child(session.getDateSessionString())
         .push(data);
 }
@@ -136,7 +135,7 @@ DBInterface.saveVisabilityActivity = function (session, id, data)
 DBInterface.saveBypassButtonPress = function (session, questionnaireType)
 {
     var id_path = "id_" + session.getID();
-    var dateTime = Date.now().toString("dd-MM-yyyy_HH:m:ss");
+    var dateTime = new Date();
     DBInterface.databaseRef.child("Questionnaire")
         .child(id_path)
         .child(session.getDateSessionString())
@@ -224,7 +223,7 @@ DBInterface.saveQuestionnaireResultToDb = function (session, questionnaire, ques
 ///////////////////////////////////Fetchers///////////////////////////////////
 DBInterface.getTodaysSessions = function (id, callback)
 {
-    var today = Date.now().toString("dd-MM-yyyy");
+    var today = getSimpleDateString();
     var query = this.databaseRef.child("Sessions").child("id_" + id).orderByKey().startAt(today).endAt(today + "\uf8ff");
     query.once("value", function (snapshot)
     {

@@ -23,7 +23,7 @@ Session.prototype.initSession = function (participant, forcedCondition)
 
     this.condition = parseInt(forcedCondition) || parseInt(this.participant.conditionOrder[this.participant.sessionsCompleted]);
     this.completionLevel = Session.COMPLETED_NOTHING;
-    this.date = Date.now().toString("dd-MM-yyyy");
+    this.date = getSimpleDateString();
 }
 
 Session.prototype.getBlockReward = function(blockNum)

@@ -13,7 +13,7 @@ function Trial(_session, _overallTrialNumber, _blockTrialNum, _blockNumber, tria
     this.stimulusPath = this.colour === "Y" ? yellowPath : bluePath;
 
     this.ITIDuration = Math.floor(Math.random() * (Engine.HIGHITI - Engine.LOWITI)) + Engine.LOWITI;
-    this.dateTime = Date.now().toString("dd-MM-yyyy HH:mm:ss");
+    this.dateTime = new Date();
 
     this.stopTrial = trialType[0] === "s" ? 1: 0;
     this.staircase = trialType[2] || -1;
