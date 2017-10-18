@@ -19,6 +19,7 @@ Participant.prototype.initParticipant = function(id)
     this.id = id;
     this.sessionsCompleted = 0;
     this.datetimeRegistered = new Date();
+    this.lastSessionCompleted = "";
     this.moneyEarned = 0;
     this.sessionsBegun = 0;
     this.studyComplete = false;
@@ -104,7 +105,7 @@ Participant.prototype.blockComplete = function(condition, moneyEarned)
 
     console.log("BlocksCompleted " + this.blocksCompleted[condition]);
     //todo reenable this
-    //this.saveToDB();
+    this.saveToDB();
 }
 
 Participant.prototype.addMoney = function(add)

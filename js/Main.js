@@ -9,10 +9,6 @@ Main.CONDITION_NONGAME = 0;
 Main.CONDITION_POINTS = 1;
 Main.CONDITION_THEME = 2;
 
-$ = $;
-PIXI = PIXI;
-firebase = firebase;
-
 Main.COMPLETION_LINKS = [
     "https://prolific.ac/submissions/complete?cc=QEEZRN9P", //Session 1
     "https://prolific.ac/submissions/complete?cc=65XD4MES", //Session 2
@@ -57,8 +53,8 @@ function Main()
     // Initialize Firebase
     var config = {
         apiKey: "AIzaSyACCRI2t52ESEl-CkFiKGY6dWSpzysJ_js",
-        authDomain: "mindgamesmkii.firebaseapp.com",
-        databaseURL: "https://mindgamesmkii.firebaseio.com",
+        authDomain: Main.URL,
+        databaseURL: Main.DBURL,
         projectId: "mindgamesmkii",
         storageBucket: "mindgamesmkii.appspot.com"//,
         //messagingSenderId: "561069159843"

@@ -175,7 +175,6 @@ Engine.prototype.finishTrial = function()
     this.runTrialorBreakorEndTask();
 };
 
-//todo limit this from happening more than 8 times or whatever it is
 Engine.prototype.displayContinueChoice = function()
 {           
     this.removeChild(this.zones);

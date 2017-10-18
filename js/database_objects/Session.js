@@ -21,8 +21,19 @@ Session.prototype.initSession = function (participant, forcedCondition)
     this.summaryData = { "medianRT": -1, "stopAccuracy": -1, "goAccuracy": -1 };
     this.metadata = {"browser": getBrowser(), "versionHash": this.getVersionHash(), "OS": getOS(), "screenSize": getScreenSize()}
 
-    this.condition = parseInt(forcedCondition) || parseInt(this.participant.conditionOrder[this.participant.sessionsCompleted]);
-    this.completionLevel = Session.COMPLETED_NOTHING;
+    if (this.participant.sessionsCompleted >= 3)
+    {
+        this.condition = 0;
+        this.completionLevel = Session.COMPLETED_ALL;
+    }
+    else
+    {
+        this.condition = parseInt(forcedCondition) ||
+            parseInt(this.participant.conditionOrder[this.participant.sessionsCompleted]);
+        this.completionLevel = Session.COMPLETED_NOTHING;
+    }
+
+    
     this.date = getSimpleDateString();
 }
 
