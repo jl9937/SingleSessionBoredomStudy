@@ -1,16 +1,107 @@
 var initialised = null;
 
 //This function checks the admin login is valid before executing database setup demands.
-
-
-
 function logout()
 {
     firebase.auth().signOut();  
     window.location = '/login.html';
 }
 
-/////////////////Button functions/////////////////
+function findParticipants(ref)
+{
+    var min = parseInt(document.getElementById("min").value) || 0;
+    var max = parseInt(document.getElementById("max").value) || 5;
+
+    var idList = [];
+
+    ref.child("Participants").orderByChild("sessionsCompleted").startAt(min).endAt(max).once("value",
+        function(allParticipants)
+        {
+            allParticipants.forEach(function(participant)
+            {
+                if (!participant.val().excluded)
+                    idList.push(participant.key.substr(3, 24));
+            });
+            if (idList.length === 0)
+                $("#displayArea").text("Sorry, we didn't find any participants matching those criteria");
+            else
+            {
+                $("#displayArea").text(idList.join(",\n"));
+            }
+            output("Searched for participants that completed between " + min + " and " + max + " sessions");
+        }).catch(function(error)
+    {
+        output(error);
+    });
+}
+
+
+String.prototype.replaceAll = function (search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+
+function changeExclusionStatus(ref, newStatus)
+{         
+    var idList = document.getElementById("inputArea").value.replaceAll("[,\n]+","|").split("|");
+
+    for (var i = 0; i < idList.length; i++)
+    {
+        //returns 1 if successfully edited, 0 if ID does not exist
+        ifParticipantExistsThenSetExcluded(ref,
+            idList[i],
+            newStatus,
+            function(result, id)
+            {
+                if (result)
+                {
+                    if (newStatus)
+                        output("Excluded " + id);
+                    else
+                        output("Unexcluded " + id);
+                }
+                else
+                    output("Couldn't find " + id);
+            });
+    }   
+    function ifParticipantExistsThenSetExcluded(root, participantId, excluded, callback)
+    {
+        var ref = root.child("Participants").child("id_" + participantId);
+        ref.once("value", function (data)
+        {
+            if (data.val())
+            {
+                ref.update({ "excluded": excluded });
+                callback(1, participantId);
+            }
+            else
+                callback(0, participantId);
+        });   
+    }  
+}
+
+function showExcludedParticipants(ref)
+{
+    var idList = [];
+
+    ref.child("Participants").orderByChild("excluded").equalTo(true).once("value",
+        function (allParticipants) {
+            allParticipants.forEach(function (participant) {
+                idList.push(participant.key.substr(3, 24));
+            });
+            if (idList.length === 0)
+                $("#displayArea").text("Sorry, we didn't find any participants matching those criteria");
+            else {
+                $("#displayArea").text(idList.join(",\n"));
+            }
+            output("Searched for excluded participants");
+        }).catch(function (error) {
+        output(error);
+    });
+}    
+
+
+/////////////////Downloading functions/////////////////
 function getQuestionnaires(ref)
 {
     output("Generating Questionnaire report, download should start soon");
@@ -202,9 +293,8 @@ function clearAllData()
 }
 
 function output(text) {
-    var mydiv = document.getElementById("updates");
-    var newcontent = document.createElement('div');
+    
+    var newcontent = document.createElement('span');
     newcontent.innerHTML = "<li>" + text + "</li>";
-    while (newcontent.firstChild)
-        mydiv.appendChild(newcontent.firstChild);
+    $("#updates").prepend(newcontent);
 }

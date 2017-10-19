@@ -23,6 +23,7 @@ Participant.prototype.initParticipant = function(id)
     this.moneyEarned = 0;
     this.sessionsBegun = 0;
     this.studyComplete = false;
+    this.excluded = false;
     this.blocksCompleted = { "0": 0, "1": 0, "2": 0 }
     this.assignToConditionOrder(this.loaded.bind(this));
 }

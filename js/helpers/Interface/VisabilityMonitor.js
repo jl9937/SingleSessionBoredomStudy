@@ -6,23 +6,38 @@
     var hidden, visibilityChange;
     if (typeof document.hidden !== "undefined")
     {
-        hidden = "hidden"; visibilityChange = "visibilitychange";
-    } else if (typeof document.mozHidden !== "undefined")
+        hidden = "hidden";
+        visibilityChange = "visibilitychange";
+    }
+    else if (typeof document.mozHidden !== "undefined")
     {
-        hidden = "mozHidden"; visibilityChange = "mozvisibilitychange";
-    } else if (typeof document.msHidden !== "undefined")
+        hidden = "mozHidden";
+        visibilityChange = "mozvisibilitychange";
+    }
+    else if (typeof document.msHidden !== "undefined")
     {
-        hidden = "msHidden"; visibilityChange = "msvisibilitychange";
-    } else if (typeof document.webkitHidden !== "undefined")
+        hidden = "msHidden";
+        visibilityChange = "msvisibilitychange";
+    }
+    else if (typeof document.webkitHidden !== "undefined")
     {
-        hidden = "webkitHidden"; visibilityChange = "webkitvisibilitychange";
+        hidden = "webkitHidden";
+        visibilityChange = "webkitvisibilitychange";
     }
 
     var self = this;
     this.inFocus = true;
 
-    document.focus = window.onfocus = function () { self.inFocus = true; self.handleScreenVisabilityChange(); };
-    document.onblur = window.onblur = function () { self.inFocus = false; self.handleScreenVisabilityChange(); };
+    document.focus = window.onfocus = function()
+    {
+        self.inFocus = true;
+        self.handleScreenVisabilityChange();
+    };
+    document.onblur = window.onblur = function()
+    {
+        self.inFocus = false;
+        self.handleScreenVisabilityChange();
+    };
     document.addEventListener(visibilityChange, this.handleScreenVisabilityChange.bind(this));
 };
 
@@ -41,7 +56,7 @@ VisabilityMonitor.prototype.handleScreenVisabilityChange = function()
                 this.state = "active";
         }
 
-        if ( isValidStateChange(oldState, this.state) )
+        if (isValidStateChange(oldState, this.state))
         {
             var stateChangeData = {
                 "sessionNumber": this.session.getSessionNumber(),
