@@ -71,7 +71,7 @@ NonGameEngine.prototype.postContinueChoice = function ()
     breakText.anchor = new PIXI.Point(0.5, 0.5);
     this.addChild(breakText);
 
-    Utils.doTimer(1000, updateBreaktext.bind(this, breakText, 9));
+    Utils.doTimer(1000, updateBreaktext.bind(this, breakText, 8));
     function updateBreaktext(text, newtime) {
         if (newtime !== -1) {
             breakText.text = breakTextString1 + newtime + breakTextString2, 

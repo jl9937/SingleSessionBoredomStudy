@@ -236,7 +236,7 @@ function createQuestionnaire(screenName, nextScreenToGoTo, session)
             new LikertScreen(session, screenName, "How much is the following statement true?\nIt was clear how well I was performing on the task", "performance"),    //PComp
             new LikertScreen(session, screenName, "How much is the following statement true?\nI was skilled at this task", "skill"),      //PComp
             new LikertScreen(session, screenName, "How much is the following statement true?\nI would recommend this task to a friend", "recommend"),        
-            new LikertScreen(session, screenName, "How much is the following statement true?\nWhile I was working on the task I was thinking about how much I enjoyed it", "enjoyed"),
+            new LikertScreen(session, screenName, "How much is the following statement true?\nWhile working on the task, I was thinking about how much I enjoyed it", "enjoyed"),
             new LikertScreen(session, screenName, "How much is the following statement true?\nI thought the task was very boring", "boring")
         ];
     }

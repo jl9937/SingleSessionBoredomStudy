@@ -140,7 +140,7 @@ PointsEngine.prototype.postContinueChoice = function()
 
     var countdownText = textArray[0];
     this.addChild(breakTextContainer);        
-    Utils.doTimer(1000, updateBreaktext.bind(this, countdownText, 9));
+    Utils.doTimer(1000, updateBreaktext.bind(this, countdownText, 8));
 
 
     function updateBreaktext(text, newtime) {

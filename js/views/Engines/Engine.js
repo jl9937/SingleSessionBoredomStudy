@@ -282,40 +282,44 @@ Engine.prototype.showForTimeThenCallback = function(picture, time, callback, _ya
 
 ////////////////////////Get Trials for Block/////////////////////
 
+//todo make this so the "first" just ensures there are no Stop trials in the first 4.
 function getTrialsForBlock(first)
 {
-    first = first || 0;
-    var firstsubblockInit = [
-    "gB", "gB", "gB", "gB", "gB", "gB", "gB", "gB",
-    "gY", "gY", "gY", "gY", "gY", "gY", "gY", "gY"
-    ];
+    //todo first is enabled all the time.
+    first = first || 1;
     var subblockInit = [
         "gB", "sB1", "gB", "gB", "gB", "sY3", "gB", "gB",
         "gY", "sY0", "gY", "gY", "sB2", "gY", "gY", "gY"
     ];
+    var firstFourTrials = ["gB", "gY", "gB", "gY"];
+    var firstTwelveTrials = ["sB1", "gB", "gB", "gB", "sY3", "gB", "gY", "sY0", "gY", "gY", "sB2", "gY"];
+
     var allTrials = [];
     for (var i = 0; i < Engine.SUBBLOCKS; i++)
     {
-        var subblockCopy = subblockInit.slice();
+        var subblockCopy = shuffleArray(subblockInit.slice());
         if (first)
-            subblockCopy = firstsubblockInit.slice();
-        subblockCopy = shuffleArray(shuffleArray(subblockCopy));
-        subblockCopy = shuffleArray(shuffleArray(subblockCopy));
-        subblockCopy = shuffleArray(shuffleArray(subblockCopy));
-        subblockCopy = shuffleArray(shuffleArray(subblockCopy));
+        {
+            subblockCopy = shuffleArray(firstFourTrials.slice());
+            subblockCopy = subblockCopy.concat(shuffleArray(firstTwelveTrials.slice())); 
+            first = 0; 
+        }              
         allTrials.push.apply(allTrials, subblockCopy);
-        first = 0;
     }
     return allTrials;
 
-    function shuffleArray(array)
+    function shuffleArray(array, repeats)
     {
-        for (var i = 0; i < array.length; i++)
+        repeats = repeats || 1;
+        for (var j = 0; j < repeats; j++)
         {
-            var swapIndex = i + Math.floor(Math.random() * (array.length - i));
-            var temp = array[i];
-            array[i] = array[swapIndex];
-            array[swapIndex] = temp;
+            for (var i = 0; i < array.length; i++)
+            {
+                var swapIndex = i + Math.floor(Math.random() * (array.length - i));
+                var temp = array[i];
+                array[i] = array[swapIndex];
+                array[swapIndex] = temp;
+            }
         }
         return array;
     }

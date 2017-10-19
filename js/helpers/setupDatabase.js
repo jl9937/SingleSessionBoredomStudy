@@ -55,10 +55,9 @@ function getQuestionnaires(ref)
             {
                 allSessionsSnapshot.forEach(function(allQuestionnairesSnapshot)
                 {
-                    allQuestionnairesSnapshot.forEach(function(questionSnapshot)
-                    {
-                        fullText = appendObjectToFullText(questionSnapshot.val(), fullText);
-                    });
+                    
+                    fullText = appendObjectToFullText(allQuestionnairesSnapshot.val(), fullText);
+                    
                 });
             });
             saveContent(fullText, "QuestionnaireData.csv");
