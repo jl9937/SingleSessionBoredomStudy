@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Backend</title>
+    <style>
+        body {background-color: #FFFFFF; }
+    </style>
+</head>
+<body onload="init()">
+<h2>Database access to Mindgames MKII</h2>
+<p>Please login below, if you don't have an account yet, contact Jim</p>
+    
+    <form>
+        Username:<br>
+        <input type="text" id="username">
+        <br>
+        Password:<br>
+        <input type="password" id="password">
+    </form>
+<br/><button id="login">Login</button>
+
+    <div id="updates"><ul></ul></div>
+
+<script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
+<script src="js/libs/FileSaver.js"></script>
+<script src="js/Main.js"></script>
+
+
+<script>
+    function output(text)
+    {
+        var mydiv = document.getElementById("updates");
+        var newcontent = document.createElement('div');
+        newcontent.innerHTML = "<li>" + text + "</li>";
+        while (newcontent.firstChild)
+            mydiv.appendChild(newcontent.firstChild);
+    }
+
+    function init()
+    {
+        var loginButton = document.getElementById("login");
+        var config = {
+            apiKey: "AIzaSyACCRI2t52ESEl-CkFiKGY6dWSpzysJ_js",
+            authDomain: Main.URL,
+            databaseURL: Main.DBURL,
+            projectId: "mindgamesmkii",
+            storageBucket: "mindgamesmkii.appspot.com",
+            messagingSenderId: "275495539195"
+        };
+        firebase.initializeApp(config);
+
+        loginButton.onclick = function()
+        {
+            var id = document.getElementById("username").value;
+            var pw = document.getElementById("password").value;
+            if (id === "" || pw === "")
+            {
+                output("Login Failed");
+                return;
+            }
+            var result = firebase.auth().signInWithEmailAndPassword(id, pw).catch(function(error)
+                {
+                    output("Login Failed" + error);
+                }
+            );
+            result.then(function(user)
+            {
+                if (user)
+                {
+                    window.location = '/backend.html';
+                }
+            });
+        };
+    };
+</script>
+
+
+
+</body>
+</html>

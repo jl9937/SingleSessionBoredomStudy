@@ -1,47 +1,14 @@
 var initialised = null;
 
 //This function checks the admin login is valid before executing database setup demands.
-function checkLogin(callback)
+
+
+
+function logout()
 {
-    
-    var id = document.getElementById("username").value;
-    var pw = document.getElementById("password").value;
-    if (id === "" || pw === "")
-    {
-        output("Login Failed");
-        return;
-    }
-
-    if (initialised === null)
-    {
-        var config = {
-            apiKey: "AIzaSyACCRI2t52ESEl-CkFiKGY6dWSpzysJ_js",
-            authDomain: Main.URL,
-            databaseURL: Main.DBURL,
-            projectId: "mindgamesmkii",
-            storageBucket: "mindgamesmkii.appspot.com",
-            messagingSenderId: "275495539195"
-        };
-        initialised = firebase.initializeApp(config);
-    }
-
-    var result = firebase.auth().signInWithEmailAndPassword(id, pw).catch(function (error)
-    {
-        output("Login Failed" + error);
-    }
-       );
-    result.then(function (user)
-    {
-        if (user)
-        {
-            var ref = firebase.database().ref();
-            output("Login correct");
-            output("Drawing from: " + Main.DBURL);
-            callback(ref);
-        }
-    });
+    firebase.auth().signOut();  
+    window.location = '/login.html';
 }
-
 
 /////////////////Button functions/////////////////
 function getQuestionnaires(ref)
@@ -232,4 +199,12 @@ function clearAllData()
         databaseRef.child("Sessions").remove();
         databaseRef.child("Questionnaire").remove();
         databaseRef.child("Participants").remove();
+}
+
+function output(text) {
+    var mydiv = document.getElementById("updates");
+    var newcontent = document.createElement('div');
+    newcontent.innerHTML = "<li>" + text + "</li>";
+    while (newcontent.firstChild)
+        mydiv.appendChild(newcontent.firstChild);
 }

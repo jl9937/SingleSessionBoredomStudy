@@ -8,48 +8,71 @@
     </style>
 </head>
 <body onload="init()">
-<b>Instructions:</b>
-<p>Database access to Mindgames MKII: Enter the admin username and password below, then click on one of the buttons to perform that action.</p>
-    
-    <form>
-        Username:<br>
-        <input type="text" id="username">
-        <br>
-        Password:<br>
-        <input type="password" id="password">
-    </form>
+<h2>Database access to Mindgames MKII</h2>
        
-    <p>Click on a button below to run that script on the database:</p>
+<p>Click on a button below to run that script on the database:</p>
 
 
-<br/><button id="activity">Download Activity</button>
-<br /><button id="participants">Download Participants</button>
-    <br /><button id="questionnaires">Download Questionnaires</button>
-    <br/><button id="sessions">Download Sessions</button>
-    <br/><button id="trials">Download Trials</button>
+<br/><button id="activityButton">Download Activity</button>
+<br /><button id="participantsButton">Download Participants</button>
+<br /><button id="questionnairesButton">Download Questionnaires</button>
+<br/><button id="sessionsButton">Download Sessions</button>
+<br/><button id="trialsButton">Download Trials</button>
 
-    <div id="updates"><ul></ul></div>
+
+<div id="updates"><ul></ul></div>
+    
+<br/><button id="logoutButton">Logout</button>
 
 <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
+<script src="js/libs/jquery-3.2.0.min.js"></script>
 <script src="js/libs/FileSaver.js"></script>
 <script src="js/Main.js"></script>
 <script src="js/helpers/backendDownloading.js"></script>
 
+
 <script>
+    $ = $;
+
+    var initialised = null;
     function init()
     {
-        var activityButton = document.getElementById("activity");
-        var participantsButton = document.getElementById("participants");
-        var questionnaireButton = document.getElementById("questionnaires");
-        var sessionButton = document.getElementById("sessions");
-        var trialButton = document.getElementById("trials");
+        if (initialised === null)
+        {
+            var config = {
+                apiKey: "AIzaSyACCRI2t52ESEl-CkFiKGY6dWSpzysJ_js",
+                authDomain: Main.URL,
+                databaseURL: Main.DBURL,
+                projectId: "mindgamesmkii",
+                storageBucket: "mindgamesmkii.appspot.com",
+                messagingSenderId: "275495539195"
+            };
+            initialised = firebase.initializeApp(config);
+        }
+        
 
-        activityButton.onclick = checkLogin.bind(this, getActivity);
-        participantsButton.onclick = checkLogin.bind(this, getParticipants);
-        questionnaireButton.onclick = checkLogin.bind(this, getQuestionnaires);
-        sessionButton.onclick = checkLogin.bind(this, getSessions);
-        trialButton.onclick = checkLogin.bind(this, getTrials);
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (!user)
+            {
+                window.location = '/login.html';
+            }
+            else
+            {
+                output("Login correct");
+                output("Connected to: " + Main.DBURL);
+            }
+        });
+        var ref = firebase.database().ref();
+
+        $("#activityButton").click(getActivity.bind(this, ref));
+        $("#participantsButton").click(getParticipants.bind(this, ref));        
+        $("#questionnairesButton").click(getQuestionnaires.bind(this, ref));
+        $("#sessionsButton").click(getSessions.bind(this, ref));
+        $("#trialsButton").click(getTrials.bind(this, ref));
+        $("#logoutButton").click(logout.bind(this));
     };
+
+    
 </script>
 
 
