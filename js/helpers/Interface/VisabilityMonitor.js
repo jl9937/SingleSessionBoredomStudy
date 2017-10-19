@@ -21,48 +21,54 @@
     var self = this;
     this.inFocus = true;
 
-    document.focus = window.onfocus = function () { self.inFocus = true; self.handleScreenVisabilityChange(0); };
-    document.onblur = window.onblur = function () { self.inFocus = false; self.handleScreenVisabilityChange(0); };
-    document.addEventListener(visibilityChange, this.handleScreenVisabilityChange.bind(this, 0));
+    document.focus = window.onfocus = function () { self.inFocus = true; self.handleScreenVisabilityChange(); };
+    document.onblur = window.onblur = function () { self.inFocus = false; self.handleScreenVisabilityChange(); };
+    document.addEventListener(visibilityChange, this.handleScreenVisabilityChange.bind(this));
 };
 
-VisabilityMonitor.prototype.handleScreenVisabilityChange = function (onceRound, screenChange)
+VisabilityMonitor.prototype.handleScreenVisabilityChange = function()
 {
     if ((this.session !== null || this.session !== undefined) && this.session.getSessionNumber() !== "?")
+    {
+        var oldState = this.state || "";
+        if (document.hidden)
+            this.state = "hidden";
+        else
         {
-
-    var currState = this.state || "";
-    if (document.hidden)
-        this.state = "hidden";
-    else if (onceRound && !document.hidden && !this.inFocus)
-        this.state = "nofocus";
-    else if (!document.hidden && !this.inFocus)
-        setTimeout(this.handleScreenVisabilityChange.bind(this, 1), 15);
-    else if (!document.hidden && this.inFocus)
-        this.state = "active";
-
-    /////Handle the change
-            if (screenChange || (currState !== this.state))
-            {
-                var currentScreen;    
-                if (this.main.viewManager.currentView === undefined)
-                    currentScreen = "MAINMENU";
-                else
-                    currentScreen = this.main.viewManager.currentScreenName;
-
-                var stateChangeData = {
-                    "sessionNumber": this.session.getSessionNumber(),
-                    "id": this.session.getID(),
-                    "view": currentScreen,        
-                    "state": this.state,
-                    "timestamp": Date.now()
-                }
-                           
-                if (stateChangeData.view.substr(0,4) === "TASK")
-                {
-                    DBInterface.saveVisabilityActivity(this.session, this.session.getID(), stateChangeData);
-                    debug(stateChangeData);
-                } 
-            }
+            if (!this.inFocus)
+                this.state = "nofocus";
+            else
+                this.state = "active";
         }
+
+        if ( isValidStateChange(oldState, this.state) )
+        {
+            var stateChangeData = {
+                "sessionNumber": this.session.getSessionNumber(),
+                "id": this.session.getID(),
+                "view": this.main.viewManager.currentScreenName,
+                "state": this.state,
+                "timestamp": Date.now()
+            }
+            DBInterface.saveVisabilityActivity(this.session, this.session.getID(), stateChangeData);
+
+            if (isLossOfFocusEvent(oldState, this.state, stateChangeData.view))
+                this.session.recordLossOfFocusEvent();
+        }
+    }
+
+    function isLossOfFocusEvent(oldState, newState, currentScreen)
+    {
+        if (isValidStateChange(oldState, newState) && currentScreen.substr(0, 4) === "TASK")
+            return true;
+        return false;
+    }
+
+    function isValidStateChange(oldState, newState)
+    {
+        if (oldState === newState)
+            return false;
+        if (oldState === "active")
+            return true;
+    }
 };

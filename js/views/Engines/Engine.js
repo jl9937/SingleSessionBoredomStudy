@@ -20,7 +20,7 @@ function Engine(_condition)
 Engine.prototype.create = function(stage, db, session)
 {
     this.createBasic(stage, db, session);
-
+    this.session.resetLossOfFocusEvents();
     //setup taask parameters
     this.overallTrialNum = 0;
     this.staircases = [

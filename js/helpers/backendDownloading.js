@@ -158,7 +158,7 @@ function getParticipants(ref)
 
 
 //////////////////////////Utility Functions/////////////////////////
-function appendObjectToFullText(object, fullText) {
+function appendObjectToFullText(object, fullText, participantID, sessionNum, condition) {
     String.prototype.toProperCase = function () {
         return this.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1); });
     };

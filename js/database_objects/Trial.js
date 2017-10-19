@@ -3,6 +3,9 @@
 function Trial(_session, _overallTrialNumber, _blockTrialNum, _blockNumber, trialType, staircases, bluePath, yellowPath)
 {
     this.session = _session;
+
+    this.sessionNum = this.session.getSessionNumber();
+    this.condition = this.session.getCondition();
     this.participantID = this.session.getID();
 
     this.overallTrialNumber = _overallTrialNumber + 1;

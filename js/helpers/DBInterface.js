@@ -66,6 +66,7 @@ function sendBugToLog(error)
 ///////////////////////////////////Savers////////////////////////////////////////
 DBInterface.saveSession = function (session)
 {
+    session.participantID = session.participant.id;
     var _participant = session.participant;
     var _schedule = session.schedule;
     delete session.participant;
@@ -79,6 +80,7 @@ DBInterface.saveSession = function (session)
 
     session.participant = _participant;
     session.schedule = _schedule;
+    delete session.participantID;
 }
 
 DBInterface.saveParticipant = function (participant)
@@ -219,7 +221,12 @@ DBInterface.increaseParticipantSessionsBegun = function (id)
 
 DBInterface.saveQuestionnaireResultToDb = function (session, questionnaire, question, value)
 {
-    this.databaseRef.child("Questionnaire").child("id_" + session.getID()).child(session.getDateSessionString()).child(questionnaire).child(question).set(value);
+    var ref = this.databaseRef.child("Questionnaire").child("id_" + session.getID()).child(session.getDateSessionString());
+
+    ref.child("SessionNum").set(session.getSessionNumber());
+    ref.child("ParticipantID").set(session.getID());
+    ref.child("Condition").set(session.getCondition());
+    ref.child(questionnaire).child(question).set(value);
 };
 
 

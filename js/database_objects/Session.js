@@ -19,7 +19,7 @@ Session.prototype.initSession = function (participant, forcedCondition)
     this.participant.newSessionBegun();
 
     this.metadata = {"browser": getBrowser(), "versionHash": this.getVersionHash(), "OS": getOS(), "screenSize": getScreenSize()}
-
+    this.lossOfFocusEvents = 0;
     if (this.participant.sessionsCompleted >= 3)
     {
         this.condition = 0;
@@ -40,6 +40,15 @@ Session.prototype.getBlockReward = function(blockNum)
 {
     var rewardArray = [0.75, 0.66, 0.57, 0.48, 0.39, 0.3, 0.21, 0.12, 0.03];
     return rewardArray[blockNum];
+}
+
+Session.prototype.recordLossOfFocusEvent = function()
+{
+    this.lossOfFocusEvents++;
+}
+
+Session.prototype.resetLossOfFocusEvents = function () {
+    this.lossOfFocusEvents = 0;
 }
 
 Session.prototype.getBlockRewardString = function()
