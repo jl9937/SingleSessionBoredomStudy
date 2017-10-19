@@ -228,7 +228,6 @@ PointsEngine.prototype.calculatePointsAndUpdatePointsText = function (trlObj)
     if (this.Pscore > this.Phighscore)
     {
         this.Phighscore = this.Pscore;
-        this.session.newHighscore = this.Pscore;
     }
 
     //update all

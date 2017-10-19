@@ -44,7 +44,7 @@ Session.prototype.getBlockReward = function(blockNum)
 
 Session.prototype.recordLossOfFocusEvent = function()
 {
-    this.lossOfFocusEvents++;
+    this.lossOfFocusEvents+= 1;
 }
 
 Session.prototype.resetLossOfFocusEvents = function () {
