@@ -67,7 +67,9 @@ function sendBugToLog(error)
 DBInterface.saveSession = function (session)
 {
     var _participant = session.participant;
+    var _schedule = session.schedule;
     delete session.participant;
+    delete session.schedule;
 
     var json = JSON.parse(JSON.stringify(session));
     DBInterface.databaseRef.child("Sessions")
@@ -76,6 +78,7 @@ DBInterface.saveSession = function (session)
         .update(json);
 
     session.participant = _participant;
+    session.schedule = _schedule;
 }
 
 DBInterface.saveParticipant = function (participant)
