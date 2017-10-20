@@ -23,10 +23,10 @@ function findParticipants(ref)
                     idList.push(participant.key.substr(3, 24));
             });
             if (idList.length === 0)
-                $("#displayArea").text("Sorry, we didn't find any participants matching those criteria");
+                $("#inputArea").val("Sorry, we didn't find any participants matching those criteria");
             else
             {
-                $("#displayArea").text(idList.join(",\n"));
+                $("#inputArea").val(idList.join(",\n"));
             }
             output("Searched for participants that completed between " + min + " and " + max + " sessions");
         }).catch(function(error)
@@ -47,22 +47,25 @@ function changeExclusionStatus(ref, newStatus)
 
     for (var i = 0; i < idList.length; i++)
     {
-        //returns 1 if successfully edited, 0 if ID does not exist
-        ifParticipantExistsThenSetExcluded(ref,
-            idList[i],
-            newStatus,
-            function(result, id)
-            {
-                if (result)
+        if (idList[i].length > 2)
+        {
+            //returns 1 if successfully edited, 0 if ID does not exist
+            ifParticipantExistsThenSetExcluded(ref,
+                idList[i],
+                newStatus,
+                function(result, id)
                 {
-                    if (newStatus)
-                        output("Excluded " + id);
+                    if (result)
+                    {
+                        if (newStatus)
+                            output("Excluded " + id);
+                        else
+                            output("Unexcluded " + id);
+                    }
                     else
-                        output("Unexcluded " + id);
-                }
-                else
-                    output("Couldn't find " + id);
-            });
+                        output("Couldn't find " + id);
+                });
+        }
     }   
     function ifParticipantExistsThenSetExcluded(root, participantId, excluded, callback)
     {
@@ -80,7 +83,7 @@ function changeExclusionStatus(ref, newStatus)
     }  
 }
 
-function showExcludedParticipants(ref)
+function getExcludedParticipants(ref, callback)
 {
     var idList = [];
 
@@ -89,20 +92,50 @@ function showExcludedParticipants(ref)
             allParticipants.forEach(function (participant) {
                 idList.push(participant.key.substr(3, 24));
             });
-            if (idList.length === 0)
-                $("#displayArea").text("Sorry, we didn't find any participants matching those criteria");
-            else {
-                $("#displayArea").text(idList.join(",\n"));
-            }
-            output("Searched for excluded participants");
+            callback(idList);  
         }).catch(function (error) {
         output(error);
     });
+}
+
+function showExcludedParticipants(ref)
+{
+    output("Searched for excluded participants");
+    getExcludedParticipants(ref,
+        function(idList)
+        {
+            if (idList.length === 0)
+                $("#inputArea").val("Sorry, we didn't find any participants matching those criteria");
+            else
+            {
+                $("#inputArea").val(idList.join(",\n"));
+            }
+        });
 }    
 
 
 /////////////////Downloading functions/////////////////
-function getQuestionnaires(ref)
+function downloadData(getFunction, ref)
+{
+    if ($("#togBtn")[0].checked)
+    {
+        output("Excluded participants have been included in the data download");
+        getFunction(ref, []);
+    }
+    else
+    {
+        getExcludedParticipants(ref,
+            function(excludedList)
+            {
+                for (var i = 0; i < excludedList.length; i++)
+                    excludedList[i] = "id_" + excludedList[i];  
+                output("Excluded participants have been removed from the data download");
+                getFunction(ref, excludedList);
+            });
+    }
+}
+
+function getQuestionnaires(ref, excludedList)
 {
     output("Generating Questionnaire report, download should start soon");
     var fullText = "";
@@ -111,12 +144,11 @@ function getQuestionnaires(ref)
         {
             allParticipantsSnapshot.forEach(function(allSessionsSnapshot)
             {
-                allSessionsSnapshot.forEach(function(allQuestionnairesSnapshot)
-                {
-                    
-                    fullText = appendObjectToFullText(allQuestionnairesSnapshot.val(), fullText);
-                    
-                });
+                if (!isPresentOnList(allSessionsSnapshot.key, excludedList))
+                    allSessionsSnapshot.forEach(function(allQuestionnairesSnapshot)
+                    {
+                        fullText = appendObjectToFullText(allQuestionnairesSnapshot.val(), fullText);
+                    });
             });
             saveContent(fullText, "QuestionnaireData.csv");
             output("Questionnaire report generated");
@@ -126,7 +158,7 @@ function getQuestionnaires(ref)
     });
 }
 
-function getTrials(ref)
+function getTrials(ref, excludedList)
 {
     output("Generating Trials report, download should start soon");
     var fullText = "";
@@ -135,13 +167,16 @@ function getTrials(ref)
         {
             allParticipantsSnapshot.forEach(function(allSessionsSnapshot)
             {
-                allSessionsSnapshot.forEach(function(allBlocksSnapshot)
+                if (!isPresentOnList(allSessionsSnapshot.key, excludedList))
                 {
-                    allBlocksSnapshot.forEach(function(trialsSnapshot)
+                    allSessionsSnapshot.forEach(function(allBlocksSnapshot)
                     {
-                        fullText = appendObjectToFullText(trialsSnapshot.val(), fullText);
+                        allBlocksSnapshot.forEach(function(trialsSnapshot)
+                        {
+                            fullText = appendObjectToFullText(trialsSnapshot.val(), fullText);
+                        });
                     });
-                });
+                }
             });
             saveContent(fullText, "TrialsData.csv");
             output("Trials report generated");
@@ -151,55 +186,79 @@ function getTrials(ref)
     });
 }
 
-function getActivity(ref) {
+function isPresentOnList(string, list)
+{
+    for (var i = 0; i < list.length; i++) 
+        if (string === list[i])
+            return true;
+    return false;
+}
+
+function getActivity(ref, excludedList)
+{
     output("Generating Activity report, download should start soon");
     var fullText = "";
     ref.child("Activity").once("value",
-        function (allParticipantsSnapshot) {
-            allParticipantsSnapshot.forEach(function (allSessionsSnapshot) {
-                allSessionsSnapshot.forEach(function (sessionSnapshot) {
-                    sessionSnapshot.forEach(function (trialsSnapshot) {
-                        fullText = appendObjectToFullText(trialsSnapshot.val(), fullText);
+        function(allParticipantsSnapshot)
+        {
+            allParticipantsSnapshot.forEach(function(allSessionsSnapshot)
+            {
+                if (!isPresentOnList(allSessionsSnapshot.key, excludedList))
+                    allSessionsSnapshot.forEach(function(sessionSnapshot)
+                    {
+                        sessionSnapshot.forEach(function(trialsSnapshot)
+                        {
+                            fullText = appendObjectToFullText(trialsSnapshot.val(), fullText);
+                        });
                     });
-                });
             });
             saveContent(fullText, "ActivityData.csv");
             output("Activity report generated");
-        }).catch(function (error) {
+        }).catch(function(error)
+    {
         debug(error);
     });
 }
 
-function getSessions(ref)
+function getSessions(ref, excludedList)
 {
     output("Generating Sessions report, download should start soon");
     var fullText = "";
     ref.child("Sessions").once("value",
-        function (allParticipantsSnapshot) {
-            allParticipantsSnapshot.forEach(function (allSessionsSnapshot) {
-                allSessionsSnapshot.forEach(function (sessionSnapshot) {  
-                        fullText = appendObjectToFullText(sessionSnapshot.val(), fullText); 
-                });
+        function(allParticipantsSnapshot)
+        {
+            allParticipantsSnapshot.forEach(function(allSessionsSnapshot)
+            {
+                if (!isPresentOnList(allSessionsSnapshot.key, excludedList))
+                    allSessionsSnapshot.forEach(function(sessionSnapshot)
+                    {
+                        fullText = appendObjectToFullText(sessionSnapshot.val(), fullText);
+                    });
             });
             saveContent(fullText, "SessionsData.csv");
             output("Sessions report generated");
-        }).catch(function (error) {
+        }).catch(function(error)
+    {
         debug(error);
     });
 }
 
-function getParticipants(ref)
+function getParticipants(ref, excludedList)
 {
     output("Generating Participants report, download should start soon");
     var fullText = "";
     ref.child("Participants").once("value",
-        function (allParticipantsSnapshot) {
-            allParticipantsSnapshot.forEach(function (trialsSnapshot) { 
-                    fullText = appendObjectToFullText(trialsSnapshot.val(), fullText); 
+        function(allParticipantsSnapshot)
+        {
+            allParticipantsSnapshot.forEach(function(trialsSnapshot)
+            {
+                if (!isPresentOnList(trialsSnapshot.key, excludedList))
+                    fullText = appendObjectToFullText(trialsSnapshot.val(), fullText);
             });
             saveContent(fullText, "ParticipantsData.csv");
             output("Participants report generated");
-        }).catch(function (error) {
+        }).catch(function(error)
+    {
         debug(error);
     });
 }

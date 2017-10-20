@@ -33,14 +33,15 @@
 
         .littleButton {
             padding: 5px;
-            margin: 5px 0;
+            margin: 5px 4px;
             width: auto;
         }
 
-        div {
+        div.displayZone {
             border-radius: 5px;
             background-color: #f2f2f2;
             padding: 15px;
+            margin: 8px 4px;
         }
 
         html { font-family: sans-serif; }
@@ -56,11 +57,12 @@
             height: 400px;
             width: 100%;
             display: block;
+            margin: 4px;
         }
 
         .group {
             display: inline-block;
-            min-width: 40%
+            min-width: 50%
         }
 
         input[type=number] {
@@ -68,35 +70,127 @@
             padding: 5px;
             border-width: 0;
         }
+
+        .switch {
+            margin: 0;
+            position: relative;
+            display: inline-block;
+            width: 210px;
+            height: 34px;
+        }
+
+        .switch input {display:none;}
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cC3333;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        li {
+            font-size: 12px;
+            line-height: 140%
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        #sliderHolder {
+            margin: 0px;
+            position: relative;
+            top: 12px;
+            left: 4px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(176px);
+            -ms-transform: translateX(176px);
+            transform: translateX(176px);
+        }
+
+        /*------ ADDED CSS ---------*/
+        .on
+        {
+            display: none;
+        }
+
+        .on, .off
+        {
+            color: white;
+            position: absolute;
+            transform: translate(-50%,-50%);
+            top: 50%;
+            left: 50%;
+            font-size: 13.33px;
+            font-family: sans-serif;
+        }
+
+        input:checked+ .slider .on
+        {display: block;}
+
+        input:checked + .slider .off
+        {display: none;}
+
+        /*--------- END --------*/
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;}
     </style>
 </head>
 <body onload="init()">
 <h2>Database access to Mindgames MKII</h2>
 
-<button id="logoutButton">Logout</button>
+
 
 <button id="activityButton">Download Activity</button>
 <button id="participantsButton">Download Participants</button>
 <button id="questionnairesButton">Download Questionnaires</button>
 <button id="sessionsButton">Download Sessions</button>
 <button id="trialsButton">Download Trials</button>
+    <div id="sliderHolder">    <label class="switch"><input type="checkbox" id="togBtn"><div class="slider round"><!--ADDED HTML --><span class="on">With excluded</span><span class="off">Without excluded</span><!--END--></div></label>
+    </div>
 
-<div id="textAreas">
+<div id="textAreas" class="displayZone">
+   
+    <div class="group">
+        <textarea id="inputArea" class="largeTextArea"></textarea>
+    </div>
+    <br/>
     <div class="group">
         <button id="findParticipantsButton" class="littleButton">Find Participants</button>
         that have completed between <input type="number" id="min" placeholder="0" max="5" min="0"/> and <input type="number" id="max" placeholder="5" max="5" min="0"/> sessions<br/>
 
     </div>
-    <br/>
-    <div class="group">
-        <h3>Input Area</h3>
-        <textarea id="inputArea" class="largeTextArea"></textarea>
-    </div>
-    <div class="group">
-        <h3>Display Area</h3>
-        <textarea id="displayArea" class="largeTextArea" readonly="readonly"></textarea>
-    </div>
-    <br/>
+
     <div class="group">
 
         <button id="excludeButton">Exclude Participants</button>
@@ -108,12 +202,12 @@
 <br/>
 
 
-<div id="updateHolder">
+<div id="updateHolder" class="displayZone">
     <h3>Activity Log</h3>
     <div id="updates">
     </div>
 </div>
-
+<button id="logoutButton">Logout</button>
 
 <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
 <script src="js/libs/jquery-3.2.0.min.js"></script>
@@ -147,7 +241,7 @@
         {
             if (!user)
             {
-                window.location = '/login.html';
+                logout();
             }
             else
             {
@@ -157,11 +251,11 @@
         });
         var ref = firebase.database().ref();
 
-        $("#activityButton").click(getActivity.bind(this, ref));
-        $("#participantsButton").click(getParticipants.bind(this, ref));
-        $("#questionnairesButton").click(getQuestionnaires.bind(this, ref));
-        $("#sessionsButton").click(getSessions.bind(this, ref));
-        $("#trialsButton").click(getTrials.bind(this, ref));
+        $("#activityButton").click(downloadData.bind(this, getActivity, ref));
+        $("#participantsButton").click(downloadData.bind(this, getParticipants, ref));
+        $("#questionnairesButton").click(downloadData.bind(this, getQuestionnaires, ref));
+        $("#sessionsButton").click(downloadData.bind(this, getSessions, ref));
+        $("#trialsButton").click(downloadData.bind(this, getTrials, ref));
         $("#logoutButton").click(logout.bind(this));
 
         $("#findParticipantsButton").click(findParticipants.bind(this, ref));
