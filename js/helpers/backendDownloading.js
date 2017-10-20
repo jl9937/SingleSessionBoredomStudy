@@ -119,7 +119,7 @@ function downloadData(getFunction, ref)
 {
     if ($("#togBtn")[0].checked)
     {
-        output("Excluded participants have been included in the data download");
+        output("Excluded participants INCLUDED");
         getFunction(ref, []);
     }
     else
@@ -129,7 +129,7 @@ function downloadData(getFunction, ref)
             {
                 for (var i = 0; i < excludedList.length; i++)
                     excludedList[i] = "id_" + excludedList[i];  
-                output("Excluded participants have been removed from the data download");
+                //output("Excluded participants have been removed from the data download");
                 getFunction(ref, excludedList);
             });
     }
@@ -137,7 +137,7 @@ function downloadData(getFunction, ref)
 
 function getQuestionnaires(ref, excludedList)
 {
-    output("Generating Questionnaire report, download should start soon");
+    output("Collating Questionnaire data, please wait");
     var fullText = "";
     ref.child("Questionnaire").once("value",
         function(allParticipantsSnapshot)
@@ -151,7 +151,7 @@ function getQuestionnaires(ref, excludedList)
                     });
             });
             saveContent(fullText, "QuestionnaireData.csv");
-            output("Questionnaire report generated");
+            output("Questionnaire data downloaded");
         }).catch(function(error)
     {
         debug(error);
@@ -160,7 +160,7 @@ function getQuestionnaires(ref, excludedList)
 
 function getTrials(ref, excludedList)
 {
-    output("Generating Trials report, download should start soon");
+    output("Collating Trials data, please wait");
     var fullText = "";
     ref.child("Trials").once("value",
         function(allParticipantsSnapshot)
@@ -179,7 +179,7 @@ function getTrials(ref, excludedList)
                 }
             });
             saveContent(fullText, "TrialsData.csv");
-            output("Trials report generated");
+            output("Trials data downloaded");
         }).catch(function(error)
     {
         debug(error);
@@ -196,7 +196,7 @@ function isPresentOnList(string, list)
 
 function getActivity(ref, excludedList)
 {
-    output("Generating Activity report, download should start soon");
+    output("Collating Activity data, please wait");
     var fullText = "";
     ref.child("Activity").once("value",
         function(allParticipantsSnapshot)
@@ -213,7 +213,7 @@ function getActivity(ref, excludedList)
                     });
             });
             saveContent(fullText, "ActivityData.csv");
-            output("Activity report generated");
+            output("Activity data downloaded");
         }).catch(function(error)
     {
         debug(error);
@@ -222,7 +222,7 @@ function getActivity(ref, excludedList)
 
 function getSessions(ref, excludedList)
 {
-    output("Generating Sessions report, download should start soon");
+    output("Collating Sessions data, please wait");
     var fullText = "";
     ref.child("Sessions").once("value",
         function(allParticipantsSnapshot)
@@ -236,7 +236,7 @@ function getSessions(ref, excludedList)
                     });
             });
             saveContent(fullText, "SessionsData.csv");
-            output("Sessions report generated");
+            output("Sessions data downloaded");
         }).catch(function(error)
     {
         debug(error);
@@ -245,7 +245,7 @@ function getSessions(ref, excludedList)
 
 function getParticipants(ref, excludedList)
 {
-    output("Generating Participants report, download should start soon");
+    output("Collating Participants data, please wait");
     var fullText = "";
     ref.child("Participants").once("value",
         function(allParticipantsSnapshot)
@@ -256,7 +256,7 @@ function getParticipants(ref, excludedList)
                     fullText = appendObjectToFullText(trialsSnapshot.val(), fullText);
             });
             saveContent(fullText, "ParticipantsData.csv");
-            output("Participants report generated");
+            output("Participants data downloaded");
         }).catch(function(error)
     {
         debug(error);
@@ -351,9 +351,11 @@ function clearAllData()
         databaseRef.child("Participants").remove();
 }
 
-function output(text) {
+function output(text)
+{
+    var timestamp = new Date();
     
     var newcontent = document.createElement('span');
-    newcontent.innerHTML = "<li>" + text + "</li>";
-    $("#updates").prepend(newcontent);
+    newcontent.innerHTML = "<li>" + timestamp.toDateString() + " " + timestamp.toLocaleTimeString() + ": " + text + "</li>";
+    $("#updates").append(newcontent);
 }

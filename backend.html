@@ -6,7 +6,7 @@
     <style>
         button, select {
             width: 100%;
-            padding: 12px 20px;
+            padding: 12px 15px;
             margin: 8px 0;
             display: inline-block;
             border: 1px solid #ccc;
@@ -15,10 +15,10 @@
         }
 
         button {
-            width: 210px;
+            width: 200px;
             background-color: #4CAF50;
             color: white;
-            padding: 14px 20px;
+            padding: 14px 15px;
             margin: 4px;
             border: none;
             border-radius: 4px;
@@ -41,7 +41,7 @@
             border-radius: 5px;
             background-color: #f2f2f2;
             padding: 15px;
-            margin: 8px 4px;
+            margin: 8px 4px;            
         }
 
         html { font-family: sans-serif; }
@@ -55,15 +55,11 @@
             border-width: 0;
             border-radius: 5px;
             height: 400px;
-            width: 100%;
+            width: 98.6%;
             display: block;
             margin: 4px;
         }
 
-        .group {
-            display: inline-block;
-            min-width: 50%
-        }
 
         input[type=number] {
             width: 3em;
@@ -71,15 +67,41 @@
             border-width: 0;
         }
 
+        li {
+            font-size: 12px;
+            line-height: 140%
+        }
+
+        #sliderHolder {
+            margin: 0px;
+            position: relative;
+            top: 12px;
+            left: 4px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .row {
+            clear: both;
+        }
+
+        .column {
+            float: left;
+            width: 35%;
+        }
+
+        /*////////////////////////////////*/
+
         .switch {
             margin: 0;
             position: relative;
             display: inline-block;
-            width: 210px;
+            width: 200px;
             height: 34px;
         }
 
-        .switch input {display:none;}
+        .switch input { display: none; }
+
         .slider {
             position: absolute;
             cursor: pointer;
@@ -92,10 +114,7 @@
             transition: .4s;
         }
 
-        li {
-            font-size: 12px;
-            line-height: 140%
-        }
+
 
         .slider:before {
             position: absolute;
@@ -109,107 +128,91 @@
             transition: .4s;
         }
 
-        #sliderHolder {
-            margin: 0px;
-            position: relative;
-            top: 12px;
-            left: 4px;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
 
-        input:checked + .slider {
-            background-color: #4CAF50;
-        }
 
-        input:focus + .slider {
-            box-shadow: 0 0 1px #2196F3;
-        }
+        input:checked + .slider { background-color: #4CAF50; }
+
+        input:focus + .slider { box-shadow: 0 0 1px #2196F3; }
 
         input:checked + .slider:before {
-            -webkit-transform: translateX(176px);
-            -ms-transform: translateX(176px);
-            transform: translateX(176px);
+            -webkit-transform: translateX(166px);
+            -ms-transform: translateX(166px);
+            transform: translateX(166px);
         }
 
-        /*------ ADDED CSS ---------*/
-        .on
-        {
-            display: none;
-        }
+        .on { display: none; }
 
-        .on, .off
-        {
+        .on, .off {
             color: white;
             position: absolute;
-            transform: translate(-50%,-50%);
+            transform: translate(-50%, -50%);
             top: 50%;
-            left: 50%;
+            left: 48%;
             font-size: 13.33px;
             font-family: sans-serif;
         }
+        
+        input:checked + .slider .on { display: block; }
 
-        input:checked+ .slider .on
-        {display: block;}
+        input:checked + .slider .off { display: none; }
 
-        input:checked + .slider .off
-        {display: none;}
+        .slider.round { border-radius: 34px; }
 
-        /*--------- END --------*/
-
-        /* Rounded sliders */
-        .slider.round {
-            border-radius: 34px;
-        }
-
-        .slider.round:before {
-            border-radius: 50%;}
+        .slider.round:before { border-radius: 50%; }
     </style>
 </head>
 <body onload="init()">
 <h2>Database access to Mindgames MKII</h2>
 
 
+<div class="row">
+    <div class ="column" style="min-width: 675px">
+       
+        <div id="textAreas" class="displayZone">
+            
+            <button id="activityButton">Download Activity</button>
+            <button id="participantsButton">Download Participants</button>
+            <button id="questionnairesButton">Download Questionnaires</button>
+            <button id="sessionsButton">Download Sessions</button>
+            <button id="trialsButton">Download Trials</button>
+            <div id="sliderHolder">
+                <label class="switch"><input type="checkbox" id="togBtn">
+                    <div class="slider round"><!--ADDED HTML --><span class="on">With excluded</span><span class="off">Without excluded</span><!--END-->
+                    </div></label>
+            </div>
 
-<button id="activityButton">Download Activity</button>
-<button id="participantsButton">Download Participants</button>
-<button id="questionnairesButton">Download Questionnaires</button>
-<button id="sessionsButton">Download Sessions</button>
-<button id="trialsButton">Download Trials</button>
-    <div id="sliderHolder">    <label class="switch"><input type="checkbox" id="togBtn"><div class="slider round"><!--ADDED HTML --><span class="on">With excluded</span><span class="off">Without excluded</span><!--END--></div></label>
+            <div>
+                <textarea id="inputArea" class="largeTextArea"></textarea>
+            </div>
+
+            <div>
+                <button id="findParticipantsButton" class="littleButton">Find Participants</button>
+                that have completed between <input type="number" id="min" placeholder="0" max="5" min="0"/> and <input type="number" id="max" placeholder="5" max="5" min="0"/> sessions<br/>
+
+            </div>
+
+            <div>
+
+                <button id="excludeButton">Exclude Participants</button>
+                <button id="unexcludeButton">Unexclude Participants</button>
+                <button id="showExcludedButton">Show Excluded Participants</button>
+            </div>
+        </div>
     </div>
 
-<div id="textAreas" class="displayZone">
-   
-    <div class="group">
-        <textarea id="inputArea" class="largeTextArea"></textarea>
-    </div>
-    <br/>
-    <div class="group">
-        <button id="findParticipantsButton" class="littleButton">Find Participants</button>
-        that have completed between <input type="number" id="min" placeholder="0" max="5" min="0"/> and <input type="number" id="max" placeholder="5" max="5" min="0"/> sessions<br/>
 
+<div class ="column"> 
+    <div id="updateHolder" class="displayZone">
+        <h3>Activity Log</h3>
+        <div id="updates">
+        </div>
     </div>
+    <button id="logoutButton">Logout</button>
 
-    <div class="group">
-
-        <button id="excludeButton">Exclude Participants</button>
-        <button id="unexcludeButton">Unexclude Participants</button>
-        <button id="showExcludedButton">Show Excluded Participants</button>
-    </div>
+</div>
 </div>
 
-<br/>
-
-
-<div id="updateHolder" class="displayZone">
-    <h3>Activity Log</h3>
-    <div id="updates">
-    </div>
-</div>
-<button id="logoutButton">Logout</button>
-
-<script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
 <script src="js/libs/jquery-3.2.0.min.js"></script>
 <script src="js/libs/FileSaver.js"></script>
 <script src="js/Main.js"></script>
