@@ -43,13 +43,22 @@ function makeMainMenu(name, nextpage, session)
 
 function makeConsent(name, nextpage, session)
 {
-    VMan.addScreen(name, new ConsentForm(session.condition, "CONSENTFORM",
-   "Before we begin the study proper, we must ask you for your informed consent.\n\n " +
-   "By completing the box below, you confirm you have read the study description " +
-   "on Prolific Academic.com and are happy to take part. You also confirm that you are:\n\n" +
-   "1) Over 18 years of age\n2) Have English as a first language\n3) Are happy for your data to be anonymised and made publicly available\n\n" +
-         "If you are happy to proceed, please press the button below. If not, please just close this window.", "consent", nextpage));
-}
+    VMan.addScreen(name, new ConsentForm(session.getCondition(), "CONSENTFORM", [
+        "Before we begin the study proper, we must ask you for your informed consent.",
+        "By clicking the button, you confirm that:\n",
+        "1) You have read the study description on Prolific Academic.com, are satisfied you have been given sufficient information, and are happy to take part",
+        "2) You understand and acknowledge that the investigation is designed to promote scientific knowledge. When the study has been completed, we will analyse the study data and report the findings in an appropriate scientific journal or presented at a scientific meeting.",
+        "3) You understand that personal information collected during the study may be looked at by individuals from the University of Bristol, regulatory authorities or the funding body of the above study. You give permission for these individuals to have access to personal information under conditions of confidentiality.",
+        "4) You understand that the anonymised study data collected from you as part of the study will be made available as “open data”, as described in the study description.",
+        "5) You understand that the anonymised study data collected for this study may be used in future research projects but that the conditions on this form under which you have provided the data will still apply.",
+        "6) You understand that you are free to withdraw from the study at any time without giving a reason for doing so. Your data up until this point can be removed from the study if you contact us via Prolific Messenger. This can be done up until the data are fully anonymised\n",
+
+        "Furthermore, you confirm that:",
+        "7) You are 18 or above",
+        "8) English is your first language",
+        "9) You have normal or corrected-to-normal vision\n",
+        "If you are happy to proceed, please press the button below. If not, please just close this window."].join("\n"), "consent", nextpage));
+};
 
 function makePostSession(name, _nextpage, session)
 {

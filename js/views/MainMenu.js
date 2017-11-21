@@ -85,7 +85,7 @@ MainMenu.prototype.createMainMenu = function()
     if (this.session.getCompletionLevel() === Session.COMPLETED_ALL)
         startButton.disable();
     
-    var downloadInstructions = new ClickButton("Instructions", function ()
+    var downloadInstructions = new ClickButton("Study Information", function ()
     {
         window.open("/task_instructions.pdf");
         focus();
@@ -97,7 +97,9 @@ MainMenu.prototype.createMainMenu = function()
 
 MainMenu.prototype.createUserDataText = function(y)
 {
-    var text = "User ID: " + this.session.participant.getID() + "\nSessions Completed: " + this.session.participant.getSessionsCompleted() + "\nReimbursement due: " + formatMoney(this.session.participant.getMoneyEarned());
+    var urlid = getUrlVars(["prolific_pid"]);
+    urlid = urlid.prolific_pid;
+    var text = "User ID: " + urlid + "\nSessions Completed: " + this.session.participant.getSessionsCompleted() + "\nReimbursement due: " + formatMoney(this.session.participant.getMoneyEarned());
     text = text + this.session.getMainMenuText();
 
     var dataText = new PIXI.Text(text, { align: "center", font: "16px Arial", fill: "#FFFFFF" });

@@ -7,58 +7,52 @@ function DBInterface()
  };
 
 /////////////////////////Login///////////////////////////
-DBInterface.logUserIn = function (prolificID, callback)
+DBInterface.logUserIn = function(prolificID, callback)
 {
     var username = prolificID + "@berti.com";
     var password = prolificID.slice(12, 24);
 
     //wipe the current user auth
-    firebase.auth().signOut().then(function ()
+    firebase.auth().signOut().then(function()
     {
         //attempt a signin
-        DBInterface.firebaseSignin(username, password, prolificID, callback, function(error)
+        firebase.auth().signInWithEmailAndPassword(username, password).then(function(user)
         {
-            //If the signin fails, it's because the user doesn't exist. So create the user
-            debug(error.code + " login failed, so creating a new user instead");
-            firebase.auth().createUserWithEmailAndPassword(username, password).then(function (user)
+            onSignin(user);
+        }).catch(function(error)
             {
-                //After this, update their profile to include their prolific ID as their display name
-                debug("New user created");
-                user.updateProfile({ displayName: prolificID }).then(function()
-                {
-                    //stupidly, you then need to relog in order for the update to work.... But, relog and we're good to go
-                    firebase.auth().signOut().then(function()
+                sendBugToLog(error.code + " login failed, so creating a new user instead");
+                firebase.auth().createUserWithEmailAndPassword(username, password).then(function(user)
                     {
-                        DBInterface.firebaseSignin(username, password, prolificID, callback, sendBugToLog);
-                    });
-                });
+                        debug("New user created");
+                        DBInterface.databaseRef.child("LinkList").push({ uid: user.uid, proid: prolificID });
+                        onSignin(user);
+                    }
+                ).catch(sendBugToLog("Creating new user failed"));
             }
-            ).catch(sendBugToLog);
-        });
+        );
     });
-}
 
-DBInterface.firebaseSignin = function (username, password, prolificID, callback, errorCallback)
-{
-    //attempt a signin
-    firebase.auth().signInWithEmailAndPassword(username, password).then(function (user)
+
+    function onSignin(user)
     {
         if (user)
         {
-            debug("User signed in:", user.displayName, user.uid);
-            DBInterface.getParticipantDetails(prolificID, function (data)
-            {
-               
-                var p = new Participant(prolificID, data, callback);
-            });
+            debug("User signed in:", user.uid);
+            DBInterface.getParticipantDetails(user.uid,
+                function(data)
+                {  
+                    var p = new Participant(user.uid, data, callback);
+                });
         }
-    }).catch(errorCallback);
-    
+        else
+            debug("Sign in failed??!");
+    }
 }
-
+  
 function sendBugToLog(error)
 {
-    debug(error.message);
+    debug(error);
 }
 
 
@@ -101,8 +95,7 @@ DBInterface.saveTrial = function (trial)
    var json = JSON.parse(JSON.stringify(trial));
     DBInterface.databaseRef.child("Trials")
         .child("id_" + session.getID())
-        .child(session.getDateSessionString()).child(trial.overallTrialNumber)
-        .update(json);
+        .child(session.getDateSessionString()).push(json);
 
     trial.session = session;
 }

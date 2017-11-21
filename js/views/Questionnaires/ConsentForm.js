@@ -24,7 +24,7 @@ ConsentForm.prototype.create = function (stage, db, session)
 
 ConsentForm.prototype.createScreenText = function (text)
 {
-    var instructions = new PIXI.Text(text, { align: "center", font: "21px Arial", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: Main.WORD_WRAP_WIDTH });
+    var instructions = new PIXI.Text(text, { align: "left", font: "16px Arial", fill: "#FFFFFF", wordWrap: true, wordWrapWidth: Main.WORD_WRAP_WIDTH });
     instructions.anchor = new PIXI.Point(0.5, 0.5);
     instructions.x = Math.round(Main.SCREEN_WIDTH / 2,0) ;
     instructions.y = Math.round(Main.SCREEN_HEIGHT / 2 - 100,0);

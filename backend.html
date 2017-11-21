@@ -16,7 +16,7 @@
 
         button {
             width: 200px;
-            background-color: #4CAF50;
+            background-color: #4C50AF;
             color: white;
             padding: 14px 15px;
             margin: 4px;
@@ -25,11 +25,17 @@
             cursor: pointer;
         }
 
-        #logoutButton { background-color: #cC3333; }
+        .redbutton {
+            background-color: #cC3333;
+        }
 
-        #logoutButton:hover { background-color: #cC5555; }
+            .redbutton:hover {
+                background-color: #cC5555;
+            }
 
-        button:hover { background-color: #46c259; }
+        button:hover {
+            background-color: #46c259;
+        }
 
         .littleButton {
             padding: 5px;
@@ -41,10 +47,12 @@
             border-radius: 5px;
             background-color: #f2f2f2;
             padding: 15px;
-            margin: 8px 4px;            
+            margin: 8px 4px;
         }
 
-        html { font-family: sans-serif; }
+        html {
+            font-family: sans-serif;
+        }
 
         h3 {
             padding: 4px;
@@ -100,7 +108,9 @@
             height: 34px;
         }
 
-        .switch input { display: none; }
+            .switch input {
+                display: none;
+            }
 
         .slider {
             position: absolute;
@@ -116,23 +126,27 @@
 
 
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            -webkit-transition: .4s;
-            transition: .4s;
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+
+
+        input:checked + .slider {
+            background-color: #4CAF50;
         }
 
-
-
-        input:checked + .slider { background-color: #4CAF50; }
-
-        input:focus + .slider { box-shadow: 0 0 1px #2196F3; }
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
 
         input:checked + .slider:before {
             -webkit-transform: translateX(166px);
@@ -140,7 +154,9 @@
             transform: translateX(166px);
         }
 
-        .on { display: none; }
+        .on {
+            display: none;
+        }
 
         .on, .off {
             color: white;
@@ -151,124 +167,154 @@
             font-size: 13.33px;
             font-family: sans-serif;
         }
-        
-        input:checked + .slider .on { display: block; }
 
-        input:checked + .slider .off { display: none; }
+        input:checked + .slider .on {
+            display: block;
+        }
 
-        .slider.round { border-radius: 34px; }
+        input:checked + .slider .off {
+            display: none;
+        }
 
-        .slider.round:before { border-radius: 50%; }
+        .slider.round {
+            border-radius: 34px;
+        }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
     </style>
 </head>
 <body onload="init()">
-<h2>Database access to Mindgames MKII</h2>
+    <h2>Database access to Single Session Boredom</h2>
 
 
-<div class="row">
-    <div class ="column" style="min-width: 675px">
-       
-        <div id="textAreas" class="displayZone">
-            
-            <button id="activityButton">Download Activity</button>
-            <button id="participantsButton">Download Participants</button>
-            <button id="questionnairesButton">Download Questionnaires</button>
-            <button id="sessionsButton">Download Sessions</button>
-            <button id="trialsButton">Download Trials</button>
-            <div id="sliderHolder">
-                <label class="switch"><input type="checkbox" id="togBtn">
-                    <div class="slider round"><!--ADDED HTML --><span class="on">With excluded</span><span class="off">Without excluded</span><!--END-->
-                    </div></label>
-            </div>
+    <div class="row">
+        <div class="column" style="min-width: 675px">
 
-            <div>
-                <textarea id="inputArea" class="largeTextArea"></textarea>
-            </div>
+            <div id="textAreas" class="displayZone">
 
-            <div>
-                <button id="findParticipantsButton" class="littleButton">Find Participants</button>
-                that have completed between <input type="number" id="min" placeholder="0" max="5" min="0"/> and <input type="number" id="max" placeholder="5" max="5" min="0"/> sessions<br/>
+                <button id="activityButton">Download Activity</button>
+                <button id="participantsButton">Download Participants</button>
+                <button id="sessionsButton">Download Sessions</button>
+                <button id="trialsButton">Download Trials</button>
+                <button id="questionnairesButton">Download Questionnaires</button>
+                <div id="sliderHolder">
+                    <label class="switch">
+                        <input type="checkbox" id="togBtn">
+                        <div class="slider round">
+                            <!--ADDED HTML --><span class="on">With excluded</span><span class="off">Without excluded</span><!--END-->
+                        </div>
+                    </label>
+                </div>
 
-            </div>
+                <div>
+                    <textarea id="inputArea" class="largeTextArea"></textarea>
+                </div>
 
-            <div>
+                <div>
+                    <button id="findParticipantsButton" class="littleButton">Find Participants</button>
+                    that have completed between <input type="number" id="min" value="0" max="5" min="0" /> and <input type="number" id="max" value="5" max="5" min="0" /> sessions<br />
 
-                <button id="excludeButton">Exclude Participants</button>
-                <button id="unexcludeButton">Unexclude Participants</button>
-                <button id="showExcludedButton">Show Excluded Participants</button>
+                </div>
+
+                <div>
+
+                    <button id="excludeButton">Exclude Participants</button>
+                    <button id="unexcludeButton">Unexclude Participants</button>
+                    <button id="showExcludedButton">Show Excluded Participants</button>
+
+                    <div id="sliderHolder">
+                        <label class="switch">
+                            <input type="checkbox" id="dealinProlific">
+                            <div class="slider round">
+                                <!--ADDED HTML --><span class="on">ProlificIDs</span><span class="off">FirebaseIDs</span><!--END-->
+                            </div>
+                        </label>
+                        <input type="checkbox" id="commas">Append commas?
+                    </div>
+                    <button id="queryStatus" class="redbutton">Query Participants' Details</button>
+                    <!--<button id="setStage" class="redbutton">Set Participants' Stage</button>
+                    <input type="number" id="stage" value="" max="6" min="1" />-->
+                </div>
             </div>
         </div>
-    </div>
 
 
-<div class ="column"> 
-    <div id="updateHolder" class="displayZone">
-        <h3>Activity Log</h3>
-        <div id="updates">
+        <div class="column">
+            <div id="updateHolder" class="displayZone">
+                <h3>Activity Log</h3>
+                <div id="updates">
+                </div>
+            </div>
+            <button id="logoutButton" class="redbutton">Logout</button>
+
         </div>
     </div>
-    <button id="logoutButton">Logout</button>
-
-</div>
-</div>
 
     <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
-<script src="js/libs/jquery-3.2.0.min.js"></script>
-<script src="js/libs/FileSaver.js"></script>
-<script src="js/Main.js"></script>
-<script src="js/helpers/backendDownloading.js"></script>
+    <script src="js/libs/jquery-3.2.0.min.js"></script>
+    <script src="js/libs/FileSaver.js"></script>
+    <script src="js/Main.js"></script>
+    <script src="js/Utils.js"></script>
+    <script src="js/helpers/backendDownloading.js"></script>
 
 
-<script>
-    $ = $;
+    <script>
+        $ = $;
 
-    var initialised = null;
+        var initialised = null;
 
-    function init()
-    {
-        if (initialised === null)
-        {
-            var config = {
-                apiKey: "AIzaSyACCRI2t52ESEl-CkFiKGY6dWSpzysJ_js",
-                authDomain: Main.URL,
-                databaseURL: Main.DBURL,
-                projectId: "mindgamesmkii",
-                storageBucket: "mindgamesmkii.appspot.com",
-                messagingSenderId: "275495539195"
-            };
-            initialised = firebase.initializeApp(config);
-        }
-
-
-        firebase.auth().onAuthStateChanged(function(user)
-        {
-            if (!user)
-            {
-                logout();
+        function init() {
+            if (initialised === null) {
+                var config = {
+                    apiKey: "AIzaSyACCRI2t52ESEl-CkFiKGY6dWSpzysJ_js",
+                    authDomain: Main.URL,
+                    databaseURL: Main.DBURL,
+                    projectId: "mindgamesmkii",
+                    storageBucket: "mindgamesmkii.appspot.com"//,
+                };
+                initialised = firebase.initializeApp(config);
             }
-            else
-            {
-                output("Successfully Logged In");
-                output("Connected to: " + Main.DBURL);
+
+
+            firebase.auth().onAuthStateChanged(function (user) {
+                if (user.uid === "jPMvZ7eAQLSkGT6k2skTpUHSbHj1") {
+                    output("Successfully Logged In");
+                    output("Connected to: " + Main.DBURL);
+                }
+                else {
+                    logout();
+                }
+            });
+            var ref = firebase.database().ref();
+            //firebase.database.enableLogging(true);
+            getIDMap(ref);
+
+            $("#activityButton").click(downloadData.bind(this, getActivity, ref));
+            $("#participantsButton").click(downloadData.bind(this, getParticipants, ref));
+            $("#questionnairesButton").click(function () {
+                output("Collating Questionnaire data, please wait");
+                window.open("https://docs.google.com/spreadsheets/d/1gv6YE05oktr0VPkz8cA7gEQzaSisnWPQH4xZ5N4T-p8/export?format=xlsx");
+                output("Questionnaire data downloaded");
             }
-        });
-        var ref = firebase.database().ref();
+            );
+            $("#sessionsButton").click(downloadData.bind(this, getSessions, ref));
+            $("#trialsButton").click(downloadData.bind(this, getTrials, ref));
+            $("#logoutButton").click(logout.bind(this));
+            $("#dealinProlific").click(rewriteList.bind(this));
 
-        $("#activityButton").click(downloadData.bind(this, getActivity, ref));
-        $("#participantsButton").click(downloadData.bind(this, getParticipants, ref));
-        $("#questionnairesButton").click(downloadData.bind(this, getQuestionnaires, ref));
-        $("#sessionsButton").click(downloadData.bind(this, getSessions, ref));
-        $("#trialsButton").click(downloadData.bind(this, getTrials, ref));
-        $("#logoutButton").click(logout.bind(this));
-
-        $("#findParticipantsButton").click(findParticipants.bind(this, ref));
-        $("#excludeButton").click(changeExclusionStatus.bind(this, ref, true));
-        $("#unexcludeButton").click(changeExclusionStatus.bind(this, ref, false));
-        $("#showExcludedButton").click(showExcludedParticipants.bind(this, ref));
-    };
+            $("#findParticipantsButton").click(findParticipants.bind(this, ref));
+            $("#queryStatus").click(queryCurrentParticipants.bind(this, ref));
+            $("#setStage").click(setParticipantStage.bind(this, ref));
+            $("#excludeButton").click(changeExclusionStatus.bind(this, ref, true));
+            //$("#setEndDate").click(setTrainingEndDate.bind(this, ref, true));
+            $("#unexcludeButton").click(changeExclusionStatus.bind(this, ref, false));
+            $("#showExcludedButton").click(showExcludedParticipants.bind(this, ref));
+        };
 
 
-</script>
+    </script>
 
 
 </body>

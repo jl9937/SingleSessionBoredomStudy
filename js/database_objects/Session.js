@@ -32,6 +32,14 @@ Session.prototype.initSession = function (participant, forcedCondition)
         this.completionLevel = Session.COMPLETED_NOTHING;
     }
 
+    if (this.metadata.OS.match(/iPhone/) || this.metadata.OS.match(/iPad/) || this.metadata.OS.match(/Android/))
+        alert("Dear Participant\n" +
+            "We have detected that you are using a touch screen device. We are sorry to say that we've experienced several compatability issues with such devices and our study.\n" +
+            "We ask that you move to another platform such as a PC.\n\nIf you are seeing this message in error, then please ignore it and carry on with the study\n" +
+            "Thanks, and apologies\n" +
+            "The Research Team");
+
+
     
     this.date = getSimpleDateString();
 }
@@ -67,6 +75,7 @@ Session.prototype.initSessionFromData = function (sessionData)
 
 Session.prototype.getVersionHash = function ()
 {
+    this.versionHash = "";
     var self = this;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function ()
