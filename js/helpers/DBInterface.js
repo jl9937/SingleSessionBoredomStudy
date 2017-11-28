@@ -21,14 +21,14 @@ DBInterface.logUserIn = function(prolificID, callback)
             onSignin(user);
         }).catch(function(error)
             {
-                sendBugToLog(error.code + " login failed, so creating a new user instead");
+                debug(error.code + " login failed, so creating a new user instead");
                 firebase.auth().createUserWithEmailAndPassword(username, password).then(function(user)
                     {
                         debug("New user created");
                         pushData(DBInterface.databaseRef.child("LinkList"), { uid: user.uid, proid: prolificID });
                         onSignin(user);
                     }
-                ).catch(sendBugToLog("Creating new user failed"));
+                ).catch(debug("Creating new user failed"));
             }
         );
     });

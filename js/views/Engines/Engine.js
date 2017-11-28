@@ -183,8 +183,8 @@ Engine.prototype.displayContinueChoice = function()
 
     var self = this;
     var choiceTextString =
-        "Block completed!\n\n\Do you wish to continue?\nIf you do, you may complete another two-minute round of testing and earn an additional " + this.session.getBlockRewardString() + 
-        "\n\nAlternatively, You are free to end today's session now if you want.";
+        "Block completed!\n\n\Do you wish to continue?\nIf you want to, you can complete another two-minute round of testing and earn an additional " + this.session.getBlockRewardString() + 
+        "\n\nAlternatively, You are free to end today's session now.";
     if (this.session.getBlockRewardString() === "NaN")
     {
         choiceTextString =
@@ -206,10 +206,10 @@ Engine.prototype.displayContinueChoice = function()
         return;
     }
 
-    var quitButton = new ClickButton("No",
+    var quitButton = new ClickButton("Quit",
         this.endTask.bind(this),
         { 'yPos': Main.SCREEN_HEIGHT - 100, 'xPos': breakText.x + 200, 'up_colour': 0xd72c2c });
-    var continueButton = new ClickButton("Yes",
+    var continueButton = new ClickButton("Continue",
         function()
         {
             self.removeChild(breakText);
