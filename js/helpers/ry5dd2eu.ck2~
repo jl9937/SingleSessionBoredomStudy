@@ -62,23 +62,22 @@ function updateData(ref, data)
 function pushData(ref, data) {
     ref.push(data).catch(
         function (error) {
-            handleError(error, ref.child(), data);
+            debug(error);
+            DBInterface.databaseRef.child("Errors").push({
+                "Error": error,
+                "Location": ref.toString(),
+                "Data": data
+            });
         });
 }
 
 function handleError(error, ref, data)
 {
     debug(error);
-    var keyString = ref.key.toString();
-    var packagedData = {};
-    packagedData[keyString] = data;
-
-    DBInterface.databaseRef.child("Errors").child(getSimpleDateString()).push({
-        "Error": error.code,
-        "Location": ref.toString().substring(37),
-        "Data": packagedData,
-        "Time": new Date().toString(),
-        "StringData": JSON.stringify(data).replace(/"/g, "'")
+    DBInterface.databaseRef.child("Errors").push({
+        "Error": error,
+        "Location": ref.toString(),
+        "Data": data
     });
 }
 
@@ -207,10 +206,7 @@ DBInterface.saveQuestionnaireResultToDb = function (session, questionnaire, ques
 {
     var ref = this.databaseRef.child("Questionnaire").child("id_" + session.getID()).child(session.getDateSessionString());
     updateData(ref, { "SessionNum": session.getSessionNumber(), "ParticipantID": session.getID(), "Condition": session.getCondition() });
-
-    var questionData = {}
-    questionData[question] = value;
-    updateData(ref.child(questionnaire), questionData);  
+    updateData(ref.child(questionnaire).child(question), value);  
 };
 
 

@@ -6,7 +6,7 @@ Session.COMPLETED_ALL = "ALL";
 function Session(sessionData, participant, forcedCondition)
 {
     this.participant = participant;
-    this.sessionNumber = this.participant.sessionsCompleted + 1;
+    this.sessionNumber = this.participant.getSessionsCompleted() + 1;
     if (sessionData === null)
         this.initSession(forcedCondition);
     else
@@ -20,7 +20,7 @@ Session.prototype.initSession = function (participant, forcedCondition)
 
     this.metadata = {"browser": getBrowser(), "versionHash": this.getVersionHash(), "OS": getOS(), "screenSize": getScreenSize()}
     this.lossOfFocusEvents = 0;
-    if (this.participant.sessionsCompleted >= 3)
+    if (this.participant.getSessionsCompleted() >= 3)
     {
         this.condition = 0;
         this.completionLevel = Session.COMPLETED_ALL;
@@ -31,6 +31,7 @@ Session.prototype.initSession = function (participant, forcedCondition)
             parseInt(this.participant.conditionOrder[this.participant.sessionsCompleted]);
         this.completionLevel = Session.COMPLETED_NOTHING;
     }
+    this.blocksComplete = 0;
 
     if (this.metadata.OS.match(/iPhone/) || this.metadata.OS.match(/iPad/) || this.metadata.OS.match(/Android/))
         alert("Dear Participant\n" +
@@ -132,6 +133,7 @@ Session.prototype.setCurrentSessionElementComplete = function ()
 
 Session.prototype.blockComplete = function ()
 {
+    this.blocksComplete++;
     this.participant.blockComplete(this.getCondition(), this.getBlockReward(this.participant.getblocksCompleted(this.getCondition())));
     this.saveToDB();
 }
@@ -193,7 +195,7 @@ Session.prototype.getCondition = function ()
 
 Session.prototype.getID = function ()
 {
-    return this.participant.id;
+    return this.participant.getID();
 }
 
 Session.prototype.getSessionNumber = function ()

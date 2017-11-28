@@ -7,7 +7,7 @@ function MainMenu(nextpage, _session)
     View.call(this);
     this.nextScreenToGoTo = nextpage;
     this.session = _session;
-    this.condition = this.session.condition;
+    this.condition = this.session.getCondition();
 }
 
 MainMenu.prototype.create = function(stage, session)

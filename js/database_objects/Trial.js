@@ -19,7 +19,7 @@ function Trial(_session, _overallTrialNumber, _blockTrialNum, _blockNumber, tria
     this.dateTime = new Date();
 
     this.stopTrial = trialType[0] === "s" ? 1: 0;
-    this.staircase = trialType[2] || -1;
+    this.staircase = this.stopTrial === 1? parseInt(trialType[2]) : -1;
     this.SSD = this.stopTrial? staircases[this.staircase].getSSD() : -1;
     this.stopTrialVisibility = 0; // 0 = not yet displayed // -1 = hidden //  1 = displayed
 

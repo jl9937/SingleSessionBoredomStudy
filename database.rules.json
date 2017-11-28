@@ -1,14 +1,135 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null",
-    "LinkList": {
-      "$uniqueID": {
-        ".write": "!data.exists() || !newData.exists()",
-        ".read": "auth.uid == 'f85zgOoUvLg1bo0DPqScF0Odvd23'"
+    ".read": "auth.uid == 'jPMvZ7eAQLSkGT6k2skTpUHSbHj1'",
+
+    "$other": {
+      ".validate": false
+    },
+    "Activity": {
+      "$id": {
+        "$sessionDateNum": {
+          "$uniqueID": {
+            ".validate": "$id.endsWith(newData.child('id').val()) && $sessionDateNum.matches(/^(\\d{2}-\\d{2}-\\d{4}_\\d+)$/)",
+            ".write": "$id.endsWith(auth.uid)"
+          }
+        }
       }
     },
+    "Conditions": {
+      ".read": true,
+
+      "$order": {
+        ".write": true,
+        ".validate": "newData.isNumber()"
+      }
+    },
+
+    "Questionnaire": {
+      "$uniqueID": {
+        "$sessionDateNum": {
+          ".write": "$uniqueID.endsWith(auth.uid) && $sessionDateNum.matches(/^(\\d{2}-\\d{2}-\\d{4}_\\d+)$/)",
+          "Condition": { ".validate": "newData.isNumber()" },
+          "ParticipantID": { ".validate": "newData.isString() &&  newData.val().endsWith(auth.uid)" },
+          "SessionNum": { ".validate": "newData.isNumber()" },
+          "CONSENTFORM": {
+            "consent": {
+              ".validate": "newData.isString() &&  newData.val() === 'I give consent'"
+            }
+          },
+          "SDT_QUEST": {
+            "boring": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "choice": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "enjoyed": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "performance": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "recommend": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "skill": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "willing": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "$other": { ".validate": false }
+          },
+          "ENGAGEMENT_QUEST": {
+            "annoyance": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "distraction": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "enjoyment": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "focus": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "inattention": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "interest": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "intrigue": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "pleasure": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "$other": { ".validate": false }
+          },
+          "demographics": {
+            "age": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "education": { ".validate": "newData.isString()" },
+            "ethnicity": { ".validate": "newData.isString()" },
+            "sex": { ".validate": "newData.isString()" },
+            "videogamehours": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "$other": { ".validate": false }
+          }
+        }
+      }
+    },
+    "LinkList": {
+      "$uniqueID": {
+        ".write": "!data.exists() || !newData.exists()"
+      }
+    },
+    "Sessions": {
+      "$uniqueID": {
+        ".read": "$uniqueID.endsWith(auth.uid)",
+        "$sessionDateNum": {
+          ".write": "$uniqueID.endsWith(auth.uid) && $sessionDateNum.matches(/^(\\d{2}-\\d{2}-\\d{4}_\\d+)$/)",
+          "blocksComplete": { ".validate": "newData.isNumber() && newData.val() >=0" },
+          "completionLevel": { ".validate": "newData.isString()" },
+          "condition": { ".validate": "newData.isNumber() && newData.val() >=0 && newData.val() <3" },
+          "date": { ".validate": "newData.isString()" },
+          "lossOfFocusEvents": { ".validate": "newData.isNumber() && newData.val() >=0" },
+          "metadata": {
+            "OS": { ".validate": "newData.isString()" },
+            "browser": { ".validate": "newData.isString()" },
+            "screenSize": { ".validate": "newData.isString()" }
+          },
+          "participantID": { ".validate": "newData.isString() &&  newData.val().endsWith(auth.uid)" },
+          "sessionNumber": { ".validate": "newData.isNumber()" },
+          "versionHash": { ".validate": "newData.isString()" },
+          "$other": { ".validate": false }
+        }
+      }
+    },
+    "Trials": {
+      "$uniqueID": {
+        "$sessionDateNum": {
+          "$uniqueTrialID": {
+            ".write": "$uniqueID.endsWith(auth.uid) && $sessionDateNum.matches(/^(\\d{2}-\\d{2}-\\d{4}_\\d+)$/)",
+            "ITIDuration": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "SSD": { ".validate": "newData.isNumber()" },
+            "blockNumber": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "blockTrialNum": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "bonus": { ".validate": "newData.isNumber()" },
+            "colour": { ".validate": "newData.isString()" },
+            "condition": { ".validate": "newData.isNumber() && newData.val() >=0 && newData.val() < 3" },
+            "correct": { ".validate": "newData.isBoolean()" },
+            "dateTime": { ".validate": "newData.isString()" },
+            "overallTrialNumber": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "participantID": { ".validate": "newData.isString() &&  newData.val().endsWith(auth.uid)" },
+            "pointsGained": { ".validate": "newData.isNumber()" },
+            "response": { ".validate": "newData.isString()" },
+            "responseTime": { ".validate": "newData.isNumber()" },
+            "score": { ".validate": "newData.isNumber()" },
+            "sessionNum": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "staircase": { ".validate": "newData.isNumber()" },
+            "stimulusPath": { ".validate": "newData.isString()" },
+            "stopTrial": { ".validate": "newData.isNumber()" },
+            "stopTrialVisibility": { ".validate": "newData.isNumber()" }
+          }
+
+        }
+      }
+    },
+    "Errors": {
+      ".write": true
+    },
     "Participants": {
+      ".indexOn": "excluded",
       "$id": {
         ".read": "$id.endsWith(auth.uid)",
         ".write": "$id.endsWith(auth.uid)",
@@ -38,7 +159,8 @@
           ".validate": "newData.isString()"
         },
         "excluded": {
-          ".validate": "newData.isBoolean()"
+          ".validate": "newData.isBoolean()",
+          ".write": "auth.uid == 'jPMvZ7eAQLSkGT6k2skTpUHSbHj1'"
         },
         "id": {
           ".write": "!data.exists() || !newData.exists()"

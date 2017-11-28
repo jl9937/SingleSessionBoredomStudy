@@ -53,7 +53,7 @@ VisabilityMonitor.prototype.handleScreenVisabilityChange = function (onceRound, 
 
             var stateChangeData = {
                 "SESH_sessionNumber": this.session.SESH_sessionNumber,
-                "id": this.session.id,
+                "id": this.session.getID(),
                 "view": currentScreen,
                 "oldState": currState,
                 "oldStateBegan": oldStateBegan,

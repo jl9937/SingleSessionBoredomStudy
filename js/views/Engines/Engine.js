@@ -183,10 +183,8 @@ Engine.prototype.displayContinueChoice = function()
 
     var self = this;
     var choiceTextString =
-        "Block completed!\n\n\nYou are free to end today's session now if you wish.\n\nAlternatively, you may complete another two-minute round of testing and earn an additional " +
-            this.session.getBlockRewardString() +
-        ".\n\nWould you like to continue?";
-
+        "Block completed!\n\n\Do you wish to continue?\nIf you do, you may complete another two-minute round of testing and earn an additional " + this.session.getBlockRewardString() + 
+        "\n\nAlternatively, You are free to end today's session now if you want.";
     if (this.session.getBlockRewardString() === "NaN")
     {
         choiceTextString =

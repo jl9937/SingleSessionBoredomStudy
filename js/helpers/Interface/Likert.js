@@ -7,8 +7,8 @@ function Likert(lowText, middleText,  highText, _callbackOnValueSet)
     this.mark = -1;
     this.divisions = 7;
 
-    this.yLowerBound = Main.SCREEN_HEIGHT/2 - 200;
-    this.yHeight = 400;
+    this.yLowerBound = Main.SCREEN_HEIGHT/2 - 150;
+    this.yHeight = 300;
     this.xLowerBound = Main.SCREEN_WIDTH / 2 - 250 ;
     this.xWidth = 500 ;
     this.lineY = Main.SCREEN_HEIGHT / 2 - 2;
