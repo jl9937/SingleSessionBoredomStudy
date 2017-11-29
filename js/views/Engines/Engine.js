@@ -171,7 +171,7 @@ Engine.prototype.finishTrial = function()
     this.overallTrialNum++;
     this.blockTrialNum++;
 
-    this.progress.width = Main.SCREEN_WIDTH / (Engine.SUBBLOCKS * 16 * this.blockTrialNum +1);
+    this.progress.width = ((this.blockTrialNum + 1) * Main.SCREEN_WIDTH) / (Engine.SUBBLOCKS * 16);
     this.runTrialorBreakorEndTask();
 };
 
