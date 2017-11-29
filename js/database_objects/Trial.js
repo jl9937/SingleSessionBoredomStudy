@@ -56,13 +56,8 @@ Trial.prototype.stopTimingAndGetCorrect = function (_keypress)
         this.responseTime = Math.round(performance.now() - this.RTTimingStart);
     this.responseWindowOpen = false;
 
-    if (this.stopTrial === 1)
-    {
-        if (this.response === "none")
+    if (this.stopTrial === 1 && this.response === "none")
             this.correct = 1;
-        if (this.stopTrialVisibility === 0 )
-            this.stopTrialVisibility = -1;
-    }
     else if (this.stopTrial !== 1 && this.colour === this.response)
         this.correct = 1;
 
@@ -103,7 +98,13 @@ Trial.prototype.wasStopTrialHidden = function ()
 
 Trial.prototype.setStopTrialShown = function()
 {
-    this.stopTrialVisibility = 1;
+    if (this.stopTrialVisibility === 0)
+        this.stopTrialVisibility = 1;
+}
+
+Trial.prototype.setStopTrialHidden = function () {
+   if (this.stopTrialVisibility === 0)
+        this.stopTrialVisibility = -1;
 }
 
 Trial.prototype.wasNoResponse =function()

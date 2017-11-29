@@ -117,12 +117,19 @@ Engine.prototype.openResponseWindow = function(trlObj)
     };
 
     if (trlObj.isStopTrial())
+    {
         Utils.doTimer(trlObj.getSSD(),
-            this.showForTimeThenCallback.bind(this,
-                "../resources/taskElements/stopsignal.png",
-                Engine.STIMULI_DUR - trlObj.getSSD(),
-                null,
-                this.getyAdjustment()));
+            function()
+            {
+                if (trlObj.isResponseWindowOpen())
+                {
+                    self.showForTimeThenCallback("../resources/taskElements/stopsignal.png", Engine.STIMULI_DUR - trlObj.getSSD(), null, self.getyAdjustment());
+                    trlObj.setStopTrialShown();
+                }
+                else
+                    trlObj.setStopTrialHidden();
+            });
+    }
 };
 
 Engine.prototype.dispTrialThenCallback = function(trlObj, callback)
