@@ -134,11 +134,6 @@ Engine.prototype.openResponseWindow = function(trlObj)
 
 Engine.prototype.dispTrialThenCallback = function(trlObj, callback)
 {
-    //stimulus displayed here
-    if (trlObj && trlObj.isStopTrial() && trlObj.wasStopTrialHidden())
-        return null;
-    if (trlObj && trlObj.isStopTrial())
-        trlObj.setStopTrialShown();
     return this.showForTimeThenCallback(trlObj.getStimulusPath(),
         Engine.STIMULI_DUR,
         callback,
