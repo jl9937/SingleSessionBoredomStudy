@@ -224,7 +224,7 @@ function Timer(time, callback)
 Timer.prototype.printSelf  = function()
 {
     if (this.time === 150)
-        console.log("Intended Duration", this.time, "Duration:", this.duration, "Frames Alive", this.framesLive());
+        debug("Intended Duration", this.time, "Duration:", this.duration, "Frames Alive", this.framesLive());
 }
 
 Timer.prototype.framesLive = function()

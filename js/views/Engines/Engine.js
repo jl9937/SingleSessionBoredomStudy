@@ -66,7 +66,7 @@ Engine.prototype.startTrial = function(trialType)
     if (this.overallTrialNum % 16 === 15)
     {
         var currentAVRT = this.currentSubBlockSumRT / 16;
-        console.log("Current Av:",
+        debug("Current Av:",
             currentAVRT,
             "Limit:",
             this.baseSubBlockAverageRT + 30,
