@@ -30,7 +30,7 @@ function Trial(_session, _overallTrialNumber, _blockTrialNum, _blockNumber, tria
     this.response = -1;
     this.RTTimingStart = -1;
     this.responseTime = -1;
-    this.correct = false;
+    this.correct = 0;
 };
 
 
@@ -44,28 +44,27 @@ Trial.prototype.print = function (verbose)
 {
     verbose = verbose || 0;
     if (verbose)
-        console.log("T: " + this.id, this.overallTrialNumber, this.blockTrialNum, this.blockNumber, this.colour, this.stopTrial, this.SSD, this.ITIDuration, this.response, this.responseTime, this.correct);
+        debug("T: " + this.id, this.overallTrialNumber, this.blockTrialNum, this.blockNumber, this.colour, this.stopTrial, this.SSD, this.ITIDuration, this.response, this.responseTime, this.correct);
     else
-        console.log("T: " + this.overallTrialNumber, this.colour + " St:" + this.stopTrial, this.stopTrialVisibility, this.SSD, this.staircase + " Cr:" + this.correct, this.responseTime);
+        debug("T: " + this.overallTrialNumber, this.colour + " St:" + this.stopTrial, this.stopTrialVisibility, this.SSD, this.staircase + " Cr:" + this.correct, this.responseTime);
 }
 
 Trial.prototype.stopTimingAndGetCorrect = function (_keypress)
 {
     this.response = _keypress;
-    if (this.response)
+    if (this.response !== "none")
         this.responseTime = Math.round(performance.now() - this.RTTimingStart);
     this.responseWindowOpen = false;
 
     if (this.stopTrial === 1)
     {
         if (this.response === "none")
-            this.correct = true;
-        else
-            if (this.stopTrialVisibility === 0 )
-                this.stopTrialVisibility = -1;
+            this.correct = 1;
+        if (this.stopTrialVisibility === 0 )
+            this.stopTrialVisibility = -1;
     }
     else if (this.stopTrial !== 1 && this.colour === this.response)
-        this.correct = true;
+        this.correct = 1;
 
     return this.correct;
 }
@@ -152,7 +151,7 @@ Trial.prototype.calculateScore = function(currentscore, currentbonus)
     }
     if (!this.correct && this.isStopTrial() && !this.wasStopTrialHidden())
         return -1;
-    if (this.correct === false)
+    if (!this.correct)
         return 0;
 }
 

@@ -72,7 +72,7 @@ Participant.prototype.initParticipantFromData = function (participantData)
 
 Participant.prototype.printSelf = function ()
 {
-    console.log(this);
+    debug(this);
 }
 
 Participant.prototype.saveToDB = function ()
@@ -104,8 +104,7 @@ Participant.prototype.blockComplete = function(condition, moneyEarned)
     this.addMoney(moneyEarned);
     this.blocksCompleted[condition] += 1;
 
-    console.log("BlocksCompleted " + this.blocksCompleted[condition]);
-    //todo reenable this
+    debug("BlocksCompleted " + this.blocksCompleted[condition]);
     this.saveToDB();
 }
 
@@ -113,5 +112,5 @@ Participant.prototype.addMoney = function(add)
 {
     this.moneyEarned += add;
     this.moneyEarned = Math.round((this.moneyEarned + 0.00001) * 100) / 100;
-    console.log("Money Earned: $" + this.moneyEarned);
+    debug("Money Earned: £" + this.moneyEarned);
 }

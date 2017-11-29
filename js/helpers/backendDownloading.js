@@ -173,7 +173,7 @@ function getQuestionnaires(ref, excludedList)
             allParticipantsSnapshot.forEach(function (allSessionsSnapshot) {
                 if (!isPresentOnList(allSessionsSnapshot.key, excludedList))
                     allSessionsSnapshot.forEach(function (sessionSnapshot) {
-                        if (Object.keys(sessionSnapshot.val()).length >= 7)
+                        if (Object.keys(sessionSnapshot.val()).length >= 5)
                             fullText = appendObjectToFullText(sessionSnapshot.val(), fullText);
                     });
             });

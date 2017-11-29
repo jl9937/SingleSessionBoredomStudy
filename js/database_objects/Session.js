@@ -90,7 +90,7 @@ Session.prototype.getVersionHash = function ()
 
 Session.prototype.printSelf = function ()
 {
-    console.log(this);
+    debug(this);
 }
 
 Session.prototype.saveToDB = function ()
@@ -124,7 +124,7 @@ Session.prototype.setCurrentSessionElementComplete = function ()
          
     this.saveToDB();
     this.participant.saveToDB();
-    console.log("Completion Level now ", this.completionLevel);
+    debug("Completion Level now ", this.completionLevel);
     
     totalLoopTime = 0;
     longFramesSinceStart = 0;

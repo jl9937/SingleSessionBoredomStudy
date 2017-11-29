@@ -107,7 +107,7 @@
             "bonus": { ".validate": "newData.isNumber()" },
             "colour": { ".validate": "newData.isString()" },
             "condition": { ".validate": "newData.isNumber() && newData.val() >=0 && newData.val() < 3" },
-            "correct": { ".validate": "newData.isBoolean()" },
+            "correct": { ".validate": "newData.isNumber()" },
             "dateTime": { ".validate": "newData.isString()" },
             "overallTrialNumber": { ".validate": "newData.isNumber() && newData.val() >=0" },
             "participantID": { ".validate": "newData.isString() &&  newData.val().endsWith(auth.uid)" },
