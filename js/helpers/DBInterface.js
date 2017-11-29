@@ -120,10 +120,10 @@ DBInterface.saveTrial = function (trial)
     trial.session = session;
 }
 
-DBInterface.saveVisabilityActivity = function (session, id, data)
+DBInterface.saveVisabilityActivity = function (session, data)
 {
     pushData(
-        DBInterface.databaseRef.child("Activity").child("id_" + id).child(session.getDateSessionString()),
+        DBInterface.databaseRef.child("Activity").child("id_" + session.getID()).child(session.getDateSessionString()),
         data
     );
 }

@@ -233,6 +233,7 @@
                         </label>
                         <input type="checkbox" id="commas">Append commas?
                     </div>
+                    <br/>
                     <button id="queryStatus" class="redbutton">Query Participants' Details</button>
                     <!--<button id="setStage" class="redbutton">Set Participants' Stage</button>
                     <input type="number" id="stage" value="" max="6" min="1" />-->
@@ -293,12 +294,7 @@
 
             $("#activityButton").click(downloadData.bind(this, getActivity, ref));
             $("#participantsButton").click(downloadData.bind(this, getParticipants, ref));
-            $("#questionnairesButton").click(function () {
-                output("Collating Questionnaire data, please wait");
-                window.open("https://docs.google.com/spreadsheets/d/1gv6YE05oktr0VPkz8cA7gEQzaSisnWPQH4xZ5N4T-p8/export?format=xlsx");
-                output("Questionnaire data downloaded");
-            }
-            );
+            $("#questionnairesButton").click(downloadData.bind(this, getQuestionnaires, ref));
             $("#sessionsButton").click(downloadData.bind(this, getSessions, ref));
             $("#trialsButton").click(downloadData.bind(this, getTrials, ref));
             $("#logoutButton").click(logout.bind(this));

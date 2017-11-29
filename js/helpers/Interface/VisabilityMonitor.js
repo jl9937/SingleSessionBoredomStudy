@@ -52,7 +52,7 @@ VisabilityMonitor.prototype.handleScreenVisabilityChange = function (onceRound, 
                 currentScreen = this.main.viewManager.currentScreenName;
 
             var stateChangeData = {
-                "SESH_sessionNumber": this.session.SESH_sessionNumber,
+                "SESH_sessionNumber": this.session.getSessionNumber(),
                 "id": this.session.getID(),
                 "view": currentScreen,
                 "oldState": currState,
@@ -62,8 +62,11 @@ VisabilityMonitor.prototype.handleScreenVisabilityChange = function (onceRound, 
                 "durationOfOldState": delta
             }
             //debug(stateChangeData);
-            if (stateChangeData.view === "ENGINE")
-                DBInterface.saveVisabilityActivity(this.session, this.session.id, stateChangeData);
+            if (stateChangeData.view.substring(0, 4) === "TASK")
+            {
+                this.session.recordLossOfFocusEvent();
+                DBInterface.saveVisabilityActivity(this.session, stateChangeData);
+            }
             this.timeOfLastStateChange = new Date();
         }
     }

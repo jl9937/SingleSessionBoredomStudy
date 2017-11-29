@@ -129,7 +129,7 @@
       ".write": true
     },
     "Participants": {
-      ".indexOn": "excluded",
+      ".indexOn": [ "excluded", "sessionsCompleted" ],
       "$id": {
         ".read": "$id.endsWith(auth.uid)",
         ".write": "$id.endsWith(auth.uid)",

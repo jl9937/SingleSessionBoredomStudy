@@ -150,12 +150,8 @@ function getTrials(ref, excludedList) {
             allParticipantsSnapshot.forEach(function (allSessionsSnapshot) {
                 if (!isPresentOnList(allSessionsSnapshot.key, excludedList)) {
                     allSessionsSnapshot.forEach(function (allBlocksSnapshot) {
-                        allBlocksSnapshot.forEach(function (blocksSnapshot) {
-                            blocksSnapshot.forEach(function (trialsSnapshot) {
+                        allBlocksSnapshot.forEach(function (trialsSnapshot) {   
                                 fullText = appendObjectToFullText(trialsSnapshot.val(), fullText);
-
-                            });
-
                         });
                     });
                 }
@@ -165,6 +161,27 @@ function getTrials(ref, excludedList) {
         }).catch(function (error) {
             debug(error);
         });
+}
+
+
+function getQuestionnaires(ref, excludedList)
+{
+    output("Collating Questionnaire data, please wait");
+    var fullText = "";
+    ref.child("Questionnaire").once("value",
+        function (allParticipantsSnapshot) {
+            allParticipantsSnapshot.forEach(function (allSessionsSnapshot) {
+                if (!isPresentOnList(allSessionsSnapshot.key, excludedList))
+                    allSessionsSnapshot.forEach(function (sessionSnapshot) {
+                        if (Object.keys(sessionSnapshot.val()).length >= 7)
+                            fullText = appendObjectToFullText(sessionSnapshot.val(), fullText);
+                    });
+            });
+            saveContent(fullText, "QuestionnaireData.csv");
+            output("Questionnaire data downloaded");
+        }).catch(function (error) {
+        debug(error);
+    });
 }
 
 function getActivity(ref, excludedList) {
