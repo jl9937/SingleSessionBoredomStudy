@@ -55,6 +55,8 @@ Trial.prototype.stopTimingAndGetCorrect = function (_keypress)
     if (this.response !== "none")
         this.responseTime = Math.round(performance.now() - this.RTTimingStart);
     this.responseWindowOpen = false;
+    if (this.stopTrial && this.responseTime <= this.SSD)
+        this.setStopTrialHidden();
 
     if (this.stopTrial === 1 && this.response === "none")
             this.correct = 1;
@@ -103,8 +105,10 @@ Trial.prototype.setStopTrialShown = function()
 }
 
 Trial.prototype.setStopTrialHidden = function () {
-   if (this.stopTrialVisibility === 0)
+    if (this.stopTrialVisibility === 0)
+    {
         this.stopTrialVisibility = -1;
+    }
 }
 
 Trial.prototype.wasNoResponse =function()
@@ -145,14 +149,23 @@ Trial.prototype.calculateScore = function(currentscore, currentbonus)
     this.bonus = currentbonus;
 
     this.pointsGained = 0;
-    if ((this.correct && !this.isStopTrial()) || this.wasStopTrialHidden() && this.response === this.colour)
+
+    if (!this.isStopTrial() || this.wasStopTrialHidden())
     {
-        this.pointsGained = currentbonus * Math.floor((Engine.STIMULI_DUR - this.getResponseTime()) / 5);
-        return 1;
+        if (this.response === this.colour)
+        {
+            this.pointsGained = Math.floor(0.2 *currentbonus * (Engine.STIMULI_DUR - this.getResponseTime()));
+            return 1;
+        }
+        else
+            return 0;
     }
-    if (!this.correct && this.isStopTrial() && !this.wasStopTrialHidden())
+    else if (!this.correct && this.isStopTrial())
+    {
+        debug("inhibition failed! hidden?:" + this.wasStopTrialHidden());
         return -1;
-    if (!this.correct)
+    }
+    else
         return 0;
 }
 

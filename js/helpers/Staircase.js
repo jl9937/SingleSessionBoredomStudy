@@ -40,12 +40,16 @@ Staircase.prototype.adjust = function(currentTrialCorrect)
     //If there has, record it and maybe act on it 
     if (newDirection !== this.direction)
     {
-        debug("Staircase reversal");
+        //debug("Staircase reversal");
         this.reversals = this.reversals + 1;
         this.direction = newDirection;
-        if (this.reversals > 2)
+        if (this.reversals > 4)
         {
-           debug("Step size changed");
+           debug("Step size changed to 12");
+            this.step = 12;
+        }
+        else if (this.reversals > 2) {
+            debug("Step size changed to 25");
             this.step = 25;
         }
     }

@@ -121,13 +121,11 @@ Engine.prototype.openResponseWindow = function(trlObj)
         Utils.doTimer(trlObj.getSSD(),
             function()
             {
-                if (trlObj.isResponseWindowOpen())
+                if (!trlObj.wasStopTrialHidden())
                 {
                     self.showForTimeThenCallback("../resources/taskElements/stopsignal.png", Engine.STIMULI_DUR - trlObj.getSSD(), null, self.getyAdjustment());
                     trlObj.setStopTrialShown();
                 }
-                else
-                    trlObj.setStopTrialHidden();
             });
     }
 };
