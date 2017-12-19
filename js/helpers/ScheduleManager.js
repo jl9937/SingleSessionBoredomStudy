@@ -101,15 +101,22 @@ function makeTask(name, nextpage, session)
 {
     switch (session.getCondition())
     {
-        case Main.CONDITION_NONGAME:
-            VMan.addScreens("TASK", [
-               new GenericScreen(session.getCondition(), {
-                   picture1: "../resources/interface/instructions1.png",
-                   buttonText: "Next page",
-                   buttonYPos: Main.SCREEN_HEIGHT - 60,
-                   buttonXPos: Main.SCREEN_WIDTH - 125,
-                   buttonScale: 0.65
-               }),
+    case Main.CONDITION_NONGAME:
+        VMan.addScreens("TASK",
+            [
+                new GenericScreen(session.getCondition(),
+                    {
+                        text: "Just to let you know, completing the first two minutes of this session will earn you £0.75",
+                        buttonText: "Next page"
+                    }),
+                new GenericScreen(session.getCondition(),
+                    {
+                        picture1: "../resources/interface/instructions1.png",
+                        buttonText: "Next page",
+                        buttonYPos: Main.SCREEN_HEIGHT - 60,
+                        buttonXPos: Main.SCREEN_WIDTH - 125,
+                        buttonScale: 0.65
+                    }),
                new GenericScreen(session.getCondition(), {
                    picture1: "../resources/interface/instructions2.png",
                    buttonText: "Next page",
@@ -128,6 +135,11 @@ function makeTask(name, nextpage, session)
             break;
         case Main.CONDITION_POINTS:
             VMan.addScreens("TASK", [
+                new GenericScreen(session.getCondition(),
+                    {
+                        text: "Just to let you know, completing the first two minutes of this session will earn you £0.75",
+                        buttonText: "Next page"
+                    }),
                new GenericScreen(session.getCondition(), {
                    background: "../resources/interface/background.png",
                    picture1: "../resources/interface/Points_instructions1.png",
@@ -167,7 +179,12 @@ function makeTask(name, nextpage, session)
             var todaysTextFilePath = "../resources/theme/screenText/Packville.txt";
 
             VMan.addScreens("TASK",
-            [
+                [
+                    new GenericScreen(session.getCondition(),
+                        {
+                            text: "Just to let you know, completing the first two minutes of this session will earn you £0.75",
+                            buttonText: "Next page"
+                        }),
                 new GenericScreen(session.getCondition(),
                 {
                     picture1: "../resources/interface/Theme_instructions1.png",
@@ -241,12 +258,10 @@ function createQuestionnaire(screenName, nextScreenToGoTo, session)
         questionnaireArray = [      
             new LikertScreen(session, screenName, "How much is the following statement true?\nI had some choice in how I approached this task", "choice"), //PChoice
             new LikertScreen(session, screenName, "How much is the following statement true?\nI continued to take part because I wanted to", "willing"),    //PChoice
+            new LikertScreen(session, screenName, "How much is the following statement true?\nI felt like it was not my own choice to continue doing this task", "unwilling"),    //PChoice
             new LikertScreen(session, screenName, "How much is the following statement true?\nI performed well on this task", "performance"),    //PComp
             new LikertScreen(session, screenName, "How much is the following statement true?\nIt was clear how well I was performing on the task", "performance"),    //PComp
-            new LikertScreen(session, screenName, "How much is the following statement true?\nI was skilled at this task", "skill"),      //PComp
-            new LikertScreen(session, screenName, "How much is the following statement true?\nI would recommend this task to a friend", "recommend"),        
-            new LikertScreen(session, screenName, "How much is the following statement true?\nWhile working on the task, I was thinking about how much I enjoyed it", "enjoyed"),
-            new LikertScreen(session, screenName, "How much is the following statement true?\nI thought the task was very boring", "boring")
+            new LikertScreen(session, screenName, "How much is the following statement true?\nI was skilled at this task", "skill")      //PComp
         ];
     }
     else if (screenName === "DEMOGRAPHICS")
@@ -266,5 +281,11 @@ function createQuestionnaire(screenName, nextScreenToGoTo, session)
     }
 
     shuffleArray(questionnaireArray);
+
+    if (screenName === "ENGAGEMENT_QUEST")      
+        questionnaireArray.push(new NumberChooserScreen(session, screenName, "How much time (in minutes) do you roughly think that you spent on the task?", "timeGuess", 0, 70));
+    
+    
+
     VMan.addScreens(screenName, questionnaireArray, nextScreenToGoTo);
 }

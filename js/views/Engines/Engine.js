@@ -1,5 +1,5 @@
-Engine.LOWITI = 300;
-Engine.HIGHITI = 700;
+Engine.LOWITI = 200;
+Engine.HIGHITI = 500;
 
 Engine.FIXATION = 500;
 Engine.STIMULI_DUR = 900;
@@ -24,7 +24,7 @@ Engine.prototype.create = function(stage, db, session)
     //setup taask parameters
     this.overallTrialNum = 0;
     this.staircases = [
-        new Staircase(100, 0.5), new Staircase(200, 0.5), new Staircase(300, 0.5), new Staircase(400, 0.5)
+        new Staircase(50, 0.5), new Staircase(150, 0.5), new Staircase(250, 0.5), new Staircase(350, 0.5)
     ];
 
     this.currentSubBlockSumRT = 0;

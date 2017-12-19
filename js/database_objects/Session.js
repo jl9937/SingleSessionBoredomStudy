@@ -134,7 +134,9 @@ Session.prototype.setCurrentSessionElementComplete = function ()
 Session.prototype.blockComplete = function ()
 {
     this.blocksComplete++;
+    this.completionLevel = Session.COMPLETED_TASK;
     this.participant.blockComplete(this.getCondition(), this.getBlockReward(this.participant.getblocksCompleted(this.getCondition())));
+                                                  
     this.saveToDB();
 }
 

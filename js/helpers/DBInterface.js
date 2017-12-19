@@ -149,15 +149,30 @@ DBInterface.getParticipantDetails = function (id, callback)
 
 DBInterface.getSmallestConditionOrderGroup = function(callback)
 {
+    var maxGroupSize = 8;              
     function findMinKey(object)
     {
         var keys = Object.keys(object);
         var minKeyIndex = 0;
+
+        var randomise = 1;
         for (var i = 0; i < keys.length; i++)
-            if(object[keys[i]] < object[keys[minKeyIndex]])
-                minKeyIndex = i;
-        return keys[minKeyIndex];
-    }
+            if (object[keys[i]] > maxGroupSize)
+                randomise = 0;
+
+        if (randomise === 0)
+        {
+            for (var i = 0; i < keys.length; i++)
+                if (object[keys[i]] < object[keys[minKeyIndex]])
+                    minKeyIndex = i;
+            return keys[minKeyIndex];
+        }
+        else
+        {
+            var index = Math.floor(Math.random() * 6);
+            return keys[index];
+        }
+}
 
     DBInterface.databaseRef.child("Conditions").once("value",
         function(snapshot)
