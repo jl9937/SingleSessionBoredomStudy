@@ -10,9 +10,9 @@ Main.CONDITION_POINTS = 1;
 Main.CONDITION_THEME = 2;
 
 Main.COMPLETION_LINKS = [
-    "https://prolific.ac/submissions/complete?cc=QEEZRN9P", //Session 1
-    "https://prolific.ac/submissions/complete?cc=65XD4MES", //Session 2
-    "https://prolific.ac/submissions/complete?cc=OKF5BZ1W" //Session 3
+    "https://prolific.ac/submissions/complete?cc=9IY6X0OD", //Session 1
+    "https://prolific.ac/submissions/complete?cc=QWXZ1XA1", //Session 2
+    "https://prolific.ac/submissions/complete?cc=0R3JI9EV" //Session 3
 ];
 
 //debug switch

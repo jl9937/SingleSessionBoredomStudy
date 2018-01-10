@@ -62,7 +62,10 @@ PointsEngine.prototype.setupBlockOnlyVisuals = function ()
 
     this.addChild(this.zones);
     this.addChild(this.progress);
-    
+
+    this.highScoreFlasherDisabled = false;
+    if (this.session.getBlocksCompleted() === 0)
+        this.highScoreFlasherDisabled = true;
     this.Pscore = 0;
     this.Pbonus = 1;
     this.bonusCounter = 0;
@@ -222,12 +225,20 @@ PointsEngine.prototype.calculatePointsAndUpdatePointsText = function (trlObj)
             this.adjustBonusCounter(+1);
             this.showTextForTimeThenClear("+" + trlObj.getTrialPoints(), Engine.LOWITI, Main.SCREEN_HEIGHT / 2 - 55);
             break;
+        case 2:
+            this.adjustBonusCounter(0);
+            break;
     }
 
     this.Pscore += trlObj.getTrialPoints();
     if (this.Pscore > this.Phighscore)
     {
         this.Phighscore = this.Pscore;
+        if (!this.highScoreFlasherDisabled)
+        {
+            this.showTextForTimeThenClear("New High Score!", 3000, 130);
+            this.highScoreFlasherDisabled = true;
+        }
     }
 
     //update all

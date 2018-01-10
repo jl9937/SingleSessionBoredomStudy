@@ -154,7 +154,8 @@ Trial.prototype.calculateScore = function(currentscore, currentbonus)
     {
         if (this.response === this.colour)
         {
-            this.pointsGained = Math.floor(0.2 *currentbonus * (Engine.STIMULI_DUR - this.getResponseTime()));
+            var levelMultiplier = (this.blockNumber * 0.05) + 1; 
+            this.pointsGained = Math.floor(0.2 * currentbonus * levelMultiplier*  (Engine.STIMULI_DUR - this.getResponseTime()));
             return 1;
         }
         else
@@ -165,6 +166,10 @@ Trial.prototype.calculateScore = function(currentscore, currentbonus)
         debug("inhibition failed! hidden?:" + this.wasStopTrialHidden());
         return -1;
     }
+    else if (this.isStopTrial() && this.correct)
+    {
+        return 2;
+    }      
     else
         return 0;
 }

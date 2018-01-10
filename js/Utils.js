@@ -180,9 +180,9 @@ function getSimpleDateString()
 {
     var date = new Date();
     var d = date.getDate();
-    d = d.length === 2 ? "0" + d : d;
+    d = d.toString().length === 2 ? d : "0" + d;
     var m = date.getMonth() + 1;
-    m = m.length === 2 ? "0" + m : m;
+    m = m.toString().length === 2 ? m : "0" + m;
 
     return d + "-" + m + "-" + date.getFullYear();
 }      

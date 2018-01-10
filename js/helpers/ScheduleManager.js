@@ -281,11 +281,5 @@ function createQuestionnaire(screenName, nextScreenToGoTo, session)
     }
 
     shuffleArray(questionnaireArray);
-
-    if (screenName === "ENGAGEMENT_QUEST")      
-        questionnaireArray.push(new NumberChooserScreen(session, screenName, "How much time (in minutes) do you roughly think that you spent on the task?", "timeGuess", 0, 70));
-    
-    
-
-    VMan.addScreens(screenName, questionnaireArray, nextScreenToGoTo);
+       VMan.addScreens(screenName, questionnaireArray, nextScreenToGoTo);
 }
