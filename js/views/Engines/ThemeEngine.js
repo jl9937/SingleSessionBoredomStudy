@@ -9,7 +9,7 @@ function ThemeEngine()
 
 ThemeEngine.prototype.mainLoop = function (speedfactor)
 {
-    if (this.stimulusSprite !== undefined)
+    if (this.stimulusSprite !== undefined && this.stimulusSprite && !this.stimulusSprite._destroyed)
     {
         this.stimulusSprite.x += this.stimulusSprite.vx * speedfactor;
         this.stimulusSprite.y += this.stimulusSprite.vy * speedfactor;

@@ -248,6 +248,7 @@ Engine.prototype.clearPicture = function(sprite, callback, fadeTime)
     function finalClear()
     {
         self.removeChild(sprite);
+        sprite.destroy();
     }
 };
 

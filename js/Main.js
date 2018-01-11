@@ -29,25 +29,25 @@ function Main()
 
     //PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
     PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
-    PIXI.settings.RESOLUTION = 2;
+    //PIXI.settings.RESOLUTION = 2;
 
-    this.app = new PIXI.Application(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT, { backgroundColor: 0x000000, resolution: PIXI.settings.RESOLUTION || 1, transparent: true, legacy: true, antialias: true, view: document.getElementById('game-canvas') });
+    this.app = new PIXI.Application(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT, { backgroundColor: 0x000000, resolution: PIXI.settings.RESOLUTION || 1, transparent: true, antialias: true, view: document.getElementById('game-canvas') });
 
     this.stage = this.app.stage;
 
     var self = this;
-    var resizeFunction = function ()
-    {
-        var scaleFactor = Math.min(window.innerWidth / Main.SCREEN_WIDTH, window.innerHeight / Main.SCREEN_HEIGHT);
-        var newWidth = Math.ceil(Main.SCREEN_WIDTH * scaleFactor);
-        var newHeight = Math.ceil(Main.SCREEN_HEIGHT * scaleFactor);
-        self.app.renderer.view.style.width = newWidth + "px";
-        self.app.renderer.view.style.height = newHeight + "px";
-        self.app.renderer.resize(newWidth, newHeight);
-        self.stage.scale.set(scaleFactor);
-    }
-    window.addEventListener("resize", resizeFunction);
-    resizeFunction();
+    //var resizeFunction = function ()
+    //{
+    //    var scaleFactor = Math.min(window.innerWidth / Main.SCREEN_WIDTH, window.innerHeight / Main.SCREEN_HEIGHT);
+    //    var newWidth = Math.ceil(Main.SCREEN_WIDTH * scaleFactor);
+    //    var newHeight = Math.ceil(Main.SCREEN_HEIGHT * scaleFactor);
+    //    self.app.renderer.view.style.width = newWidth + "px";
+    //    self.app.renderer.view.style.height = newHeight + "px";
+    //    self.app.renderer.resize(newWidth, newHeight);
+    //    self.stage.scale.set(scaleFactor);
+    //}
+    //window.addEventListener("resize", resizeFunction);
+    //resizeFunction();
 
 
     // Initialize Firebase
