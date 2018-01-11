@@ -163,7 +163,7 @@ Trial.prototype.calculateScore = function(currentscore, currentbonus)
     }
     else if (!this.correct && this.isStopTrial())
     {
-        debug("inhibition failed! hidden?:" + this.wasStopTrialHidden());
+        //debug("inhibition failed! hidden?:" + this.wasStopTrialHidden());
         return -1;
     }
     else if (this.isStopTrial() && this.correct)

@@ -15,15 +15,15 @@ Staircase.prototype.getSSD = function ()
 Staircase.prototype.adjust = function (stepUp)
 { 
     //Determine if there's been a change in direction
-    var newDirection = (stepUp===true) ? 1 : -1;
+    var newDirection = (stepUp) ? 1 : -1;
 
     if (newDirection !== this.direction)
     {
         this.reversals += 1;
         
-        if (this.reversals > 5)
+        if (this.reversals > 4)
             this.step = 12;
-        else if (this.reversals > 3)
+        else if (this.reversals > 2)
             this.step = 25;
 
         this.direction = newDirection;

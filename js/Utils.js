@@ -11,21 +11,13 @@
 
 function shuffleArray(array)
 {
-    for (var i = 0; i < array.length; i++)
-    {
+    for (var i = 0; i < array.length; i++) {
         var swapIndex = i + Math.floor(Math.random() * (array.length - i));
         var temp = array[i];
         array[i] = array[swapIndex];
         array[swapIndex] = temp;
     }
-}
-
-function checkForConsecutiveDuplicates(array)
-{
-    for (var i = 0; i < array.length - 1; i++)
-        if (array[i] === array[i + 1])
-            return true;
-    return false;
+    return array;
 }
 
 function getScreenSize()

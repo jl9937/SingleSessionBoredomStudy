@@ -47,7 +47,7 @@ Engine.prototype.startBlock = function(first)
     this.setupBlockOnlyVisuals();
     this.blockTrialNum = 0;
     this.progress.width = 0;
-    this.trialArray = getTrialsForBlock(first);
+    this.trialArray = getTrialsForBlock();
 
     this.runTrialorBreakorEndTask();
 };
@@ -63,7 +63,7 @@ Engine.prototype.runTrialorBreakorEndTask = function()
 Engine.prototype.startTrial = function(trialType)
 {
     //Subblock RT shift?
-    if (this.overallTrialNum % 16 === 15)
+    if (this.overallTrialNum !== 1 && this.overallTrialNum % 16 === 1)
     {
         var currentAVRT = this.currentSubBlockSumRT / 16;
         debug("Current Av:",
@@ -279,12 +279,11 @@ Engine.prototype.showForTimeThenCallback = function(picture, time, callback, _ya
 };
 
 ////////////////////////Get Trials for Block/////////////////////
-
-//todo make this so the "first" just ensures there are no Stop trials in the first 4.
-function getTrialsForBlock(first)
+function getTrialsForBlock()
 {
-    //todo first is enabled all the time.
-    first = first || 1;
+    //todo make this so the "first" just ensures there are no Stop trials in the first 4.
+    //todo first is enabled for all new blocks. 
+    var first = true;
     var subblockInit = [
         "gB", "sB1", "gB", "gB", "gB", "sY3", "gB", "gB",
         "gY", "sY0", "gY", "gY", "sB2", "gY", "gY", "gY"
@@ -300,25 +299,10 @@ function getTrialsForBlock(first)
         {
             subblockCopy = shuffleArray(firstFourTrials.slice());
             subblockCopy = subblockCopy.concat(shuffleArray(firstTwelveTrials.slice())); 
-            first = 0; 
+            first = false; 
         }              
         allTrials.push.apply(allTrials, subblockCopy);
     }
     return allTrials;
-
-    function shuffleArray(array, repeats)
-    {
-        repeats = repeats || 1;
-        for (var j = 0; j < repeats; j++)
-        {
-            for (var i = 0; i < array.length; i++)
-            {
-                var swapIndex = i + Math.floor(Math.random() * (array.length - i));
-                var temp = array[i];
-                array[i] = array[swapIndex];
-                array[swapIndex] = temp;
-            }
-        }
-        return array;
-    }
 }
+

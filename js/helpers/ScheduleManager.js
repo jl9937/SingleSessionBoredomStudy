@@ -260,7 +260,7 @@ function createQuestionnaire(screenName, nextScreenToGoTo, session)
             new LikertScreen(session, screenName, "How much is the following statement true?\nI continued to take part because I wanted to", "willing"),    //PChoice
             new LikertScreen(session, screenName, "How much is the following statement true?\nI felt like it was not my own choice to continue doing this task", "unwilling"),    //PChoice
             new LikertScreen(session, screenName, "How much is the following statement true?\nI performed well on this task", "performance"),    //PComp
-            new LikertScreen(session, screenName, "How much is the following statement true?\nIt was clear how well I was performing on the task", "performance"),    //PComp
+            new LikertScreen(session, screenName, "How much is the following statement true?\nIt was clear how well I was performing on the task", "clarity"),    //PComp
             new LikertScreen(session, screenName, "How much is the following statement true?\nI was skilled at this task", "skill")      //PComp
         ];
     }
@@ -281,5 +281,5 @@ function createQuestionnaire(screenName, nextScreenToGoTo, session)
     }
 
     shuffleArray(questionnaireArray);
-       VMan.addScreens(screenName, questionnaireArray, nextScreenToGoTo);
+    VMan.addScreens(screenName, questionnaireArray, nextScreenToGoTo);
 }

@@ -37,13 +37,12 @@
             }
           },
           "SDT_QUEST": {
-            "boring": { ".validate": "newData.isNumber() && newData.val() >=0" },
-            "choice": { ".validate": "newData.isNumber() && newData.val() >=0" },
-            "enjoyed": { ".validate": "newData.isNumber() && newData.val() >=0" },
-            "performance": { ".validate": "newData.isNumber() && newData.val() >=0" },
-            "recommend": { ".validate": "newData.isNumber() && newData.val() >=0" },
-            "skill": { ".validate": "newData.isNumber() && newData.val() >=0" },
             "willing": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "choice": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "unwilling": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "performance": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "clarity": { ".validate": "newData.isNumber() && newData.val() >=0" },
+            "skill": { ".validate": "newData.isNumber() && newData.val() >=0" },
             "$other": { ".validate": false }
           },
           "ENGAGEMENT_QUEST": {
