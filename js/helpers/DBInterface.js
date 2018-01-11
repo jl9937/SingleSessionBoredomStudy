@@ -156,10 +156,12 @@ DBInterface.getSmallestConditionOrderGroup = function(callback)
         var minKeyIndex = 0;
 
         var randomise = 1;
+        //if any of the groups are better than the maxgroup-size, then disable randomisation 
         for (var i = 0; i < keys.length; i++)
             if (object[keys[i]] > maxGroupSize)
                 randomise = 0;
 
+        //if randomisation is disabled, fill the lowest group
         if (randomise === 0)
         {
             for (var i = 0; i < keys.length; i++)
@@ -169,6 +171,7 @@ DBInterface.getSmallestConditionOrderGroup = function(callback)
         }
         else
         {
+            //otherwise randomise
             var index = Math.floor(Math.random() * 6);
             return keys[index];
         }

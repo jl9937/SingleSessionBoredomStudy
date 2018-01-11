@@ -31,7 +31,7 @@ function Main()
     PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
     PIXI.settings.RESOLUTION = 2;
 
-    this.app = new PIXI.Application(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT, { backgroundColor: 0x000000, resolution: PIXI.settings.RESOLUTION || 1, transparent: true, antialias: true, view: document.getElementById('game-canvas') });
+    this.app = new PIXI.Application(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT, { backgroundColor: 0x000000, resolution: PIXI.settings.RESOLUTION || 1, transparent: true, legacy: true, antialias: true, view: document.getElementById('game-canvas') });
 
     this.stage = this.app.stage;
 
@@ -194,9 +194,7 @@ Main.prototype.loadOtherSprites = function(condition)
         {});     
 }
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 var totalLoopTime = 0;
 var loopCounter = 0;
@@ -213,8 +211,7 @@ var globalTime = 0;
 //This delta which comes in is effectively: how many times longer than the last frame is this frame (this is what you should multiple distances moved by etc)
 //called at the end of one frame being displayed
 Main.prototype.prepareNextFrame = function (speedfactor)
-{
-    
+{                  
     delta = Math.round(this.app.ticker.elapsedMS);
     globalTime += delta;
 
