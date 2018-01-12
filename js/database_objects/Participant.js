@@ -41,6 +41,7 @@ Participant.prototype.getMoneyEarned = function()
         for (var j = 0; j < blocks; j++)
             moneyEarned += getBlockReward(j);
     }
+    moneyEarned += (0.5 * this.getSessionsCompleted());
     moneyEarned = Math.round((moneyEarned + 0.00001) * 100) / 100;
     return moneyEarned;
 }
