@@ -25,7 +25,7 @@ DBInterface.logUserIn = function(prolificID, callback)
                 firebase.auth().createUserWithEmailAndPassword(username, password).then(function(user)
                     {
                         debug("New user created");
-                        pushData(DBInterface.databaseRef.child("LinkList"), { uid: user.uid, proid: prolificID });
+                        
                         onSignin(user);
                     }
                 ).catch(debug("Creating new user failed"));
@@ -42,6 +42,8 @@ DBInterface.logUserIn = function(prolificID, callback)
             DBInterface.getParticipantDetails(user.uid,
                 function(data)
                 {  
+                    if (!data)
+                        pushData(DBInterface.databaseRef.child("LinkList"), { uid: user.uid, proid: prolificID });
                     var p = new Participant(user.uid, data, callback);
                 });
         }

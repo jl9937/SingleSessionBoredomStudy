@@ -100,14 +100,14 @@ function queryCurrentParticipants(ref) {
     var fullText = "";
 
     if (IDs.length > 0) {
-        fullText += "ID\t\t\t\tSeshsCompleted\tLastSession\tStage\n";
+        fullText += "ID\t\t\t\tSeshsCompleted\tLastSession\n";
         ref.child("Participants").once("value",
             function (allParticipants) {
                 allParticipants.forEach(function (participant) {
                     var participantID = participant.key.substr(3, 28);
                     if (isPresentOnList(participantID, IDs)) {
                         //append to array here
-                        fullText += convertType(participantID, 1) + "\t" + participant.val().sessionsCompleted + "\t\t" + participant.val().lastSessionCompleted + "\t" + participant.val().studyStage + "\n";
+                        fullText += convertType(participantID, 1) + "\t" + participant.val().sessionsCompleted + "\t\t" + participant.val().lastSessionCompleted + "\n";
                     }
                 });
                 output("Query ran");

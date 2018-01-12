@@ -63,7 +63,7 @@ Engine.prototype.runTrialorBreakorEndTask = function()
 Engine.prototype.startTrial = function(trialType)
 {
     //Subblock RT shift?
-    if (this.overallTrialNum !== 1 && this.overallTrialNum % 16 === 1)
+    if (this.blockTrialNum !== 1 && this.overallTrialNum % 16 === 1)
     {
         var currentAVRT = this.currentSubBlockSumRT / 16;
         debug("Current Av:",
