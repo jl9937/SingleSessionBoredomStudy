@@ -48,7 +48,7 @@ function makeConsent(name, nextpage, session)
         "By clicking the button, you confirm that:\n",
         "1) You have read the study description on Prolific Academic.com, are satisfied you have been given sufficient information, and are happy to take part",
         "2) You understand and acknowledge that the investigation is designed to promote scientific knowledge. When the study has been completed, we will analyse the study data and report the findings in an appropriate scientific journal or presented at a scientific meeting.",
-        "3) You understand that personal information collected during the study may be looked at by individuals from the University of Bristol, regulatory authorities or the funding body of the above study. You give permission for these individuals to have access to personal information under conditions of confidentiality.",
+        "3) You understand that the data collected during the study may be looked at by individuals from the University of Bristol, regulatory authorities or the funding body of the above study. You give permission for these individuals to have access to this data under conditions of confidentiality.",
         "4) You understand that the anonymised study data collected from you as part of the study will be made available as “open data”, as described in the study description.",
         "5) You understand that the anonymised study data collected for this study may be used in future research projects but that the conditions on this form under which you have provided the data will still apply.",
         "6) You understand that you are free to withdraw from the study at any time without giving a reason for doing so. Your data up until this point can be removed from the study if you contact us via Prolific Messenger. This can be done up until the data are fully anonymised\n",
@@ -257,8 +257,8 @@ function createQuestionnaire(screenName, nextScreenToGoTo, session)
     else if (screenName === "SDT_QUEST") {
         questionnaireArray = [      
             new LikertScreen(session, screenName, "How much is the following statement true?\nI had some choice in how I approached this task", "choice"), //PChoice
-            new LikertScreen(session, screenName, "How much is the following statement true?\nI continued to take part because I wanted to", "willing"),    //PChoice
-            new LikertScreen(session, screenName, "How much is the following statement true?\nI felt like it was not my own choice to continue doing this task", "unwilling"),    //PChoice
+            new LikertScreen(session, screenName, "How much is the following statement true?\nI took part for as long as I because I wanted to", "willing"),    //PChoice
+            new LikertScreen(session, screenName, "How much is the following statement true?\nI felt like it was not my own choice to take part for as long as I did ", "unwilling"),    //PChoice
             new LikertScreen(session, screenName, "How much is the following statement true?\nI performed well on this task", "performance"),    //PComp
             new LikertScreen(session, screenName, "How much is the following statement true?\nIt was clear how well I was performing on the task", "clarity"),    //PComp
             new LikertScreen(session, screenName, "How much is the following statement true?\nI was skilled at this task", "skill")      //PComp

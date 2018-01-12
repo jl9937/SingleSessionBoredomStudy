@@ -307,3 +307,8 @@ function colorLuminance(hexNum, lum) {
 
     return rgb;
 }
+
+function getBlockReward(blockNum) {
+    var rewardArray = [0.75, 0.66, 0.57, 0.48, 0.39, 0.3, 0.21, 0.12, 0.03];
+    return rewardArray[blockNum];
+}

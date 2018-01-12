@@ -164,9 +164,6 @@
         "id": {
           ".write": "!data.exists() || !newData.exists()"
         },
-        "moneyEarned": {
-          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 30"
-        },
         "sessionsCompleted": {
           ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 14"
         },

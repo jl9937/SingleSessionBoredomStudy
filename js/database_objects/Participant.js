@@ -20,7 +20,6 @@ Participant.prototype.initParticipant = function(id)
     this.sessionsCompleted = 0;
     this.datetimeRegistered = new Date();
     this.lastSessionCompleted = "";
-    this.moneyEarned = 0;
     this.sessionsBegun = 0;
     this.studyComplete = false;
     this.excluded = false;
@@ -35,7 +34,15 @@ Participant.prototype.getID = function()
 
 Participant.prototype.getMoneyEarned = function()
 {
-    return this.moneyEarned;
+    var moneyEarned = 0;
+    for (var i = 0; i < 3; i++)
+    {
+        var blocks = this.blocksCompleted[i];
+        for (var j = 0; j < blocks; j++)
+            moneyEarned += getBlockReward(j);
+    }
+    moneyEarned = Math.round((moneyEarned + 0.00001) * 100) / 100;
+    return moneyEarned;
 }
 
 Participant.prototype.getSessionsCompleted = function()
@@ -99,18 +106,9 @@ Participant.prototype.getblocksCompleted =function(condition)
     return this.blocksCompleted[condition];
 }
 
-Participant.prototype.blockComplete = function(condition, moneyEarned)
-{
-    this.addMoney(moneyEarned);
-    this.blocksCompleted[condition] += 1;
-
+Participant.prototype.blockComplete = function(condition)
+{    
+    this.blocksCompleted[condition] += 1; 
     debug("BlocksCompleted " + this.blocksCompleted[condition]);
     this.saveToDB();
-}
-
-Participant.prototype.addMoney = function(add)
-{
-    this.moneyEarned += add;
-    this.moneyEarned = Math.round((this.moneyEarned + 0.00001) * 100) / 100;
-    debug("Money Earned: £" + this.moneyEarned);
 }

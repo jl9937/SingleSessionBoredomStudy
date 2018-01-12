@@ -45,12 +45,6 @@ Session.prototype.initSession = function (participant, forcedCondition)
     this.date = getSimpleDateString();
 }
 
-Session.prototype.getBlockReward = function(blockNum)
-{
-    var rewardArray = [0.75, 0.66, 0.57, 0.48, 0.39, 0.3, 0.21, 0.12, 0.03];
-    return rewardArray[blockNum];
-}
-
 Session.prototype.recordLossOfFocusEvent = function()
 {
     this.lossOfFocusEvents+= 1;
@@ -62,7 +56,7 @@ Session.prototype.resetLossOfFocusEvents = function () {
 
 Session.prototype.getBlockRewardString = function()
 {
-    return formatMoney(this.getBlockReward(this.getBlocksCompleted()));
+    return formatMoney(getBlockReward(this.getBlocksCompleted()));
 }
 
 Session.prototype.initSessionFromData = function (sessionData)
@@ -135,7 +129,7 @@ Session.prototype.blockComplete = function ()
 {
     this.blocksComplete++;
     this.completionLevel = Session.COMPLETED_TASK;
-    this.participant.blockComplete(this.getCondition(), this.getBlockReward(this.participant.getblocksCompleted(this.getCondition())));
+    this.participant.blockComplete(this.getCondition(), getBlockReward(this.participant.getblocksCompleted(this.getCondition())));
                                                   
     this.saveToDB();
 }
