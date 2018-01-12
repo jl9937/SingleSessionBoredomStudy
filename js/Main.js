@@ -16,7 +16,7 @@ Main.COMPLETION_LINKS = [
 ];
 
 //debug switch
-Main.isDebug = true;
+Main.isDebug = false;
 var debug;
 
 function Main()
