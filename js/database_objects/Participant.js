@@ -60,7 +60,6 @@ Participant.prototype.newSessionBegun =function()
 
 Participant.prototype.sessionComplete = function()
 {
-    this.addMoney(0.5);
     this.lastSessionCompleted = getSimpleDateString();
     this.sessionsCompleted++;   
     if (this.sessionsCompleted === 3)
