@@ -41,7 +41,7 @@ Engine.prototype.setupBasics = function()
     {};
 /////////////////////////////////////////////////////////////////////////////////
 
-Engine.prototype.startBlock = function(first)
+Engine.prototype.startBlock = function()
 {
     longFramesSinceStart = 0;
     this.setupBlockOnlyVisuals();
@@ -65,7 +65,7 @@ Engine.prototype.startTrial = function(trialType)
     //Subblock RT shift?
     if (this.blockTrialNum !== 1 && this.overallTrialNum % 16 === 1)
     {
-        var currentAVRT = this.currentSubBlockSumRT / 16;
+        var currentAVRT = this.currentSubBlockSumRT / 12;
         debug("Current Av:",
             currentAVRT,
             "Limit:",
@@ -282,8 +282,6 @@ Engine.prototype.showForTimeThenCallback = function(picture, time, callback, _ya
 ////////////////////////Get Trials for Block/////////////////////
 function getTrialsForBlock()
 {
-    //todo make this so the "first" just ensures there are no Stop trials in the first 4.
-    //todo first is enabled for all new blocks. 
     var first = true;
     var subblockInit = [
         "gB", "sB1", "gB", "gB", "gB", "sY3", "gB", "gB",
