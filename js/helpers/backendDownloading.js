@@ -174,7 +174,12 @@ function getQuestionnaires(ref, excludedList)
                 if (!isPresentOnList(allSessionsSnapshot.key, excludedList))
                     allSessionsSnapshot.forEach(function (sessionSnapshot) {
                         if (Object.keys(sessionSnapshot.val()).length >= 5)
-                            fullText = appendObjectToFullText(sessionSnapshot.val(), fullText);
+                        {
+                            var cleanConsent = sessionSnapshot.val();
+                            cleanConsent["CONSENTFORM"] = {};
+                            fullText = appendObjectToFullText(cleanConsent, fullText);
+                        }
+                            
                     });
             });
             saveContent(fullText, "QuestionnaireData.csv");
