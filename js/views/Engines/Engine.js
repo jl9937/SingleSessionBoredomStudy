@@ -65,7 +65,7 @@ Engine.prototype.startTrial = function(trialType)
     //Subblock RT shift?
     if (this.blockTrialNum !== 1 && this.overallTrialNum % 16 === 1)
     {
-        var currentAVRT = this.currentSubBlockSumRT / 12;
+        var currentAVRT = this.currentSubBlockSumRT / 15;
         debug("Current Av:",
             currentAVRT,
             "Limit:",

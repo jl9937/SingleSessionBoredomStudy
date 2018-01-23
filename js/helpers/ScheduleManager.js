@@ -261,7 +261,7 @@ function createQuestionnaire(screenName, nextScreenToGoTo, session)
             new LikertScreen(session, screenName, "How much is the following statement true?\nI felt like it was not my own choice to take part for as long as I did ", "unwilling"),    //PChoice
             new LikertScreen(session, screenName, "How much is the following statement true?\nI performed well on this task", "performance"),    //PComp
             new LikertScreen(session, screenName, "How much is the following statement true?\nIt was clear how well I was performing on the task", "clarity"),    //PComp
-            new LikertScreen(session, screenName, "How much is the following statement true?\nI was skilled at this task", "skill")      //PComp
+            new LikertScreen(session, screenName, "How much is the following statement true?\nI was not skilled at this task", "skill")      //PComp
         ];
     }
     else if (screenName === "DEMOGRAPHICS")
