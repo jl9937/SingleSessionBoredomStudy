@@ -66,7 +66,7 @@ function makePostSession(name, _nextpage, session)
         new GenericScreen(session.getCondition(),
         {
             text:
-                "You have completed today's session!\nWe will send out Prolific Academic invites for the next part of the study shortly, please keep an eye on your mailbox\n\Click below to return to complete your submission of this session.",
+                "You have completed today's session!\nWe will send out Prolific Academic invites for the next part of the study shortly, please keep an eye on your mailbox\n\Click below to return to Prolific.",
             buttonText: "Submit",
             nextScreenToGoTo: "MAINMENU",
             special: Main.COMPLETION_LINKS[session.getDayNumber() - 1]
@@ -78,7 +78,7 @@ function makePostTask(name, _nextpage, session) {
         new GenericScreen(session.getCondition(),
             {
                 text:
-                    "Thanks for completing the task. We just have a short questionnaire for you to do, and then today's session will be complete, thanks!\n\nWe'll give you 50p as thanks for completing the questionnaire.\nPlease press the button below to continue.",
+                    "Thanks for completing the task. We just have a short questionnaire for you to do, and then today's session will be complete, thanks!\n\nPlease press the button below to continue.",
                 buttonText: "Next",
                 nextScreenToGoTo: "ENGAGEMENT_QUEST"
             }));
@@ -90,9 +90,9 @@ function makePostStudy(name, _nextpage, session)
         new GenericScreen(session.getCondition(),
         {
             text:
-                "You have completed the final session of the study, thank you for taking part!\n. We will be processing acceptions and rejections over the coming days. \nClick below to return to complete your submission of this session.",
+                "You have completed the final session of the study, thank you for taking part!\n. We will be processing acceptions and rejections over the coming days. \nClick below to return to Prolific",
             buttonText: "Submit",
-            nextScreenToGoTo: "MAINMENU",
+            nextScreenToGoTo: "MAINMENU", 
             special: Main.COMPLETION_LINKS[session.getDayNumber() - 1]
         }));
 }
@@ -104,11 +104,6 @@ function makeTask(name, nextpage, session)
     case Main.CONDITION_NONGAME:
         VMan.addScreens("TASK",
             [
-                new GenericScreen(session.getCondition(),
-                    {
-                        text: "Just to let you know, completing the first two minutes of this session will earn you £0.75",
-                        buttonText: "Next page"
-                    }),
                 new GenericScreen(session.getCondition(),
                     {
                         picture1: "../resources/interface/instructions1.png",
@@ -135,11 +130,6 @@ function makeTask(name, nextpage, session)
             break;
         case Main.CONDITION_POINTS:
             VMan.addScreens("TASK", [
-                new GenericScreen(session.getCondition(),
-                    {
-                        text: "Just to let you know, completing the first two minutes of this session will earn you £0.75",
-                        buttonText: "Next page"
-                    }),
                new GenericScreen(session.getCondition(), {
                    background: "../resources/interface/background.png",
                    picture1: "../resources/interface/Points_instructions1.png",
@@ -180,11 +170,6 @@ function makeTask(name, nextpage, session)
 
             VMan.addScreens("TASK",
                 [
-                    new GenericScreen(session.getCondition(),
-                        {
-                            text: "Just to let you know, completing the first two minutes of this session will earn you £0.75",
-                            buttonText: "Next page"
-                        }),
                 new GenericScreen(session.getCondition(),
                 {
                     picture1: "../resources/interface/Theme_instructions1.png",

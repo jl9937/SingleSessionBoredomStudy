@@ -176,15 +176,14 @@ Engine.prototype.finishTrial = function()
 };
 
 Engine.prototype.displayContinueChoice = function()
-{           
+{
     this.removeChild(this.zones);
     this.removeChild(this.progress);
     this.session.blockComplete();
 
     var self = this;
     var choiceTextString =
-        "Block completed!\n\n\Do you wish to continue?\nIf you want to, you can complete another two-minute round of testing and earn an additional " + this.session.getBlockRewardString() + 
-        "\n\nAlternatively, You are free to end today's session now.";
+        "Block completed!\n\n\Do you wish to continue?\nIf you want to, you can complete another\ntwo-minute round of testing.\n\n\nAlternatively, you are free to end today's session now.";
     if (this.session.getBlockRewardString() === "NaN")
     {
         choiceTextString =
@@ -205,17 +204,17 @@ Engine.prototype.displayContinueChoice = function()
         this.addChild(continueToQuestionnaire);
         return;
     }
-
+  
     var quitButton = new ClickButton("Quit",
         this.endTask.bind(this),
         { 'yPos': Main.SCREEN_HEIGHT - 100, 'xPos': breakText.x + 200, 'up_colour': 0xd72c2c });
     var continueButton = new ClickButton("Continue",
         function()
-        {
+        {         
             self.removeChild(breakText);
             self.removeChild(continueButton);
             self.removeChild(quitButton);
-            self.postContinueChoice();
+            self.submitToProlific();
         },
         { 'yPos': Main.SCREEN_HEIGHT - 100, 'xPos': breakText.x - 200, 'up_colour': 0x2cd744 });
 
@@ -223,6 +222,37 @@ Engine.prototype.displayContinueChoice = function()
     this.addChild(quitButton);
     this.addChild(breakText);
 };
+
+Engine.prototype.submitToProlific = function()
+{
+    if (!Main.sessionSubmitted)
+    {
+        var self = this;
+        window.open(Main.COMPLETION_LINKS[this.session.getDayNumber() - 1],
+            'submission window',
+            'width=300,height=100,toolbar=0,menubar=0,location=0,status=0,scrollbars=0,resizable=0,left=0,top=0');
+        Main.sessionSubmitted = true;
+                                        
+        var breakTextString = "We've just marked your submission in Prolific as complete.\nYou are now free to continue testing for as long as you wish.\n\nWhen you're done testing, please choose\nthe 'Quit' option and complete our short questionnaire";
+        var breakText = new PIXI.Text(breakTextString,
+            { align: "center", font: "30px Arial", fill: "#FFFFFF" });
+        breakText.x = Main.SCREEN_WIDTH / 2;
+        breakText.y = Main.SCREEN_HEIGHT / 2;
+        breakText.anchor = new PIXI.Point(0.5, 0.5);  
+        
+        var continueButton = new ClickButton("Continue",
+            function()
+            {
+                self.removeChild(breakText);
+                self.removeChild(continueButton);
+                self.postContinueChoice();
+            });   
+        this.addChild(continueButton);     
+        this.addChild(breakText);   
+    }
+    else
+        this.postContinueChoice(); 
+}
 
 Engine.prototype.endTask = function()
 {

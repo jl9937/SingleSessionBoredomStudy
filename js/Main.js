@@ -15,6 +15,8 @@ Main.COMPLETION_LINKS = [
     "https://prolific.ac/submissions/complete?cc=0R3JI9EV" //Session 3
 ];
 
+Main.sessionSubmitted = false;
+
 //debug switch
 Main.isDebug = false;
 var debug;

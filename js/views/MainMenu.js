@@ -99,7 +99,7 @@ MainMenu.prototype.createUserDataText = function(y)
 {
     var urlid = getUrlVars(["prolific_pid"]);
     urlid = urlid.prolific_pid;
-    var text = "User ID: " + urlid + "\nSessions Completed: " + this.session.participant.getSessionsCompleted() + "\nReimbursement due: " + formatMoney(this.session.participant.getMoneyEarned());
+    var text = "User ID: " + urlid + "\nSessions Completed: " + this.session.participant.getSessionsCompleted();
     text = text + this.session.getMainMenuText();
 
     var dataText = new PIXI.Text(text, { align: "center", font: "16px Arial", fill: "#FFFFFF" });
