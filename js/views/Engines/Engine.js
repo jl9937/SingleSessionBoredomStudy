@@ -230,7 +230,7 @@ Engine.prototype.submitToProlific = function()
         var self = this;
         window.open(Main.COMPLETION_LINKS[this.session.getDayNumber() - 1],
             'submission window',
-            'width=300,height=100,toolbar=0,menubar=0,location=0,status=0,scrollbars=0,resizable=0,left=0,top=0');
+            'width=300,height=600,toolbar=0,menubar=0,location=0,status=0,scrollbars=0,resizable=0,left=0,top=0');
         Main.sessionSubmitted = true;
                                         
         var breakTextString = "We've just marked your submission in Prolific as complete.\nYou are now free to continue testing for as long as you wish.\n\nWhen you're done testing, please choose\nthe 'Quit' option and complete our short questionnaire";

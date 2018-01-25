@@ -64,7 +64,7 @@ GenericScreen.prototype.buttonClicked = function (nextScreenToGoTo)
         if (!Main.sessionSubmitted)   
             window.open(this.options.special);
         else
-            window.open("https://www.prolific.ac/studies/");
+            window.open("https://www.prolific.ac/studies");
         focus();
     }
     this.moveToScreen = nextScreenToGoTo;
