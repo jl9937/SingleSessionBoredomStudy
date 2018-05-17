@@ -214,7 +214,7 @@ Engine.prototype.displayContinueChoice = function()
             self.removeChild(breakText);
             self.removeChild(continueButton);
             self.removeChild(quitButton);
-            self.submitToProlific();
+            self.postContinueChoice();
         },
         { 'yPos': Main.SCREEN_HEIGHT - 100, 'xPos': breakText.x - 200, 'up_colour': 0x2cd744 });
 
@@ -222,37 +222,6 @@ Engine.prototype.displayContinueChoice = function()
     this.addChild(quitButton);
     this.addChild(breakText);
 };
-
-Engine.prototype.submitToProlific = function()
-{
-    if (!Main.sessionSubmitted)
-    {
-        var self = this;
-        window.open(Main.COMPLETION_LINKS[this.session.getDayNumber() - 1],
-            'submission window',
-            'width=300,height=600,toolbar=0,menubar=0,location=0,status=0,scrollbars=0,resizable=0,left=0,top=0');
-        Main.sessionSubmitted = true;
-
-        var breakTextString = "Don't mind the popup window! We're just marking your submission in Prolific as complete so that you are free to continue playing for as long as you want.\n\nWhen you're done with the task, please choose\nthe 'Quit' option and complete our short questionnaire";
-        var breakText = new PIXI.Text(breakTextString,
-            { align: "center", font: "28px Arial", fill: "#FFFFFF", wordWrapWidth: Main.WORD_WRAP_WIDTH, wordWrap: true });
-        breakText.x = Main.SCREEN_WIDTH / 2;
-        breakText.y = Main.SCREEN_HEIGHT / 2;
-        breakText.anchor = new PIXI.Point(0.5, 0.5);  
-        
-        var continueButton = new ClickButton("Continue",
-            function()
-            {
-                self.removeChild(breakText);
-                self.removeChild(continueButton);
-                self.postContinueChoice();
-            });   
-        this.addChild(continueButton);     
-        this.addChild(breakText);   
-    }
-    else
-        this.postContinueChoice(); 
-}
 
 Engine.prototype.endTask = function()
 {

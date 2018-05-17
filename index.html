@@ -128,41 +128,41 @@
 
     <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height" />-->
 </head>
-<body onload="init()">
+<body>
 
     <form class="form-container">
         <div class="form-title">
             <h2>Welcome to MindGames II</h2>
         </div>
         <p>
-            Thanks for signing up to take part in our experiment. This is a Bristol University Experiment, accessed through Prolific Academic. If you have any questions feel free to contact us using Prolific Messenger<br/>
-            
-        </p>
-        <div class="form-title">Please enter your Prolific ID</div>
-        <input class="form-field" type="text" name="prolificID" id="pid" /><br />
-        <div id='floatVal'>Your ID must be 24 characters long!</div>
-        
-        <div id="link-container">
-            <div class="form-title">The link below is your UNIQUE link to the study, please make a note of it. If you forget the link for any reason, simply come back to this page through Prolific Academic and re-enter your Prolific ID</div>
-
-            <input class="form-field" type="text" id="linkBox" readonly/>
-            <input class="submit-button" value="Copy Link" id="copyToClipboard"/>
-        </div>
-
+        Hello!<br />This is the archived release of MindGames II. It is a demo of three Stop Signal Task variants: 1 control, 2 gamified, used in my study in 2018. Github code can be found <a href="https://github.com/jl9937/SingleSessionBoredomStudy">here</a>.<br/><br />Clicking the button below will send you randomly to one of the three task variants.
+        There's just a few things you need to know:<br />
+            <ul>
+                <li>Throughout the task there are lots of references to money, sadly the study is now over, so you'll just have to imagine getting rich instead</li>
+                <li>The task won't work on touchscreen devices. You need a keyboard!</li>
+            </ul>
         <div class="submit-container">
-            <input class="submit-button" value="Begin Study" id="submitProper" />
+            <input class="submit-button" onclick="loadStudy()" value="Begin" id="submitProper" />
         </div>
     </form>
 
 <script src="js/libs/jquery-3.2.0.min.js"></script>
     <script src="js/Main.js"></script>
-    <script src="js/introductionScreen.js"></script>
 
 <script>
-    function init()
+    function loadStudy()
     {
-        var main = new introductionScreen();
+        var randomID = guid();
+        window.location.href = "https://mindgamesmkii.firebaseapp.com/task.html?prolific_pid="+randomID;
     };
+    function guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+        return s4() + s4() + s4() + s4() + s4() + s4();
+    }
 </script>
 </body>
 
